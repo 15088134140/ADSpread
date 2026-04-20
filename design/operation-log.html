@@ -1,44 +1,56 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="ja">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>操作日志 - 信发系统管理后台</title>
+    <title data-i18n="operationLog">操作ログ - 信発システム管理画面</title>
     <link rel="stylesheet" href="styles.css">
+    <script src="i18n.js"></script>
 </head>
 <body>
     <div class="admin-layout">
         <!-- 侧边栏 -->
         <aside class="sidebar">
             <div class="sidebar-header">
-                <h1>信发系统</h1>
-                <p>管理后台</p>
+                <a href="index.html">
+                    <h1 data-i18n="systemName">信発システム</h1>
+                    <p data-i18n="adminPanel">管理画面</p>
+                </a>
             </div>
             <nav class="sidebar-menu">
                 <a href="store-list.html" class="menu-item">
-                    <span class="icon">🏪</span>门店管理
+                    <span class="icon">🏪</span><span data-i18n="storeManagement">店舗管理</span>
                 </a>
                 <a href="device-list.html" class="menu-item">
-                    <span class="icon">📺</span>设备管理
+                    <span class="icon">📺</span><span data-i18n="deviceManagement">デバイス管理</span>
                 </a>
                 <a href="program-list.html" class="menu-item">
-                    <span class="icon">🎬</span>节目制作
+                    <span class="icon">🎬</span><span data-i18n="programProduction">番組制作</span>
                 </a>
                 <a href="material.html" class="menu-item">
-                    <span class="icon">🖼️</span>素材管理
+                    <span class="icon">🖼️</span><span data-i18n="materialManagement">素材管理</span>
                 </a>
                 <a href="publish.html" class="menu-item">
-                    <span class="icon">📤</span>发布管理
+                    <span class="icon">📤</span><span data-i18n="publishManagement">公開管理</span>
                 </a>
-                <a href="admin-list.html" class="menu-item">
-                    <span class="icon">👤</span>管理员账号管理
-                </a>
-                <a href="operation-log.html" class="menu-item active">
-                    <span class="icon">📋</span>操作日志
-                </a>
+                <div class="menu-group">
+                    <div class="menu-group-title" data-i18n="systemManagement">システム管理</div>
+                    <a href="admin-list.html" class="menu-item menu-item-child">
+                        <span class="icon">👤</span><span data-i18n="accountManagement">アカウント管理</span>
+                    </a>
+                    <a href="role-list.html" class="menu-item menu-item-child">
+                        <span class="icon">👥</span><span data-i18n="roleManagement">権限管理</span>
+                    </a>
+                    <a href="menu-list.html" class="menu-item menu-item-child">
+                        <span class="icon">📋</span><span data-i18n="menuManagement">メニュー管理</span>
+                    </a>
+                    <a href="operation-log.html" class="menu-item menu-item-child active">
+                        <span class="icon">📝</span><span data-i18n="operationLog">操作ログ</span>
+                    </a>
+                </div>
             </nav>
             <div class="sidebar-footer">
-                <p>v1.1.0</p>
+                <p>v1.2.0</p>
             </div>
         </aside>
 
@@ -46,38 +58,60 @@
         <main class="main-content">
             <header class="top-header">
                 <div class="breadcrumb">
-                    <a href="#">首页</a>
+                    <a href="#" data-i18n="home">ホーム</a>
                     <span>/</span>
-                    <strong>操作日志</strong>
+                    <strong data-i18n="operationLog">操作ログ</strong>
                 </div>
                 <div class="user-info">
+                    <!-- 语言切换器 -->
+                    <div class="lang-switcher">
+                        <div class="lang-selector">
+                            <span class="lang-current-flag">🇯🇵</span>
+                            <span class="lang-current-text">日本語</span>
+                            <span>▼</span>
+                        </div>
+                        <div class="lang-dropdown">
+                            <div class="lang-option" data-lang="ja">
+                                <span class="lang-flag">🇯🇵</span>
+                                <span data-i18n="japanese">日本語</span>
+                            </div>
+                            <div class="lang-option" data-lang="zh">
+                                <span class="lang-flag">🇨🇳</span>
+                                <span data-i18n="chinese">中文</span>
+                            </div>
+                            <div class="lang-option" data-lang="en">
+                                <span class="lang-flag">🇺🇸</span>
+                                <span data-i18n="english">English</span>
+                            </div>
+                        </div>
+                    </div>
                     <span class="user-name">admin</span>
-                    <a href="admin-login.html" class="btn-logout">退出</a>
+                    <a href="admin-login.html" class="btn-logout" data-i18n="logout">ログアウト</a>
                 </div>
             </header>
 
             <div class="content">
                 <div class="page-header">
-                    <h2 class="page-title">操作日志</h2>
-                    <button class="btn btn-outline" onclick="alert('导出日志Excel')">📥 导出日志</button>
+                    <h2 class="page-title" data-i18n="operationLog">操作ログ</h2>
+                    <button class="btn btn-outline" onclick="alert(t('exportLog'))">📥 ログ出力</button>
                 </div>
 
                 <!-- 搜索筛选 -->
                 <div class="filter-bar">
-                    <input type="text" class="search-input" placeholder="搜索操作人或操作内容...">
+                    <input type="text" class="search-input" placeholder="操作者または操作内容を検索...">
                     <select class="select-filter">
-                        <option value="">全部操作类型</option>
-                        <option value="login">登录登出</option>
-                        <option value="store">门店操作</option>
-                        <option value="device">设备操作</option>
-                        <option value="program">节目操作</option>
-                        <option value="publish">发布计划</option>
-                        <option value="admin">管理员</option>
+                        <option value="">全ての操作タイプ</option>
+                        <option value="login">ログイン/ログアウト</option>
+                        <option value="store">店舗操作</option>
+                        <option value="device">デバイス操作</option>
+                        <option value="program">番組操作</option>
+                        <option value="publish">公開計画</option>
+                        <option value="admin">管理者</option>
                     </select>
-                    <input type="date" class="select-filter" placeholder="开始日期">
-                    <input type="date" class="select-filter" placeholder="结束日期">
-                    <button class="btn btn-outline">搜索</button>
-                    <button class="btn btn-outline">重置</button>
+                    <input type="date" class="select-filter" placeholder="開始日">
+                    <input type="date" class="select-filter" placeholder="終了日">
+                    <button class="btn btn-outline" data-i18n="search">検索</button>
+                    <button class="btn btn-outline" data-i18n="reset">リセット</button>
                 </div>
 
                 <!-- 操作日志列表 -->
@@ -85,103 +119,103 @@
                     <table>
                         <thead>
                             <tr>
-                                <th>操作时间</th>
-                                <th>操作人</th>
-                                <th>操作类型</th>
-                                <th>操作对象</th>
-                                <th>操作内容</th>
-                                <th>IP地址</th>
+                                <th data-i18n="operationTime">操作日時</th>
+                                <th data-i18n="operator">操作者</th>
+                                <th data-i18n="operationType">操作タイプ</th>
+                                <th>操作対象</th>
+                                <th data-i18n="operationContent">操作内容</th>
+                                <th data-i18n="ipAddress">IPアドレス</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
                                 <td>2024-01-15 10:32:18</td>
                                 <td>admin</td>
-                                <td>发布计划</td>
-                                <td>春季促销中关村投放</td>
-                                <td>新建发布计划</td>
+                                <td>公開計画</td>
+                                <td>春のプロモーション渋谷配信</td>
+                                <td>新規公開計画作成</td>
                                 <td>192.168.1.100</td>
                             </tr>
                             <tr>
                                 <td>2024-01-15 10:28:45</td>
                                 <td>admin</td>
-                                <td>设备操作</td>
-                                <td>入口大屏(DEV001)</td>
-                                <td>编辑设备信息，修改备注为"机柜故障"</td>
+                                <td>デバイス操作</td>
+                                <td>入口大型ディスプレイ(DEV001)</td>
+                                <td>デバイス情報編集、備考を"キャビネット故障"に変更</td>
                                 <td>192.168.1.100</td>
                             </tr>
                             <tr>
                                 <td>2024-01-15 10:15:32</td>
                                 <td>admin</td>
-                                <td>设备操作</td>
-                                <td>外墙大屏(DEV007)</td>
-                                <td>新增设备</td>
+                                <td>デバイス操作</td>
+                                <td>外壁大型ディスプレイ(DEV007)</td>
+                                <td>デバイス新規追加</td>
                                 <td>192.168.1.100</td>
                             </tr>
                             <tr>
                                 <td>2024-01-15 09:42:10</td>
                                 <td>admin</td>
-                                <td>登录</td>
+                                <td>ログイン</td>
                                 <td>-</td>
-                                <td>用户登录成功</td>
+                                <td>ユーザーログイン成功</td>
                                 <td>192.168.1.100</td>
                             </tr>
                             <tr>
                                 <td>2024-01-14 18:25:41</td>
                                 <td>admin</td>
-                                <td>发布计划</td>
-                                <td>元旦优惠活动</td>
-                                <td>停用发布计划</td>
+                                <td>公開計画</td>
+                                <td>元旦セールキャンペーン</td>
+                                <td>公開計画を無効化</td>
                                 <td>192.168.1.98</td>
                             </tr>
                             <tr>
                                 <td>2024-01-14 17:38:22</td>
                                 <td>operator</td>
-                                <td>节目操作</td>
-                                <td>春季促销活动</td>
-                                <td>新建节目并发布</td>
+                                <td>番組操作</td>
+                                <td>春のプロモーションキャンペーン</td>
+                                <td>新規番組作成・公開</td>
                                 <td>192.168.1.105</td>
                             </tr>
                             <tr>
                                 <td>2024-01-14 16:55:10</td>
                                 <td>operator</td>
-                                <td>设备导入</td>
+                                <td>デバイスインポート</td>
                                 <td>-</td>
-                                <td>Excel批量导入设备，成功6台，失败0台</td>
+                                <td>Excel一括インポート：成功6台、失敗0台</td>
                                 <td>192.168.1.105</td>
                             </tr>
                             <tr>
                                 <td>2024-01-14 16:20:33</td>
                                 <td>operator</td>
-                                <td>登出</td>
+                                <td>ログアウト</td>
                                 <td>-</td>
-                                <td>用户登出系统</td>
+                                <td>ユーザーログアウト</td>
                                 <td>192.168.1.105</td>
                             </tr>
                             <tr>
                                 <td>2024-01-14 16:10:05</td>
                                 <td>operator</td>
-                                <td>登录</td>
+                                <td>ログイン</td>
                                 <td>-</td>
-                                <td>用户登录成功</td>
+                                <td>ユーザーログイン成功</td>
                                 <td>192.168.1.105</td>
                             </tr>
                             <tr>
                                 <td>2024-01-14 12:05:18</td>
                                 <td>admin</td>
-                                <td>门店操作</td>
-                                <td>朝阳大悦城店</td>
-                                <td>编辑门店联系电话</td>
+                                <td>店舗操作</td>
+                                <td>横浜ランドマーク店</td>
+                                <td>店舗連絡先電話番号編集</td>
                                 <td>192.168.1.100</td>
                             </tr>
                         </tbody>
                     </table>
                     <div class="pagination">
-                        <a href="#" class="page-item">上一页</a>
+                        <a href="#" class="page-item" data-i18n="previous">前へ</a>
                         <a href="#" class="page-item active">1</a>
                         <a href="#" class="page-item">2</a>
                         <a href="#" class="page-item">3</a>
-                        <a href="#" class="page-item">下一页</a>
+                        <a href="#" class="page-item" data-i18n="next">次へ</a>
                     </div>
                 </div>
             </div>

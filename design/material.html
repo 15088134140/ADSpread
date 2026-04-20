@@ -3,39 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>素材管理 - 信发系统管理后台</title>
+    <title data-i18n="materialManagementTitle">素材管理 - 信发系统管理后台</title>
     <link rel="stylesheet" href="styles.css">
+    <script src="i18n.js"></script>
 </head>
 <body>
     <div class="admin-layout">
         <!-- 侧边栏 -->
         <aside class="sidebar">
             <div class="sidebar-header">
-                <h1>信发系统</h1>
-                <p>管理后台</p>
+                <a href="index.html">
+                    <h1 data-i18n="systemName">信发系统</h1>
+                    <p data-i18n="adminPanel">管理后台</p>
+                </a>
             </div>
             <nav class="sidebar-menu">
                 <a href="store-list.html" class="menu-item">
-                    <span class="icon">🏪</span>门店管理
+                    <span class="icon">🏪</span><span data-i18n="storeManagement">门店管理</span>
                 </a>
                 <a href="device-list.html" class="menu-item">
-                    <span class="icon">📺</span>设备管理
+                    <span class="icon">📺</span><span data-i18n="deviceManagement">设备管理</span>
                 </a>
                 <a href="program-list.html" class="menu-item">
-                    <span class="icon">🎬</span>节目制作
+                    <span class="icon">🎬</span><span data-i18n="programProduction">节目制作</span>
                 </a>
                 <a href="material.html" class="menu-item active">
-                    <span class="icon">🖼️</span>素材管理
+                    <span class="icon">🖼️</span><span data-i18n="materialManagement">素材管理</span>
                 </a>
                 <a href="publish.html" class="menu-item">
-                    <span class="icon">📤</span>发布管理
+                    <span class="icon">📤</span><span data-i18n="publishManagement">发布管理</span>
                 </a>
-                <a href="admin-list.html" class="menu-item">
-                    <span class="icon">👤</span>管理员账号管理
-                </a>
+                <div class="menu-group">
+                    <div class="menu-group-title" data-i18n="systemManagement">系统管理</div>
+                    <a href="admin-list.html" class="menu-item menu-item-child">
+                        <span class="icon">👤</span><span data-i18n="accountManagement">账号管理</span>
+                    </a>
+                    <a href="role-list.html" class="menu-item menu-item-child">
+                        <span class="icon">👥</span><span data-i18n="roleManagement">角色管理</span>
+                    </a>
+                    <a href="menu-list.html" class="menu-item menu-item-child">
+                        <span class="icon">📋</span><span data-i18n="menuManagement">菜单管理</span>
+                    </a>
+                    <a href="operation-log.html" class="menu-item menu-item-child">
+                        <span class="icon">📝</span><span data-i18n="operationLog">操作日志</span>
+                    </a>
+                </div>
             </nav>
             <div class="sidebar-footer">
-                <p>v1.0.0</p>
+                <p>v1.2.0</p>
             </div>
         </aside>
 
@@ -43,32 +58,54 @@
         <main class="main-content">
             <header class="top-header">
                 <div class="breadcrumb">
-                    <a href="#">首页</a>
+                    <a href="#" data-i18n="home">首页</a>
                     <span>/</span>
-                    <strong>素材管理</strong>
+                    <strong data-i18n="materialManagement">素材管理</strong>
                 </div>
                 <div class="user-info">
+                    <!-- 语言切换器 -->
+                    <div class="lang-switcher">
+                        <div class="lang-selector">
+                            <span class="lang-current-flag">🇯🇵</span>
+                            <span class="lang-current-text">日本語</span>
+                            <span>▼</span>
+                        </div>
+                        <div class="lang-dropdown">
+                            <div class="lang-option" data-lang="ja">
+                                <span class="lang-flag">🇯🇵</span>
+                                <span data-i18n="japanese">日本語</span>
+                            </div>
+                            <div class="lang-option" data-lang="zh">
+                                <span class="lang-flag">🇨🇳</span>
+                                <span data-i18n="chinese">中文</span>
+                            </div>
+                            <div class="lang-option" data-lang="en">
+                                <span class="lang-flag">🇺🇸</span>
+                                <span data-i18n="english">English</span>
+                            </div>
+                        </div>
+                    </div>
                     <span class="user-name">admin</span>
-                    <a href="admin-login.html" class="btn-logout">退出</a>
+                    <a href="admin-login.html" class="btn-logout" data-i18n="logout">退出</a>
                 </div>
             </header>
 
             <div class="content">
                 <div class="page-header">
-                    <h2 class="page-title">素材管理</h2>
-                    <button class="btn btn-primary">+ 上传素材</button>
+                    <h2 class="page-title" data-i18n="materialManagementTitle">素材管理</h2>
+                    <button class="btn btn-primary" data-i18n="uploadMaterial">+ 上传素材</button>
                 </div>
 
                 <!-- 搜索筛选 -->
                 <div class="filter-bar">
-                    <input type="text" class="search-input" placeholder="搜索素材名称...">
+                    <input type="text" class="search-input" data-i18n-placeholder="searchMaterialPlaceholder" placeholder="搜索素材名称...">
                     <select class="select-filter">
-                        <option value="">全部类型</option>
-                        <option value="image">图片</option>
-                        <option value="video">视频</option>
+                        <option value="" data-i18n="allTypes">全部类型</option>
+                        <option value="image" data-i18n="image">图片</option>
+                        <option value="video" data-i18n="video">视频</option>
                     </select>
-                    <button class="btn btn-outline">搜索</button>
-                    <button class="btn btn-outline">重置</button>
+                    <button class="btn btn-outline" data-i18n="search">搜索</button>
+                    <button class="btn btn-outline" data-i18n="reset">重置</button>
                 </div>
 
                 <!-- 素材列表 -->
@@ -76,12 +113,12 @@
                     <table>
                         <thead>
                             <tr>
-                                <th>预览</th>
-                                <th>素材名称</th>
-                                <th>类型</th>
-                                <th>文件大小</th>
-                                <th>上传时间</th>
-                                <th>操作</th>
+                                <th>プレビュー</th>
+                                <th data-i18n="materialName">素材名</th>
+                                <th data-i18n="materialType">タイプ</th>
+                                <th data-i18n="fileSize">ファイルサイズ</th>
+                                <th data-i18n="uploadTime">アップロード日時</th>
+                                <th data-i18n="action">操作</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -90,12 +127,12 @@
                                     <div style="width: 80px; height: 45px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 4px;"></div>
                                 </td>
                                 <td>spring_promotion.jpg</td>
-                                <td><span style="background: var(--primary-100); color: var(--primary-700); padding: 2px 8px; border-radius: 4px; font-size: 12px;">图片</span></td>
+                                <td><span style="background: var(--primary-100); color: var(--primary-700); padding: 2px 8px; border-radius: 4px; font-size: 12px;" data-i18n="image">画像</span></td>
                                 <td>2.4 MB</td>
                                 <td>2024-01-10 14:30</td>
                                 <td>
-                                    <button class="btn btn-outline btn-sm">预览</button>
-                                    <button class="btn btn-danger btn-sm">删除</button>
+                                    <button class="btn btn-outline btn-sm" data-i18n="preview">プレビュー</button>
+                                    <button class="btn btn-danger btn-sm" data-i18n="delete">削除</button>
                                 </td>
                             </tr>
                             <tr>
@@ -103,12 +140,12 @@
                                     <div style="width: 80px; height: 45px; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); border-radius: 4px; display: flex; align-items: center; justify-content: center; color: white; font-size: 20px;">▶</div>
                                 </td>
                                 <td>product_intro.mp4</td>
-                                <td><span style="background: var(--warning-100); color: var(--warning-700); padding: 2px 8px; border-radius: 4px; font-size: 12px;">视频</span></td>
+                                <td><span style="background: var(--warning-100); color: var(--warning-700); padding: 2px 8px; border-radius: 4px; font-size: 12px;" data-i18n="video">動画</span></td>
                                 <td>45.8 MB</td>
                                 <td>2024-01-09 10:15</td>
                                 <td>
-                                    <button class="btn btn-outline btn-sm">预览</button>
-                                    <button class="btn btn-danger btn-sm">删除</button>
+                                    <button class="btn btn-outline btn-sm" data-i18n="preview">プレビュー</button>
+                                    <button class="btn btn-danger btn-sm" data-i18n="delete">削除</button>
                                 </td>
                             </tr>
                             <tr>
@@ -116,12 +153,12 @@
                                     <div style="width: 80px; height: 45px; background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); border-radius: 4px;"></div>
                                 </td>
                                 <td>new_arrival_banner.png</td>
-                                <td><span style="background: var(--primary-100); color: var(--primary-700); padding: 2px 8px; border-radius: 4px; font-size: 12px;">图片</span></td>
+                                <td><span style="background: var(--primary-100); color: var(--primary-700); padding: 2px 8px; border-radius: 4px; font-size: 12px;" data-i18n="image">画像</span></td>
                                 <td>1.8 MB</td>
                                 <td>2024-01-08 16:45</td>
                                 <td>
-                                    <button class="btn btn-outline btn-sm">预览</button>
-                                    <button class="btn btn-danger btn-sm">删除</button>
+                                    <button class="btn btn-outline btn-sm" data-i18n="preview">プレビュー</button>
+                                    <button class="btn btn-danger btn-sm" data-i18n="delete">削除</button>
                                 </td>
                             </tr>
                             <tr>
@@ -129,12 +166,12 @@
                                     <div style="width: 80px; height: 45px; background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); border-radius: 4px;"></div>
                                 </td>
                                 <td>discount_50off.gif</td>
-                                <td><span style="background: var(--primary-100); color: var(--primary-700); padding: 2px 8px; border-radius: 4px; font-size: 12px;">图片</span></td>
+                                <td><span style="background: var(--primary-100); color: var(--primary-700); padding: 2px 8px; border-radius: 4px; font-size: 12px;" data-i18n="image">画像</span></td>
                                 <td>3.2 MB</td>
                                 <td>2024-01-07 09:20</td>
                                 <td>
-                                    <button class="btn btn-outline btn-sm">预览</button>
-                                    <button class="btn btn-danger btn-sm">删除</button>
+                                    <button class="btn btn-outline btn-sm" data-i18n="preview">プレビュー</button>
+                                    <button class="btn btn-danger btn-sm" data-i18n="delete">削除</button>
                                 </td>
                             </tr>
                             <tr>
@@ -142,22 +179,22 @@
                                     <div style="width: 80px; height: 45px; background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); border-radius: 4px; display: flex; align-items: center; justify-content: center; color: white; font-size: 20px;">▶</div>
                                 </td>
                                 <td>promo_video.mp4</td>
-                                <td><span style="background: var(--warning-100); color: var(--warning-700); padding: 2px 8px; border-radius: 4px; font-size: 12px;">视频</span></td>
+                                <td><span style="background: var(--warning-100); color: var(--warning-700); padding: 2px 8px; border-radius: 4px; font-size: 12px;" data-i18n="video">動画</span></td>
                                 <td>78.5 MB</td>
                                 <td>2024-01-06 11:00</td>
                                 <td>
-                                    <button class="btn btn-outline btn-sm">预览</button>
-                                    <button class="btn btn-danger btn-sm">删除</button>
+                                    <button class="btn btn-outline btn-sm" data-i18n="preview">プレビュー</button>
+                                    <button class="btn btn-danger btn-sm" data-i18n="delete">削除</button>
                                 </td>
                             </tr>
                         </tbody>
                     </table>
                     <div class="pagination">
-                        <a href="#" class="page-item">上一页</a>
+                        <a href="#" class="page-item" data-i18n="previous">上一页</a>
                         <a href="#" class="page-item active">1</a>
                         <a href="#" class="page-item">2</a>
                         <a href="#" class="page-item">3</a>
-                        <a href="#" class="page-item">下一页</a>
+                        <a href="#" class="page-item" data-i18n="next">下一页</a>
                     </div>
                 </div>
 
@@ -166,19 +203,19 @@
                     <div class="modal-overlay">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h3 class="modal-title">上传素材</h3>
+                                <h3 class="modal-title" data-i18n="uploadMaterial">素材アップロード</h3>
                                 <button class="modal-close">&times;</button>
                             </div>
                             <div class="modal-body">
                                 <div style="border: 2px dashed var(--gray-300); border-radius: 8px; padding: 40px; text-align: center; cursor: pointer;">
                                     <div style="font-size: 48px; margin-bottom: 12px;">📁</div>
-                                    <p>点击选择文件或将文件拖拽到此处</p>
-                                    <p style="font-size: 12px; color: var(--gray-500); margin-top: 8px;">支持格式：JPG、PNG、GIF、MP4、AVI、MOV，单文件最大 100MB</p>
+                                    <p>クリックしてファイルを選択、またはファイルをドラッグ＆ドロップ</p>
+                                    <p style="font-size: 12px; color: var(--gray-500); margin-top: 8px;">対応形式：JPG、PNG、GIF、MP4、AVI、MOV、最大100MB/ファイル</p>
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <button class="btn btn-outline">取消</button>
-                                <button class="btn btn-primary">开始上传</button>
+                                <button class="btn btn-outline" data-i18n="cancel">キャンセル</button>
+                                <button class="btn btn-primary">アップロード開始</button>
                             </div>
                         </div>
                     </div>
@@ -189,17 +226,17 @@
                     <div class="modal-overlay">
                         <div class="modal-content" style="max-width: 800px;">
                             <div class="modal-header">
-                                <h3 class="modal-title">素材预览</h3>
+                                <h3 class="modal-title" data-i18n="preview">素材プレビュー</h3>
                                 <button class="modal-close">&times;</button>
                             </div>
                             <div class="modal-body">
                                 <div style="aspect-ratio: 16/9; background: var(--gray-100); border-radius: 8px; display: flex; align-items: center; justify-content: center;">
-                                    <img src="#" alt="预览" style="max-width: 100%; max-height: 100%;">
+                                    <img src="#" alt="プレビュー" style="max-width: 100%; max-height: 100%;">
                                 </div>
                                 <div style="margin-top: 16px;">
-                                    <p><strong>素材名称：</strong> spring_promotion.jpg</p>
-                                    <p><strong>文件大小：</strong> 2.4 MB</p>
-                                    <p><strong>类型：</strong> 图片</p>
+                                    <p><strong>素材名：</strong> spring_promotion.jpg</p>
+                                    <p><strong>ファイルサイズ：</strong> 2.4 MB</p>
+                                    <p><strong>タイプ：</strong> 画像</p>
                                 </div>
                             </div>
                         </div>

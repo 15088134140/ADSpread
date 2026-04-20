@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="menuListTitle">菜单管理 - 信发系统管理后台</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="i18n.js"></script>
+    <style>
+        .tree-table td {
+            padding: var(--space-3) var(--space-4);
+        }
+        .tree-indent {
+            display: inline-block;
+            width: 24px;
+        }
+        .tree-toggle {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            color: var(--gray-500);
+            margin-right: 4px;
+        }
+        .tree-toggle:hover {
+            color: var(--primary-600);
+        }
+        .menu-name {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+        .menu-icon {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--primary-100);
+            color: var(--primary-700);
+            border-radius: var(--radius);
+            font-size: 0.875rem;
+        }
+        .batch-actions {
+            display: flex;
+            gap: var(--space-2);
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-layout">
+        <!-- 侧边栏 -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <a href="index.html">
+                    <h1 data-i18n="systemName">信发系统</h1>
+                    <p data-i18n="adminPanel">管理后台</p>
+                </a>
+            </div>
+            <nav class="sidebar-menu">
+                <a href="store-list.html" class="menu-item">
+                    <span class="icon">🏪</span><span data-i18n="storeManagement">门店管理</span>
+                </a>
+                <a href="device-list.html" class="menu-item">
+                    <span class="icon">📺</span><span data-i18n="deviceManagement">设备管理</span>
+                </a>
+                <a href="program-list.html" class="menu-item">
+                    <span class="icon">🎬</span><span data-i18n="programProduction">节目制作</span>
+                </a>
+                <a href="material.html" class="menu-item">
+                    <span class="icon">🖼️</span><span data-i18n="materialManagement">素材管理</span>
+                </a>
+                <a href="publish.html" class="menu-item">
+                    <span class="icon">📤</span><span data-i18n="publishManagement">发布管理</span>
+                </a>
+                <div class="menu-group">
+                    <div class="menu-group-title" data-i18n="systemManagement">系统管理</div>
+                    <a href="admin-list.html" class="menu-item menu-item-child">
+                        <span class="icon">👤</span><span data-i18n="accountManagement">账号管理</span>
+                    </a>
+                    <a href="role-list.html" class="menu-item menu-item-child">
+                        <span class="icon">👥</span><span data-i18n="roleManagement">角色管理</span>
+                    </a>
+                    <a href="menu-list.html" class="menu-item menu-item-child active">
+                        <span class="icon">📋</span><span data-i18n="menuManagement">菜单管理</span>
+                    </a>
+                    <a href="operation-log.html" class="menu-item menu-item-child">
+                        <span class="icon">📝</span><span data-i18n="operationLog">操作日志</span>
+                    </a>
+                </div>
+            </nav>
+            <div class="sidebar-footer">
+                <p>v1.2.0</p>
+            </div>
+        </aside>
+
+        <!-- 主内容区 -->
+        <main class="main-content">
+            <header class="top-header">
+                <div class="breadcrumb">
+                    <a href="#" data-i18n="home">首页</a>
+                    <span>/</span>
+                    <strong data-i18n="systemManagement">系统管理</strong>
+                    <span>/</span>
+                    <strong data-i18n="menuManagement">菜单管理</strong>
+                </div>
+                <div class="user-info">
+                    <!-- 语言切换器 -->
+                    <div class="lang-switcher">
+                        <div class="lang-selector">
+                            <span class="lang-current-flag">🇯🇵</span>
+                            <span class="lang-current-text">日本語</span>
+                            <span>▼</span>
+                        </div>
+                        <div class="lang-dropdown">
+                            <div class="lang-option" data-lang="ja">
+                                <span class="lang-flag">🇯🇵</span>
+                                <span data-i18n="japanese">日本語</span>
+                            </div>
+                            <div class="lang-option" data-lang="zh">
+                                <span class="lang-flag">🇨🇳</span>
+                                <span data-i18n="chinese">中文</span>
+                            </div>
+                            <div class="lang-option" data-lang="en">
+                                <span class="lang-flag">🇺🇸</span>
+                                <span data-i18n="english">English</span>
+                            </div>
+                        </div>
+                    </div>
+                    <span class="user-name">admin</span>
+                    <a href="admin-login.html" class="btn-logout" data-i18n="logout">退出</a>
+                </div>
+            </header>
+
+            <div class="content">
+                <div class="page-header">
+                    <h2 class="page-title" data-i18n="menuListTitle">菜单管理</h2>
+                    <div style="display: flex; gap: var(--space-4);">
+                        <button class="btn btn-primary" onclick="alert(t('openAddMenuModal'))" data-i18n="createMenu">+ メニューを追加</button>
+                        <div class="batch-actions">
+                            <button class="btn btn-outline btn-sm" data-i18n="batchEnable">一括で有効化</button>
+                            <button class="btn btn-outline btn-sm" data-i18n="batchDisable">一括で無効化</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 搜索筛选 -->
+                <div class="filter-bar">
+                    <input type="text" class="search-input" data-i18n-placeholder="searchMenuPlaceholder" placeholder="メニュー名を検索...">
+                    <select class="select-filter">
+                        <option value="" data-i18n="allStatus">すべてのステータス</option>
+                        <option value="1" data-i18n="enabled">有効</option>
+                        <option value="0" data-i18n="disabled">無効</option>
+                    </select>
+                    <button class="btn btn-outline" data-i18n="search">検索</button>
+                    <button class="btn btn-outline" data-i18n="reset">リセット</button>
+                </div>
+
+                <!-- 菜单列表 - 树形结构 -->
+                <div class="table-container tree-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width: 40px;">
+                                    <input type="checkbox">
+                                </th>
+                                <th data-i18n="menuName">菜单名称</th>
+                                <th data-i18n="menuPath">路由路径</th>
+                                <th data-i18n="sortOrder">排序</th>
+                                <th data-i18n="status">状态</th>
+                                <th data-i18n="action">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- 一级菜单 -->
+                            <tr>
+                                <td><input type="checkbox"></td>
+                                <td>
+                                    <span class="tree-toggle">▼</span>
+                                    <span class="menu-name">
+                                        <span class="menu-icon">🏪</span>
+                                        <strong data-i18n="storeManagement">门店管理</strong>
+                                    </span>
+                                </td>
+                                <td>/store</td>
+                                <td>1</td>
+                                <td><span class="status-badge status-enabled" data-i18n="enabled">启用</span></td>
+                                <td>
+                                    <button class="btn btn-outline btn-sm" data-i18n="edit">编辑</button>
+                                    <button class="btn btn-danger btn-sm" data-i18n="delete">删除</button>
+                                </td>
+                            </tr>
+                            <!-- 一级菜单无子菜单 -->
+                            <tr>
+                                <td><input type="checkbox"></td>
+                                <td>
+                                    <span class="tree-toggle"></span>
+                                    <span class="menu-name">
+                                        <span class="menu-icon">📺</span>
+                                        <strong data-i18n="deviceManagement">设备管理</strong>
+                                    </span>
+                                </td>
+                                <td>/device</td>
+                                <td>2</td>
+                                <td><span class="status-badge status-enabled" data-i18n="enabled">启用</span></td>
+                                <td>
+                                    <button class="btn btn-outline btn-sm" data-i18n="edit">编辑</button>
+                                    <button class="btn btn-danger btn-sm" data-i18n="delete">删除</button>
+                                </td>
+                            </tr>
+                            <!-- 一级菜单 -->
+                            <tr>
+                                <td><input type="checkbox"></td>
+                                <td>
+                                    <span class="tree-toggle">▼</span>
+                                    <span class="menu-name">
+                                        <span class="menu-icon">🎬</span>
+                                        <strong data-i18n="programProduction">节目制作</strong>
+                                    </span>
+                                </td>
+                                <td>/program</td>
+                                <td>3</td>
+                                <td><span class="status-badge status-enabled" data-i18n="enabled">启用</span></td>
+                                <td>
+                                    <button class="btn btn-outline btn-sm" data-i18n="edit">编辑</button>
+                                    <button class="btn btn-danger btn-sm" data-i18n="delete">删除</button>
+                                </td>
+                            </tr>
+                            <!-- 二级子菜单 -->
+                            <tr>
+                                <td><input type="checkbox"></td>
+                                <td>
+                                    <span class="tree-indent"></span>
+                                    <span class="tree-toggle"></span>
+                                    <span class="menu-name">
+                                        <span class="menu-icon">📁</span>
+                                        <span data-i18n="materialManagement">素材管理</span>
+                                    </span>
+                                </td>
+                                <td>/program/material</td>
+                                <td>31</td>
+                                <td><span class="status-badge status-enabled" data-i18n="enabled">启用</span></td>
+                                <td>
+                                    <button class="btn btn-outline btn-sm" data-i18n="edit">编辑</button>
+                                    <button class="btn btn-danger btn-sm" data-i18n="delete">删除</button>
+                                </td>
+                            </tr>
+                            <!-- 二级子菜单 -->
+                            <tr>
+                                <td><input type="checkbox"></td>
+                                <td>
+                                    <span class="tree-indent"></span>
+                                    <span class="tree-toggle"></span>
+                                    <span class="menu-name">
+                                        <span class="menu-icon">✏️</span>
+                                        <span data-i18n="editProgram">节目编辑</span>
+                                    </span>
+                                </td>
+                                <td>/program/edit</td>
+                                <td>32</td>
+                                <td><span class="status-badge status-enabled" data-i18n="enabled">启用</span></td>
+                                <td>
+                                    <button class="btn btn-outline btn-sm" data-i18n="edit">编辑</button>
+                                    <button class="btn btn-danger btn-sm" data-i18n="delete">删除</button>
+                                </td>
+                            </tr>
+                            <!-- 一级菜单 -->
+                            <tr>
+                                <td><input type="checkbox"></td>
+                                <td>
+                                    <span class="tree-toggle"></span>
+                                    <span class="menu-name">
+                                        <span class="menu-icon">📤</span>
+                                        <strong data-i18n="publishManagement">发布管理</strong>
+                                    </span>
+                                </td>
+                                <td>/publish</td>
+                                <td>4</td>
+                                <td><span class="status-badge status-enabled" data-i18n="enabled">启用</span></td>
+                                <td>
+                                    <button class="btn btn-outline btn-sm" data-i18n="edit">编辑</button>
+                                    <button class="btn btn-danger btn-sm" data-i18n="delete">删除</button>
+                                </td>
+                            </tr>
+                            <!-- 一级菜单 -->
+                            <tr>
+                                <td><input type="checkbox"></td>
+                                <td>
+                                    <span class="tree-toggle">▼</span>
+                                    <span class="menu-name">
+                                        <span class="menu-icon">⚙️</span>
+                                        <strong data-i18n="systemManagement">系统管理</strong>
+                                    </span>
+                                </td>
+                                <td>/system</td>
+                                <td>5</td>
+                                <td><span class="status-badge status-enabled" data-i18n="enabled">启用</span></td>
+                                <td>
+                                    <button class="btn btn-outline btn-sm" data-i18n="edit">编辑</button>
+                                    <button class="btn btn-danger btn-sm" data-i18n="delete">删除</button>
+                                </td>
+                            </tr>
+                            <!-- 二级子菜单 -->
+                            <tr>
+                                <td><input type="checkbox"></td>
+                                <td>
+                                    <span class="tree-indent"></span>
+                                    <span class="tree-toggle"></span>
+                                    <span class="menu-name">
+                                        <span class="menu-icon">👤</span>
+                                        <span data-i18n="adminManagement">管理员账号</span>
+                                    </span>
+                                </td>
+                                <td>/system/admin</td>
+                                <td>51</td>
+                                <td><span class="status-badge status-enabled" data-i18n="enabled">启用</span></td>
+                                <td>
+                                    <button class="btn btn-outline btn-sm" data-i18n="edit">编辑</button>
+                                    <button class="btn btn-danger btn-sm" data-i18n="delete">删除</button>
+                                </td>
+                            </tr>
+                            <!-- 二级子菜单 -->
+                            <tr>
+                                <td><input type="checkbox"></td>
+                                <td>
+                                    <span class="tree-indent"></span>
+                                    <span class="tree-toggle"></span>
+                                    <span class="menu-name">
+                                        <span class="menu-icon">🎭</span>
+                                        <span data-i18n="roleManagement">角色管理</span>
+                                    </span>
+                                </td>
+                                <td>/system/role</td>
+                                <td>52</td>
+                                <td><span class="status-badge status-enabled" data-i18n="enabled">启用</span></td>
+                                <td>
+                                    <button class="btn btn-outline btn-sm" data-i18n="edit">编辑</button>
+                                    <button class="btn btn-danger btn-sm" data-i18n="delete">删除</button>
+                                </td>
+                            </tr>
+                            <!-- 二级子菜单 -->
+                            <tr>
+                                <td><input type="checkbox"></td>
+                                <td>
+                                    <span class="tree-indent"></span>
+                                    <span class="tree-toggle"></span>
+                                    <span class="menu-name">
+                                        <span class="menu-icon">📋</span>
+                                        <span data-i18n="menuManagement">菜单管理</span>
+                                    </span>
+                                </td>
+                                <td>/system/menu</td>
+                                <td>53</td>
+                                <td><span class="status-badge status-enabled" data-i18n="enabled">启用</span></td>
+                                <td>
+                                    <button class="btn btn-outline btn-sm" data-i18n="edit">编辑</button>
+                                    <button class="btn btn-danger btn-sm" data-i18n="delete">删除</button>
+                                </td>
+                            </tr>
+                            <!-- 二级子菜单 -->
+                            <tr>
+                                <td><input type="checkbox"></td>
+                                <td>
+                                    <span class="tree-indent"></span>
+                                    <span class="tree-toggle"></span>
+                                    <span class="menu-name">
+                                        <span class="menu-icon">📝</span>
+                                        <span data-i18n="operationLog">操作日志</span>
+                                    </span>
+                                </td>
+                                <td>/system/log</td>
+                                <td>54</td>
+                                <td><span class="status-badge status-disabled" data-i18n="disabled">禁用</span></td>
+                                <td>
+                                    <button class="btn btn-outline btn-sm" data-i18n="edit">编辑</button>
+                                    <button class="btn btn-danger btn-sm" data-i18n="delete">删除</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="pagination">
+                        <span style="font-size: 0.875rem; color: var(--gray-500);">共 12 条记录</span>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

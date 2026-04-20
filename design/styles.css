@@ -187,6 +187,15 @@ body {
     background: var(--primary-800);
 }
 
+.sidebar-header a {
+    color: white;
+    text-decoration: none;
+}
+
+.sidebar-header a:hover {
+    opacity: 0.9;
+}
+
 .sidebar-header h1 {
     font-size: 1.25rem;
     font-weight: 600;
@@ -226,6 +235,27 @@ body {
 
 .menu-item .icon {
     margin-right: var(--space-3);
+}
+
+/* 一级菜单分组 */
+.menu-group {
+    display: block;
+}
+
+.menu-group-title {
+    display: block;
+    padding: var(--space-3) var(--space-6);
+    color: var(--gray-600);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    background: var(--gray-800);
+}
+
+/* 子菜单缩进 */
+.menu-item.menu-item-child {
+    padding-left: calc(var(--space-6) + var(--space-4));
+    font-size: 0.875rem;
 }
 
 .sidebar-footer {
@@ -275,6 +305,71 @@ body {
     display: flex;
     align-items: center;
     gap: var(--space-4);
+}
+
+/* 语言切换器 */
+.lang-switcher {
+    position: relative;
+}
+
+.lang-selector {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-4);
+    background: var(--gray-50);
+    border: 1px solid var(--gray-300);
+    border-radius: var(--radius);
+    font-size: 0.875rem;
+    color: var(--gray-700);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.lang-selector:hover {
+    background: var(--gray-100);
+    border-color: var(--gray-400);
+}
+
+.lang-dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: var(--space-2);
+    background: white;
+    border: 1px solid var(--gray-300);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-lg);
+    min-width: 150px;
+    z-index: 100;
+    display: none;
+}
+
+.lang-dropdown.show {
+    display: block;
+}
+
+.lang-option {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-3) var(--space-4);
+    cursor: pointer;
+    transition: background 0.2s;
+    font-size: 0.875rem;
+}
+
+.lang-option:hover {
+    background: var(--gray-50);
+}
+
+.lang-option.active {
+    background: var(--primary-50);
+    color: var(--primary-700);
+}
+
+.lang-flag {
+    font-size: 1rem;
 }
 
 .user-info .user-name {
@@ -643,6 +738,31 @@ td {
     align-items: center;
     justify-content: center;
     background: linear-gradient(135deg, var(--primary-600) 0%, var(--primary-800) 100%);
+    position: relative;
+}
+
+/* 登录页语言切换器 */
+.login-lang-switcher {
+    position: absolute;
+    top: var(--space-6);
+    right: var(--space-6);
+    z-index: 100;
+}
+
+.login-lang-switcher .lang-selector {
+    background: rgba(255, 255, 255, 0.95);
+    border-color: rgba(255, 255, 255, 0.3);
+    color: var(--gray-700);
+    font-weight: 500;
+}
+
+.login-lang-switcher .lang-selector:hover {
+    background: white;
+    border-color: white;
+}
+
+.login-lang-switcher .lang-dropdown {
+    border-color: rgba(255, 255, 255, 0.3);
 }
 
 .login-box {

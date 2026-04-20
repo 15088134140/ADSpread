@@ -3,42 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>节目编辑 - 信发系统管理后台</title>
+    <title data-i18n="editProgram">节目编辑 - 信发系统管理后台</title>
     <link rel="stylesheet" href="styles.css">
+    <script src="i18n.js"></script>
 </head>
 <body>
     <div class="admin-layout">
         <!-- 侧边栏 -->
         <aside class="sidebar">
             <div class="sidebar-header">
-                <h1>信发系统</h1>
-                <p>管理后台</p>
+                <a href="index.html">
+                    <h1 data-i18n="systemName">信发系统</h1>
+                    <p data-i18n="adminPanel">管理后台</p>
+                </a>
             </div>
             <nav class="sidebar-menu">
                 <a href="store-list.html" class="menu-item">
-                    <span class="icon">🏪</span>门店管理
+                    <span class="icon">🏪</span><span data-i18n="storeManagement">门店管理</span>
                 </a>
                 <a href="device-list.html" class="menu-item">
-                    <span class="icon">📺</span>设备管理
+                    <span class="icon">📺</span><span data-i18n="deviceManagement">设备管理</span>
                 </a>
                 <a href="program-list.html" class="menu-item active">
-                    <span class="icon">🎬</span>节目制作
+                    <span class="icon">🎬</span><span data-i18n="programProduction">节目制作</span>
                 </a>
                 <a href="material.html" class="menu-item">
-                    <span class="icon">🖼️</span>素材管理
+                    <span class="icon">🖼️</span><span data-i18n="materialManagement">素材管理</span>
                 </a>
                 <a href="publish.html" class="menu-item">
-                    <span class="icon">📤</span>发布管理
+                    <span class="icon">📤</span><span data-i18n="publishManagement">发布管理</span>
                 </a>
-                <a href="admin-list.html" class="menu-item">
-                    <span class="icon">👤</span>管理员账号管理
-                </a>
-                <a href="operation-log.html" class="menu-item">
-                    <span class="icon">📋</span>操作日志
-                </a>
+                <div class="menu-group">
+                    <div class="menu-group-title" data-i18n="systemManagement">系统管理</div>
+                    <a href="admin-list.html" class="menu-item menu-item-child">
+                        <span class="icon">👤</span><span data-i18n="accountManagement">账号管理</span>
+                    </a>
+                    <a href="role-list.html" class="menu-item menu-item-child">
+                        <span class="icon">👥</span><span data-i18n="roleManagement">角色管理</span>
+                    </a>
+                    <a href="menu-list.html" class="menu-item menu-item-child">
+                        <span class="icon">📋</span><span data-i18n="menuManagement">菜单管理</span>
+                    </a>
+                    <a href="operation-log.html" class="menu-item menu-item-child">
+                        <span class="icon">📝</span><span data-i18n="operationLog">操作日志</span>
+                    </a>
+                </div>
             </nav>
             <div class="sidebar-footer">
-                <p>v1.0.0</p>
+                <p>v1.2.0</p>
             </div>
         </aside>
 
@@ -46,44 +58,66 @@
         <main class="main-content">
             <header class="top-header">
                 <div class="breadcrumb">
-                    <a href="program-list.html">节目制作</a>
+                    <a href="program-list.html" data-i18n="programProduction">节目制作</a>
                     <span>/</span>
-                    <strong>编辑节目</strong>
+                    <strong data-i18n="editProgram">编辑节目</strong>
                 </div>
                 <div class="user-info">
+                    <!-- 语言切换器 -->
+                    <div class="lang-switcher">
+                        <div class="lang-selector">
+                            <span class="lang-current-flag">🇯🇵</span>
+                            <span class="lang-current-text">日本語</span>
+                            <span>▼</span>
+                        </div>
+                        <div class="lang-dropdown">
+                            <div class="lang-option" data-lang="ja">
+                                <span class="lang-flag">🇯🇵</span>
+                                <span data-i18n="japanese">日本語</span>
+                            </div>
+                            <div class="lang-option" data-lang="zh">
+                                <span class="lang-flag">🇨🇳</span>
+                                <span data-i18n="chinese">中文</span>
+                            </div>
+                            <div class="lang-option" data-lang="en">
+                                <span class="lang-flag">🇺🇸</span>
+                                <span data-i18n="english">English</span>
+                            </div>
+                        </div>
+                    </div>
                     <span class="user-name">admin</span>
-                    <a href="admin-login.html" class="btn-logout">退出</a>
+                    <a href="admin-login.html" class="btn-logout" data-i18n="logout">退出</a>
                 </div>
             </header>
 
             <div class="content">
                 <div class="page-header">
-                    <h2 class="page-title">编辑节目 - 春季促销活动</h2>
+                    <h2 class="page-title" data-i18n="editProgram">编辑节目 - 春季促销活动</h2>
                 </div>
 
                 <div class="form-container" style="max-width: 100%; margin-bottom: 24px;">
                     <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px;">
                         <div class="form-group" style="margin-bottom: 0;">
-                            <label class="form-label">节目名称 <span style="color: var(--danger-500)">*</span></label>
-                            <input type="text" class="form-input" value="春季促销活动" placeholder="请输入节目名称">
+                            <label class="form-label" data-i18n="programName">节目名称 <span style="color: var(--danger-500)">*</span></label>
+                            <input type="text" class="form-input" value="春季プロモーション" data-i18n-placeholder="enterProgramName" placeholder="番組名を入力してください">
                         </div>
                         <div class="form-group" style="margin-bottom: 0;">
-                            <label class="form-label">适配屏幕方向</label>
+                            <label class="form-label" data-i18n="screenOrientation">适配屏幕方向</label>
                             <select class="form-select">
-                                <option>任意</option>
-                                <option value="landscape" selected>横屏</option>
-                                <option value="portrait">竖屏</option>
+                                <option data-i18n="any">任意</option>
+                                <option value="landscape" selected data-i18n="landscape">横画面</option>
+                                <option value="portrait" data-i18n="portrait">縦画面</option>
                             </select>
                         </div>
                         <div class="form-group" style="margin-bottom: 0;">
-                            <label class="form-label">适配分屏类型</label>
+                            <label class="form-label" data-i18n="layoutTemplate">适配分屏类型</label>
                             <select class="form-select">
-                                <option>任意</option>
-                                <option value="1">1分屏</option>
-                                <option value="2">2分屏</option>
-                                <option value="3">3分屏</option>
-                                <option value="3-1" selected>3-1分屏</option>
-                                <option value="4">4分屏</option>
+                                <option data-i18n="any">任意</option>
+                                <option value="1">1分割</option>
+                                <option value="2">2分割</option>
+                                <option value="3">3分割</option>
+                                <option value="3-1" selected>3-1分割</option>
+                                <option value="4">4分割</option>
                             </select>
                         </div>
                     </div>
@@ -92,12 +126,12 @@
                 <div class="program-editor">
                     <!-- 素材面板 -->
                     <div class="material-panel">
-                        <h4 style="margin-bottom: 12px;">素材库</h4>
-                        <input type="text" class="search-input" placeholder="搜索素材..." style="margin-bottom: 12px;">
+                        <h4 style="margin-bottom: 12px;" data-i18n="materialLibrary">素材库</h4>
+                        <input type="text" class="search-input" data-i18n-placeholder="searchMaterial" placeholder="素材を検索..." style="margin-bottom: 12px;">
                         <div style="display: flex; gap: 8px; margin-bottom: 12px;">
-                            <button class="btn btn-outline btn-sm">全部</button>
-                            <button class="btn btn-primary btn-sm">图片</button>
-                            <button class="btn btn-outline btn-sm">视频</button>
+                            <button class="btn btn-primary btn-sm" data-i18n="all">すべて</button>
+                            <button class="btn btn-outline btn-sm" data-i18n="image">画像</button>
+                            <button class="btn btn-outline btn-sm" data-i18n="video">動画</button>
                         </div>
                         <div class="material-grid">
                             <div class="material-item">
@@ -140,37 +174,37 @@
 
                     <!-- 预览编排面板 -->
                     <div class="preview-panel">
-                        <h4 style="margin-bottom: 16px;">编排区域（点击左侧素材添加到对应区域，拖拽调整顺序）</h4>
+                        <h4 style="margin-bottom: 16px;">編成エリア（左側の素材をクリックして対応エリアに追加、ドラッグで順番を調整）</h4>
                         <div class="preview-container layout-3-1">
                             <div class="preview-region has-content region-main">
-                                <div class="region-label">区域1（左侧大屏）</div>
+                                <div class="region-label" data-i18n="area1">区域1（左侧大屏）</div>
                                 <div class="region-content">
                                     <div class="region-material">
                                         <span class="region-material-name">promo1.jpg（5秒）</span>
-                                        <button class="btn-remove">移除</button>
+                                        <button class="btn-remove" data-i18n="remove">移除</button>
                                     </div>
                                     <div class="region-material">
                                         <span class="region-material-name">spring_banner.png（5秒）</span>
-                                        <button class="btn-remove">移除</button>
+                                        <button class="btn-remove" data-i18n="remove">移除</button>
                                     </div>
                                 </div>
                             </div>
                             <div class="side-wrapper">
                                 <div class="preview-region has-content">
-                                    <div class="region-label">区域2（右上）</div>
+                                    <div class="region-label" data-i18n="area2">区域2（右上）</div>
                                     <div class="region-content">
                                         <div class="region-material">
                                             <span class="region-material-name">sale_50off.gif（5秒）</span>
-                                            <button class="btn-remove">移除</button>
+                                            <button class="btn-remove" data-i18n="remove">移除</button>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="preview-region has-content">
-                                    <div class="region-label">区域3（右下）</div>
+                                    <div class="region-label" data-i18n="area3">区域3（右下）</div>
                                     <div class="region-content">
                                         <div class="region-material">
                                             <span class="region-material-name">new_arrival.jpg（5秒）</span>
-                                            <button class="btn-remove">移除</button>
+                                            <button class="btn-remove" data-i18n="remove">移除</button>
                                         </div>
                                     </div>
                                 </div>
@@ -178,9 +212,9 @@
                         </div>
 
                         <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 24px;">
-                            <a href="program-list.html" class="btn btn-outline">取消</a>
-                            <button class="btn btn-outline">保存草稿</button>
-                            <button class="btn btn-primary">保存并发布</button>
+                            <a href="program-list.html" class="btn btn-outline" data-i18n="cancel">取消</a>
+                            <button class="btn btn-outline" data-i18n="saveDraft">保存草稿</button>
+                            <button class="btn btn-primary" data-i18n="saveAndPublish">保存并发布</button>
                         </div>
                     </div>
                 </div>
@@ -192,7 +226,7 @@
         // 简单交互演示
         document.querySelectorAll('.material-item').forEach(item => {
             item.addEventListener('click', function() {
-                alert('素材已添加到选中区域（原型演示）');
+                alert(t('materialAdded'));
             });
         });
     </script>

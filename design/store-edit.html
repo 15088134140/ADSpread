@@ -3,39 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>门店编辑 - 信发系统管理后台</title>
+    <title data-i18n="editStore">门店编辑 - 信发系统管理后台</title>
     <link rel="stylesheet" href="styles.css">
+    <script src="i18n.js"></script>
 </head>
 <body>
     <div class="admin-layout">
         <!-- 侧边栏 -->
         <aside class="sidebar">
             <div class="sidebar-header">
-                <h1>信发系统</h1>
-                <p>管理后台</p>
+                <a href="index.html">
+                    <h1 data-i18n="systemName">信发系统</h1>
+                    <p data-i18n="adminPanel">管理后台</p>
+                </a>
             </div>
             <nav class="sidebar-menu">
                 <a href="store-list.html" class="menu-item active">
-                    <span class="icon">🏪</span>门店管理
+                    <span class="icon">🏪</span><span data-i18n="storeManagement">门店管理</span>
                 </a>
                 <a href="device-list.html" class="menu-item">
-                    <span class="icon">📺</span>设备管理
+                    <span class="icon">📺</span><span data-i18n="deviceManagement">设备管理</span>
                 </a>
                 <a href="program-list.html" class="menu-item">
-                    <span class="icon">🎬</span>节目制作
+                    <span class="icon">🎬</span><span data-i18n="programProduction">节目制作</span>
                 </a>
                 <a href="material.html" class="menu-item">
-                    <span class="icon">🖼️</span>素材管理
+                    <span class="icon">🖼️</span><span data-i18n="materialManagement">素材管理</span>
                 </a>
                 <a href="publish.html" class="menu-item">
-                    <span class="icon">📤</span>发布管理
+                    <span class="icon">📤</span><span data-i18n="publishManagement">发布管理</span>
                 </a>
-                <a href="admin-list.html" class="menu-item">
-                    <span class="icon">👤</span>管理员账号管理
-                </a>
+                <div class="menu-group">
+                    <div class="menu-group-title" data-i18n="systemManagement">系统管理</div>
+                    <a href="admin-list.html" class="menu-item menu-item-child">
+                        <span class="icon">👤</span><span data-i18n="accountManagement">账号管理</span>
+                    </a>
+                    <a href="role-list.html" class="menu-item menu-item-child">
+                        <span class="icon">👥</span><span data-i18n="roleManagement">角色管理</span>
+                    </a>
+                    <a href="menu-list.html" class="menu-item menu-item-child">
+                        <span class="icon">📋</span><span data-i18n="menuManagement">菜单管理</span>
+                    </a>
+                    <a href="operation-log.html" class="menu-item menu-item-child">
+                        <span class="icon">📝</span><span data-i18n="operationLog">操作日志</span>
+                    </a>
+                </div>
             </nav>
             <div class="sidebar-footer">
-                <p>v1.0.0</p>
+                <p>v1.2.0</p>
             </div>
         </aside>
 
@@ -43,67 +58,89 @@
         <main class="main-content">
             <header class="top-header">
                 <div class="breadcrumb">
-                    <a href="store-list.html">门店管理</a>
+                    <a href="store-list.html" data-i18n="storeManagement">门店管理</a>
                     <span>/</span>
-                    <strong>编辑门店</strong>
+                    <strong data-i18n="editStore">编辑门店</strong>
                 </div>
                 <div class="user-info">
+                    <!-- 语言切换器 -->
+                    <div class="lang-switcher">
+                        <div class="lang-selector">
+                            <span class="lang-current-flag">🇯🇵</span>
+                            <span class="lang-current-text">日本語</span>
+                            <span>▼</span>
+                        </div>
+                        <div class="lang-dropdown">
+                            <div class="lang-option" data-lang="ja">
+                                <span class="lang-flag">🇯🇵</span>
+                                <span data-i18n="japanese">日本語</span>
+                            </div>
+                            <div class="lang-option" data-lang="zh">
+                                <span class="lang-flag">🇨🇳</span>
+                                <span data-i18n="chinese">中文</span>
+                            </div>
+                            <div class="lang-option" data-lang="en">
+                                <span class="lang-flag">🇺🇸</span>
+                                <span data-i18n="english">English</span>
+                            </div>
+                        </div>
+                    </div>
                     <span class="user-name">admin</span>
-                    <a href="admin-login.html" class="btn-logout">退出</a>
+                    <a href="admin-login.html" class="btn-logout" data-i18n="logout">退出</a>
                 </div>
             </header>
 
             <div class="content">
                 <div class="page-header">
-                    <h2 class="page-title">编辑门店</h2>
+                    <h2 class="page-title" data-i18n="editStore">编辑门店</h2>
                 </div>
 
                 <div class="form-container">
                     <form>
                         <div class="form-group">
-                            <label class="form-label" for="storeName">门店名称 <span style="color: var(--danger-500)">*</span></label>
-                            <input type="text" id="storeName" class="form-input" value="中关村旗舰店" placeholder="请输入门店名称">
+                            <label class="form-label" for="storeName" data-i18n="storeName">店舗名 <span style="color: var(--danger-500)">*</span></label>
+                            <input type="text" id="storeName" class="form-input" value="渋谷旗艦店" data-i18n-placeholder="enterStoreName" placeholder="店舗名を入力してください">
                         </div>
 
                         <div class="form-group">
-                            <label class="form-label" for="storeCode">门店编码 <span style="color: var(--danger-500)">*</span></label>
-                            <input type="text" id="storeCode" class="form-input" value="SH001" placeholder="请输入唯一门店编码">
-                            <p style="font-size: 0.75rem; color: var(--gray-500); margin-top: 4px;">门店编码全局唯一，用于系统内部标识</p>
+                            <label class="form-label" for="storeCode" data-i18n="storeCode">店舗コード <span style="color: var(--danger-500)">*</span></label>
+                            <input type="text" id="storeCode" class="form-input" value="SH001" data-i18n-placeholder="enterStoreCode" placeholder="一意の店舗コードを入力してください">
+                            <p style="font-size: 0.75rem; color: var(--gray-500); margin-top: 4px;">店舗コードはシステム全体で一意、内部識別用です</p>
                         </div>
 
                         <div class="form-group">
-                            <label class="form-label" for="storeAddress">门店地址</label>
-                            <textarea id="storeAddress" class="form-textarea" placeholder="请输入门店详细地址">北京市海淀区中关村大街1号</textarea>
+                            <label class="form-label" for="storeAddress" data-i18n="storeAddress">店舗住所</label>
+                            <textarea id="storeAddress" class="form-textarea" data-i18n-placeholder="enterAddress" placeholder="店舗の詳細住所を入力してください">東京都渋谷区渋谷1丁目1番1号</textarea>
                         </div>
 
                         <div class="form-group">
-                            <label class="form-label" for="contactName">联系人</label>
-                            <input type="text" id="contactName" class="form-input" value="张三" placeholder="请输入联系人姓名">
+                            <label class="form-label" for="contactName" data-i18n="contactPerson">担当者</label>
+                            <input type="text" id="contactName" class="form-input" value="田中太郎" data-i18n-placeholder="enterContactPerson" placeholder="担当者名を入力してください">
                         </div>
 
                         <div class="form-group">
-                            <label class="form-label" for="contactPhone">联系电话</label>
-                            <input type="text" id="contactPhone" class="form-input" value="13800138001" placeholder="请输入联系电话">
+                            <label class="form-label" for="contactPhone" data-i18n="contactPhone">連絡先電話</label>
+                            <input type="text" id="contactPhone" class="form-input" value="03-1234-5678" data-i18n-placeholder="enterPhone" placeholder="電話番号を入力してください">
                         </div>
 
                         <div class="form-group">
-                            <label class="form-label">状态</label>
+                            <label class="form-label" data-i18n="status">ステータス</label>
                             <div style="display: flex; gap: 24px; margin-top: 8px;">
                                 <label style="display: flex; align-items: center; gap: 6px; cursor: pointer;">
                                     <input type="radio" name="status" checked>
-                                    <span>启用</span>
+                                    <span data-i18n="enabled">有効</span>
                                 </label>
                                 <label style="display: flex; align-items: center; gap: 6px; cursor: pointer;">
                                     <input type="radio" name="status">
-                                    <span>禁用</span>
+                                    <span data-i18n="disabled">無効</span>
                                 </label>
                             </div>
-                            <p style="font-size: 0.75rem; color: var(--gray-500); margin-top: 4px;">禁用后，该门店下所有设备无法接收新广告</p>
+                            <p style="font-size: 0.75rem; color: var(--gray-500); margin-top: 4px;">無効にすると、この店舗配下の全デバイスは新規広告を受信できなくなります</p>
                         </div>
 
                         <div class="form-actions">
-                            <a href="store-list.html" class="btn btn-outline">取消</a>
-                            <button type="submit" class="btn btn-primary">保存</button>
+                            <a href="store-list.html" class="btn btn-outline" data-i18n="cancel">キャンセル</a>
+                            <button type="submit" class="btn btn-primary" data-i18n="save">保存</button>
                         </div>
                     </form>
                 </div>
@@ -113,41 +150,41 @@
                     <div class="modal-overlay">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h3 class="modal-title">新增门店</h3>
+                                <h3 class="modal-title" data-i18n="createStore">店舗を追加</h3>
                                 <button class="modal-close">&times;</button>
                             </div>
                             <div class="modal-body">
                                 <div class="form-group">
-                                    <label class="form-label">门店名称 *</label>
-                                    <input type="text" class="form-input" placeholder="请输入门店名称">
+                                    <label class="form-label" data-i18n="storeName">店舗名 *</label>
+                                    <input type="text" class="form-input" data-i18n-placeholder="enterStoreName" placeholder="店舗名を入力してください">
                                 </div>
                                 <div class="form-group">
-                                    <label class="form-label">门店编码 *</label>
-                                    <input type="text" class="form-input" placeholder="请输入唯一编码">
+                                    <label class="form-label" data-i18n="storeCode">店舗コード *</label>
+                                    <input type="text" class="form-input" data-i18n-placeholder="enterStoreCode" placeholder="一意のコードを入力してください">
                                 </div>
                                 <div class="form-group">
-                                    <label class="form-label">地址</label>
-                                    <textarea class="form-textarea" placeholder="请输入地址"></textarea>
+                                    <label class="form-label" data-i18n="address">住所</label>
+                                    <textarea class="form-textarea" data-i18n-placeholder="enterAddress" placeholder="住所を入力してください"></textarea>
                                 </div>
                                 <div class="form-group">
-                                    <label class="form-label">联系人</label>
-                                    <input type="text" class="form-input" placeholder="请输入联系人">
+                                    <label class="form-label" data-i18n="contactPerson">担当者</label>
+                                    <input type="text" class="form-input" data-i18n-placeholder="enterContactPerson" placeholder="担当者名を入力してください">
                                 </div>
                                 <div class="form-group">
-                                    <label class="form-label">联系电话</label>
-                                    <input type="text" class="form-input" placeholder="请输入电话">
+                                    <label class="form-label" data-i18n="contactPhone">連絡先電話</label>
+                                    <input type="text" class="form-input" data-i18n-placeholder="enterPhone" placeholder="電話番号を入力してください">
                                 </div>
                                 <div class="form-group">
-                                    <label class="form-label">状态</label>
+                                    <label class="form-label" data-i18n="status">ステータス</label>
                                     <div style="display: flex; gap: 24px;">
-                                        <label><input type="radio" name="status" checked> 启用</label>
-                                        <label><input type="radio" name="status"> 禁用</label>
+                                        <label><input type="radio" name="status" checked data-i18n="enabled"> 有効</label>
+                                        <label><input type="radio" name="status" data-i18n="disabled"> 無効</label>
                                     </div>
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <button class="btn btn-outline">取消</button>
-                                <button class="btn btn-primary">确定</button>
+                                <button class="btn btn-outline" data-i18n="cancel">キャンセル</button>
+                                <button class="btn btn-primary" data-i18n="confirm">確定</button>
                             </div>
                         </div>
                     </div>

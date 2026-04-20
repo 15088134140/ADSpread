@@ -1,28 +1,54 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="ja">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>登录 - 信发系统管理后台</title>
+    <title data-i18n="loginTitle">信発システム - 管理画面ログイン</title>
     <link rel="stylesheet" href="styles.css">
+    <script src="i18n.js"></script>
 </head>
 <body>
     <div class="login-page">
+        <!-- 语言切换器 - 右上角 -->
+        <div class="login-lang-switcher">
+            <div class="lang-switcher">
+                <div class="lang-selector">
+                    <span class="lang-current-flag">🇯🇵</span>
+                    <span class="lang-current-text">日本語</span>
+                    <span>▼</span>
+                </div>
+                <div class="lang-dropdown">
+                    <div class="lang-option" data-lang="ja">
+                        <span class="lang-flag">🇯🇵</span>
+                        <span data-i18n="japanese">日本語</span>
+                    </div>
+                    <div class="lang-option" data-lang="zh">
+                        <span class="lang-flag">🇨🇳</span>
+                        <span data-i18n="chinese">中文</span>
+                    </div>
+                    <div class="lang-option" data-lang="en">
+                        <span class="lang-flag">🇺🇸</span>
+                        <span data-i18n="english">English</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="login-box">
             <div class="login-header">
-                <h1>信发系统</h1>
-                <p>门店广告投放管理平台</p>
+                <h1 data-i18n="systemName">信発システム</h1>
+                <p data-i18n="loginSubtitle">店舗広告表示システム</p>
             </div>
             <form class="login-form">
                 <div class="form-group">
-                    <label class="form-label" for="username">用户名</label>
-                    <input type="text" id="username" class="form-input" placeholder="请输入用户名">
+                    <label class="form-label" for="username" data-i18n="username">ユーザー名</label>
+                    <input type="text" id="username" class="form-input" data-i18n-placeholder="enterUsername" placeholder="ユーザー名を入力してください">
                 </div>
                 <div class="form-group">
-                    <label class="form-label" for="password">密码</label>
-                    <input type="password" id="password" class="form-input" placeholder="请输入密码">
+                    <label class="form-label" for="password" data-i18n="password">パスワード</label>
+                    <input type="password" id="password" class="form-input" data-i18n-placeholder="enterPassword" placeholder="パスワードを入力してください">
                 </div>
-                <button type="submit" class="btn btn-primary login-btn">登 录</button>
+                <button type="submit" class="btn btn-primary login-btn" data-i18n="loginButton">ログイン</button>
             </form>
         </div>
     </div>

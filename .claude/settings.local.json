@@ -5,7 +5,8 @@
       "Bash(npx playwright:*)",
       "Bash(node:*)",
       "Bash(ls:*)",
-      "WebSearch"
+      "WebSearch",
+      "Bash(grep -r \"<div class=\"\"sidebar-header\"\">\" design/*.html)"
     ]
   }
 }

@@ -1,11 +1,27 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="ja">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title data-i18n="storeManagementTitle">门店管理 - 信发系统管理后台</title>
+    <title data-i18n="roleListTitle">角色管理 - 信发系统管理后台</title>
     <link rel="stylesheet" href="styles.css">
     <script src="i18n.js"></script>
+    <style>
+        .permission-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            margin-top: 4px;
+        }
+        .permission-tag {
+            display: inline-block;
+            padding: 2px 8px;
+            background: var(--primary-50);
+            color: var(--primary-700);
+            border-radius: 4px;
+            font-size: 0.75rem;
+        }
+    </style>
 </head>
 <body>
     <div class="admin-layout">
@@ -18,7 +34,7 @@
                 </a>
             </div>
             <nav class="sidebar-menu">
-                <a href="store-list.html" class="menu-item active">
+                <a href="store-list.html" class="menu-item">
                     <span class="icon">🏪</span><span data-i18n="storeManagement">门店管理</span>
                 </a>
                 <a href="device-list.html" class="menu-item">
@@ -38,7 +54,7 @@
                     <a href="admin-list.html" class="menu-item menu-item-child">
                         <span class="icon">👤</span><span data-i18n="accountManagement">账号管理</span>
                     </a>
-                    <a href="role-list.html" class="menu-item menu-item-child">
+                    <a href="role-list.html" class="menu-item menu-item-child active">
                         <span class="icon">👥</span><span data-i18n="roleManagement">角色管理</span>
                     </a>
                     <a href="menu-list.html" class="menu-item menu-item-child">
@@ -60,7 +76,9 @@
                 <div class="breadcrumb">
                     <a href="#" data-i18n="home">首页</a>
                     <span>/</span>
-                    <strong data-i18n="storeManagement">门店管理</strong>
+                    <strong data-i18n="systemManagement">系统管理</strong>
+                    <span>/</span>
+                    <strong data-i18n="roleManagement">角色管理</strong>
                 </div>
                 <div class="user-info">
                     <!-- 语言切换器 -->
@@ -92,13 +110,13 @@
 
             <div class="content">
                 <div class="page-header">
-                    <h2 class="page-title" data-i18n="storeManagementTitle">门店管理</h2>
-                    <button class="btn btn-primary" onclick="alert(t('openAddStoreModal'))" data-i18n="addStore">+ 新增门店</button>
+                    <h2 class="page-title" data-i18n="roleListTitle">角色管理</h2>
+                    <a href="role-edit.html" class="btn btn-primary" data-i18n="createRole">+ 役割を作成</a>
                 </div>
 
                 <!-- 搜索筛选 -->
                 <div class="filter-bar">
-                    <input type="text" class="search-input" data-i18n-placeholder="searchStorePlaceholder" placeholder="搜索门店名称或编码...">
+                    <input type="text" class="search-input" data-i18n-placeholder="searchRolePlaceholder" placeholder="役割名を検索...">
                     <select class="select-filter">
                         <option value="" data-i18n="allStatus">全部状态</option>
                         <option value="1" data-i18n="enabled">启用</option>
@@ -108,84 +126,132 @@
                     <button class="btn btn-outline" data-i18n="reset">重置</button>
                 </div>
 
-                <!-- 门店列表 -->
+                <!-- 角色列表 -->
                 <div class="table-container">
                     <table>
                         <thead>
                             <tr>
-                                <th data-i18n="storeName">店舗名</th>
-                                <th data-i18n="storeCode">店舗コード</th>
-                                <th data-i18n="address">住所</th>
-                                <th data-i18n="contactPerson">担当者</th>
-                                <th data-i18n="contactPhone">連絡先</th>
-                                <th data-i18n="deviceCount">デバイス数</th>
-                                <th data-i18n="status">ステータス</th>
+                                <th data-i18n="roleName">角色名称</th>
+                                <th data-i18n="remark">备注说明</th>
+                                <th data-i18n="accountCount">关联账号数</th>
+                                <th data-i18n="menuPermission">菜单权限</th>
+                                <th data-i18n="status">状态</th>
                                 <th data-i18n="action">操作</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td>渋谷旗艦店</td>
-                                <td>SH001</td>
-                                <td>東京都渋谷区渋谷1丁目</td>
-                                <td>田中太郎</td>
-                                <td>03-1234-5678</td>
+                                <td>
+                                    <strong>スーパー管理者</strong>
+                                </td>
+                                <td>システムデフォルトのスーパー管理者。全ての権限を有します。</td>
+                                <td>1</td>
+                                <td>
+                                    <div class="permission-tags">
+                                        <span class="permission-tag" data-i18n="allMenus">全てのメニュー</span>
+                                    </div>
+                                </td>
+                                <td><span class="status-badge status-enabled" data-i18n="enabled">有効</span></td>
+                                <td>
+                                    <a href="role-edit.html" class="btn btn-outline btn-sm" data-i18n="view">閲覧</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong>運用管理者</strong>
+                                </td>
+                                <td>店舗、デバイス、番組、公開の総合管理を担当します。</td>
                                 <td>3</td>
+                                <td>
+                                    <div class="permission-tags">
+                                        <span class="permission-tag" data-i18n="storeManagement">店舗管理</span>
+                                        <span class="permission-tag" data-i18n="deviceManagement">デバイス管理</span>
+                                        <span class="permission-tag" data-i18n="programProduction">番組制作</span>
+                                        <span class="permission-tag" data-i18n="publishManagement">公開管理</span>
+                                        <span class="permission-tag">+2</span>
+                                    </div>
+                                </td>
                                 <td><span class="status-badge status-enabled" data-i18n="enabled">有効</span></td>
                                 <td>
-                                    <a href="store-edit.html" class="btn btn-outline btn-sm" data-i18n="edit">編集</a>
+                                    <a href="role-edit.html" class="btn btn-outline btn-sm" data-i18n="edit">編集</a>
+                                    <button class="btn btn-outline btn-sm" data-i18n="copy">コピー</button>
                                     <button class="btn btn-danger btn-sm" data-i18n="delete">削除</button>
                                 </td>
                             </tr>
                             <tr>
-                                <td>新宿店</td>
-                                <td>SH002</td>
-                                <td>東京都新宿区新宿3丁目</td>
-                                <td>山田花子</td>
-                                <td>03-2345-6789</td>
+                                <td>
+                                    <strong>コンテンツ編集者</strong>
+                                </td>
+                                <td>番組素材の管理と番組編成のみを担当します。</td>
                                 <td>2</td>
+                                <td>
+                                    <div class="permission-tags">
+                                        <span class="permission-tag" data-i18n="programProduction">番組制作</span>
+                                        <span class="permission-tag" data-i18n="materialManagement">素材管理</span>
+                                    </div>
+                                </td>
                                 <td><span class="status-badge status-enabled" data-i18n="enabled">有効</span></td>
                                 <td>
-                                    <a href="store-edit.html" class="btn btn-outline btn-sm" data-i18n="edit">編集</a>
+                                    <a href="role-edit.html" class="btn btn-outline btn-sm" data-i18n="edit">編集</a>
+                                    <button class="btn btn-outline btn-sm" data-i18n="copy">コピー</button>
                                     <button class="btn btn-danger btn-sm" data-i18n="delete">削除</button>
                                 </td>
                             </tr>
                             <tr>
-                                <td>銀座センター店</td>
-                                <td>SH003</td>
-                                <td>東京都中央区銀座4丁目</td>
-                                <td>佐藤健</td>
-                                <td>03-3456-7890</td>
+                                <td>
+                                    <strong>店舗運用担当</strong>
+                                </td>
+                                <td>店舗とデバイス情報のみを管理します。</td>
                                 <td>5</td>
+                                <td>
+                                    <div class="permission-tags">
+                                        <span class="permission-tag" data-i18n="storeManagement">店舗管理</span>
+                                        <span class="permission-tag" data-i18n="deviceManagement">デバイス管理</span>
+                                    </div>
+                                </td>
                                 <td><span class="status-badge status-enabled" data-i18n="enabled">有効</span></td>
                                 <td>
-                                    <a href="store-edit.html" class="btn btn-outline btn-sm" data-i18n="edit">編集</a>
+                                    <a href="role-edit.html" class="btn btn-outline btn-sm" data-i18n="edit">編集</a>
+                                    <button class="btn btn-outline btn-sm" data-i18n="copy">コピー</button>
                                     <button class="btn btn-danger btn-sm" data-i18n="delete">削除</button>
                                 </td>
                             </tr>
                             <tr>
-                                <td>池袋パルコ店</td>
-                                <td>SH004</td>
-                                <td>東京都豊島区池袋1丁目</td>
-                                <td>鈴木一郎</td>
-                                <td>03-4567-8901</td>
-                                <td>0</td>
+                                <td>
+                                    <strong>読み取り専用ユーザー</strong>
+                                </td>
+                                <td>データの閲覧のみ可能。操作権限はありません。</td>
+                                <td>2</td>
+                                <td>
+                                    <div class="permission-tags">
+                                        <span class="permission-tag" data-i18n="storeManagement">店舗管理</span>
+                                        <span class="permission-tag" data-i18n="deviceManagement">デバイス管理</span>
+                                        <span class="permission-tag" data-i18n="programProduction">番組制作</span>
+                                        <span class="permission-tag" data-i18n="publishManagement">公開管理</span>
+                                    </div>
+                                </td>
                                 <td><span class="status-badge status-disabled" data-i18n="disabled">無効</span></td>
                                 <td>
-                                    <a href="store-edit.html" class="btn btn-outline btn-sm" data-i18n="edit">編集</a>
+                                    <a href="role-edit.html" class="btn btn-outline btn-sm" data-i18n="edit">編集</a>
+                                    <button class="btn btn-outline btn-sm" data-i18n="copy">コピー</button>
                                     <button class="btn btn-danger btn-sm" data-i18n="delete">削除</button>
                                 </td>
                             </tr>
                             <tr>
-                                <td>横浜ランドマーク店</td>
-                                <td>SH005</td>
-                                <td>神奈川県横浜市西区みなとみらい</td>
-                                <td>高橋美咲</td>
-                                <td>045-567-8901</td>
-                                <td>4</td>
+                                <td>
+                                    <strong>公開担当者</strong>
+                                </td>
+                                <td>広告公開計画の作成と配信を担当します。</td>
+                                <td>0</td>
+                                <td>
+                                    <div class="permission-tags">
+                                        <span class="permission-tag" data-i18n="publishManagement">公開管理</span>
+                                    </div>
+                                </td>
                                 <td><span class="status-badge status-enabled" data-i18n="enabled">有効</span></td>
                                 <td>
-                                    <a href="store-edit.html" class="btn btn-outline btn-sm" data-i18n="edit">編集</a>
+                                    <a href="role-edit.html" class="btn btn-outline btn-sm" data-i18n="edit">編集</a>
+                                    <button class="btn btn-outline btn-sm" data-i18n="copy">コピー</button>
                                     <button class="btn btn-danger btn-sm" data-i18n="delete">削除</button>
                                 </td>
                             </tr>
@@ -195,7 +261,6 @@
                         <a href="#" class="page-item" data-i18n="previous">上一页</a>
                         <a href="#" class="page-item active">1</a>
                         <a href="#" class="page-item">2</a>
-                        <a href="#" class="page-item">3</a>
                         <a href="#" class="page-item" data-i18n="next">下一页</a>
                     </div>
                 </div>

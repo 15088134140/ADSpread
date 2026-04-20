@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>发布管理 - 信发系统管理后台</title>
+    <title data-i18n="publishManagementTitle">发布管理 - 信发系统管理后台</title>
     <link rel="stylesheet" href="styles.css">
+    <script src="i18n.js"></script>
     <style>
         :root {
             /* 补充弹窗设计色彩系统，保持与原有设计一致 */
@@ -385,34 +386,45 @@
         <!-- 侧边栏 -->
         <aside class="sidebar">
             <div class="sidebar-header">
-                <h1>信发系统</h1>
-                <p>管理后台</p>
+                <a href="index.html">
+                    <h1 data-i18n="systemName">信发系统</h1>
+                    <p data-i18n="adminPanel">管理后台</p>
+                </a>
             </div>
             <nav class="sidebar-menu">
                 <a href="store-list.html" class="menu-item">
-                    <span class="icon">🏪</span>门店管理
+                    <span class="icon">🏪</span><span data-i18n="storeManagement">门店管理</span>
                 </a>
                 <a href="device-list.html" class="menu-item">
-                    <span class="icon">📺</span>设备管理
+                    <span class="icon">📺</span><span data-i18n="deviceManagement">设备管理</span>
                 </a>
                 <a href="program-list.html" class="menu-item">
-                    <span class="icon">🎬</span>节目制作
+                    <span class="icon">🎬</span><span data-i18n="programProduction">节目制作</span>
                 </a>
                 <a href="material.html" class="menu-item">
-                    <span class="icon">🖼️</span>素材管理
+                    <span class="icon">🖼️</span><span data-i18n="materialManagement">素材管理</span>
                 </a>
                 <a href="publish.html" class="menu-item active">
-                    <span class="icon">📤</span>发布管理
+                    <span class="icon">📤</span><span data-i18n="publishManagement">发布管理</span>
                 </a>
-                <a href="admin-list.html" class="menu-item">
-                    <span class="icon">👤</span>管理员账号管理
-                </a>
-                <a href="operation-log.html" class="menu-item">
-                    <span class="icon">📋</span>操作日志
-                </a>
+                <div class="menu-group">
+                    <div class="menu-group-title" data-i18n="systemManagement">系统管理</div>
+                    <a href="admin-list.html" class="menu-item menu-item-child">
+                        <span class="icon">👤</span><span data-i18n="accountManagement">账号管理</span>
+                    </a>
+                    <a href="role-list.html" class="menu-item menu-item-child">
+                        <span class="icon">👥</span><span data-i18n="roleManagement">角色管理</span>
+                    </a>
+                    <a href="menu-list.html" class="menu-item menu-item-child">
+                        <span class="icon">📋</span><span data-i18n="menuManagement">菜单管理</span>
+                    </a>
+                    <a href="operation-log.html" class="menu-item menu-item-child">
+                        <span class="icon">📝</span><span data-i18n="operationLog">操作日志</span>
+                    </a>
+                </div>
             </nav>
             <div class="sidebar-footer">
-                <p>v1.0.0</p>
+                <p>v1.2.0</p>
             </div>
         </aside>
 
@@ -420,32 +432,54 @@
         <main class="main-content">
             <header class="top-header">
                 <div class="breadcrumb">
-                    <a href="#">首页</a>
+                    <a href="#" data-i18n="home">首页</a>
                     <span>/</span>
-                    <strong>发布管理</strong>
+                    <strong data-i18n="publishManagement">发布管理</strong>
                 </div>
                 <div class="user-info">
+                    <!-- 语言切换器 -->
+                    <div class="lang-switcher">
+                        <div class="lang-selector">
+                            <span class="lang-current-flag">🇯🇵</span>
+                            <span class="lang-current-text">日本語</span>
+                            <span>▼</span>
+                        </div>
+                        <div class="lang-dropdown">
+                            <div class="lang-option" data-lang="ja">
+                                <span class="lang-flag">🇯🇵</span>
+                                <span data-i18n="japanese">日本語</span>
+                            </div>
+                            <div class="lang-option" data-lang="zh">
+                                <span class="lang-flag">🇨🇳</span>
+                                <span data-i18n="chinese">中文</span>
+                            </div>
+                            <div class="lang-option" data-lang="en">
+                                <span class="lang-flag">🇺🇸</span>
+                                <span data-i18n="english">English</span>
+                            </div>
+                        </div>
+                    </div>
                     <span class="user-name">admin</span>
-                    <a href="admin-login.html" class="btn-logout">退出</a>
+                    <a href="admin-login.html" class="btn-logout" data-i18n="logout">退出</a>
                 </div>
             </header>
 
             <div class="content">
                 <div class="page-header">
-                    <h2 class="page-title">发布计划管理</h2>
-                    <button class="btn btn-primary" id="openModalBtn">+ 新建发布计划</button>
+                    <h2 class="page-title" data-i18n="publishManagementTitle">发布计划管理</h2>
+                    <button class="btn btn-primary" id="openModalBtn" data-i18n="createPublish">+ 新建发布计划</button>
                 </div>
 
                 <!-- 搜索筛选 -->
                 <div class="filter-bar">
-                    <input type="text" class="search-input" placeholder="搜索节目名称...">
+                    <input type="text" class="search-input" data-i18n-placeholder="searchPublishPlaceholder" placeholder="搜索节目名称...">
                     <select class="select-filter">
-                        <option value="">全部状态</option>
-                        <option value="1">启用</option>
-                        <option value="0">停用</option>
+                        <option value="" data-i18n="allStatus">全部状态</option>
+                        <option value="1" data-i18n="enabled">启用</option>
+                        <option value="0" data-i18n="disabled">停用</option>
                     </select>
-                    <button class="btn btn-outline">搜索</button>
-                    <button class="btn btn-outline">重置</button>
+                    <button class="btn btn-outline" data-i18n="search">搜索</button>
+                    <button class="btn btn-outline" data-i18n="reset">重置</button>
                     <button class="btn btn-primary">批量推送</button>
                 </div>
 
@@ -455,93 +489,93 @@
                         <thead>
                             <tr>
                                 <th><input type="checkbox"></th>
-                                <th>发布计划名称</th>
-                                <th>节目名称</th>
-                                <th>发布目标</th>
-                                <th>生效时间</th>
-                                <th>结束时间</th>
-                                <th>播放周期</th>
-                                <th>状态</th>
-                                <th>创建时间</th>
-                                <th>操作</th>
+                                <th data-i18n="publishName">公開計画名</th>
+                                <th data-i18n="programName">番組名</th>
+                                <th data-i18n="targetDevice">公開対象</th>
+                                <th data-i18n="publishTime">開始日時</th>
+                                <th>終了日時</th>
+                                <th>配信周期</th>
+                                <th data-i18n="status">ステータス</th>
+                                <th data-i18n="createTime">作成日時</th>
+                                <th data-i18n="action">操作</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
                                 <td><input type="checkbox"></td>
-                                <td>春季促销中关村投放</td>
-                                <td>春季促销活动</td>
-                                <td>门店：中关村旗舰店（3台设备）</td>
+                                <td>春のプロモーション渋谷配信</td>
+                                <td>春のプロモーションキャンペーン</td>
+                                <td>店舗：渋谷旗艦店（3台）</td>
                                 <td>2024-01-15 00:00</td>
                                 <td>2024-02-15 23:59</td>
-                                <td>周一至周五</td>
-                                <td><span class="status-badge status-enabled">启用</span></td>
+                                <td>月曜〜金曜</td>
+                                <td><span class="status-badge status-enabled" data-i18n="enabled">有効</span></td>
                                 <td>2024-01-12 17:00</td>
                                 <td>
-                                    <button class="btn btn-outline btn-sm">编辑</button>
-                                    <button class="btn btn-outline btn-sm">停用</button>
-                                    <button class="btn btn-primary btn-sm">推送</button>
-                                    <button class="btn btn-danger btn-sm">删除</button>
+                                    <button class="btn btn-outline btn-sm" data-i18n="edit">編集</button>
+                                    <button class="btn btn-outline btn-sm" data-i18n="disabled">無効</button>
+                                    <button class="btn btn-primary btn-sm">配信</button>
+                                    <button class="btn btn-danger btn-sm" data-i18n="delete">削除</button>
                                 </td>
                             </tr>
                             <tr>
                                 <td><input type="checkbox"></td>
-                                <td>新品上市全门店</td>
-                                <td>新品上市宣传片</td>
-                                <td>全部门店（14台设备）</td>
+                                <td>新商品発売 全店舗配信</td>
+                                <td>新商品発売プロモーション</td>
+                                <td>全店舗（14台）</td>
                                 <td>2024-01-10 00:00</td>
                                 <td>- 永久 -</td>
-                                <td>每天</td>
-                                <td><span class="status-badge status-enabled">启用</span></td>
+                                <td>毎日</td>
+                                <td><span class="status-badge status-enabled" data-i18n="enabled">有効</span></td>
                                 <td>2024-01-10 15:30</td>
                                 <td>
-                                    <button class="btn btn-outline btn-sm">编辑</button>
-                                    <button class="btn btn-outline btn-sm">停用</button>
-                                    <button class="btn btn-primary btn-sm">推送</button>
-                                    <button class="btn btn-danger btn-sm">删除</button>
+                                    <button class="btn btn-outline btn-sm" data-i18n="edit">編集</button>
+                                    <button class="btn btn-outline btn-sm" data-i18n="disabled">無効</button>
+                                    <button class="btn btn-primary btn-sm">配信</button>
+                                    <button class="btn btn-danger btn-sm" data-i18n="delete">削除</button>
                                 </td>
                             </tr>
                             <tr>
                                 <td><input type="checkbox"></td>
-                                <td>年终促销活动</td>
-                                <td>上下双栏目</td>
-                                <td>门店：王府井店、西单店（5台设备）</td>
+                                <td>年末年始プロモーション</td>
+                                <td>上下2カラムレイアウト</td>
+                                <td>店舗：新宿店、池袋店（5台）</td>
                                 <td>2023-12-01 00:00</td>
                                 <td>2023-12-31 23:59</td>
-                                <td>周末</td>
-                                <td><span class="status-badge status-disabled">已停用</span></td>
+                                <td>週末</td>
+                                <td><span class="status-badge status-disabled" data-i18n="disabled">無効</span></td>
                                 <td>2023-11-28 09:45</td>
                                 <td>
-                                    <button class="btn btn-outline btn-sm">编辑</button>
-                                    <button class="btn btn-outline btn-sm">启用</button>
-                                    <button class="btn btn-primary btn-sm">推送</button>
-                                    <button class="btn btn-danger btn-sm">删除</button>
+                                    <button class="btn btn-outline btn-sm" data-i18n="edit">編集</button>
+                                    <button class="btn btn-outline btn-sm" data-i18n="enabled">有効</button>
+                                    <button class="btn btn-primary btn-sm">配信</button>
+                                    <button class="btn btn-danger btn-sm" data-i18n="delete">削除</button>
                                 </td>
                             </tr>
                             <tr>
                                 <td><input type="checkbox"></td>
-                                <td>元旦优惠活动</td>
-                                <td>三屏产品推荐</td>
-                                <td>全部门店（14台设备）</td>
+                                <td>元旦セールキャンペーン</td>
+                                <td>3画面商品推奨</td>
+                                <td>全店舗（14台）</td>
                                 <td>2023-12-30 00:00</td>
                                 <td>2024-01-02 23:59</td>
-                                <td>每天</td>
-                                <td><span class="status-badge status-disabled">已停用</span></td>
+                                <td>毎日</td>
+                                <td><span class="status-badge status-disabled" data-i18n="disabled">無効</span></td>
                                 <td>2023-12-28 16:20</td>
                                 <td>
-                                    <button class="btn btn-outline btn-sm">编辑</button>
-                                    <button class="btn btn-outline btn-sm">启用</button>
-                                    <button class="btn btn-primary btn-sm">推送</button>
-                                    <button class="btn btn-danger btn-sm">删除</button>
+                                    <button class="btn btn-outline btn-sm" data-i18n="edit">編集</button>
+                                    <button class="btn btn-outline btn-sm" data-i18n="enabled">有効</button>
+                                    <button class="btn btn-primary btn-sm">配信</button>
+                                    <button class="btn btn-danger btn-sm" data-i18n="delete">削除</button>
                                 </td>
                             </tr>
                         </tbody>
                     </table>
                     <div class="pagination">
-                        <a href="#" class="page-item">上一页</a>
+                        <a href="#" class="page-item" data-i18n="previous">上一页</a>
                         <a href="#" class="page-item active">1</a>
                         <a href="#" class="page-item">2</a>
-                        <a href="#" class="page-item">下一页</a>
+                        <a href="#" class="page-item" data-i18n="next">下一页</a>
                     </div>
                 </div>
             </div>
@@ -552,133 +586,133 @@
     <div class="modal-overlay" id="publishModal">
         <div class="new-modal-container">
             <div class="new-modal-header">
-                <div class="new-modal-title">新建发布计划</div>
+                <div class="new-modal-title" data-i18n="createPublish">新建发布计划</div>
                 <div class="new-modal-close" id="closeModalBtn">✕</div>
             </div>
 
             <div class="new-modal-body">
                 <div class="new-form-item">
                     <label class="new-form-label">
-                        <span class="required">*</span>选择节目
+                        <span class="required">*</span>番組選択
                     </label>
                     <select class="new-form-select">
-                        <option value="">请选择已发布的节目</option>
-                        <option value="1">开业促销活动 - 横屏1分屏</option>
-                        <option value="2">新品推荐 - 横屏4分屏</option>
-                        <option value="3">价格表展示 - 竖屏1分屏</option>
+                        <option value="">公開済みの番組を選択してください</option>
+                        <option value="1">オープニングプロモーション - 横1画面</option>
+                        <option value="2">新商品推奨 - 横4画面</option>
+                        <option value="3">価格表表示 - 縦1画面</option>
                     </select>
                 </div>
 
                 <div class="new-form-item">
                     <label class="new-form-label">
-                        <span class="required">*</span>发布目标（只支持按门店发布）
+                        <span class="required">*</span>公開対象（店舗単位での公開のみ対応）
                     </label>
                     <div class="store-selector">
                         <div class="store-list">
                             <div class="store-item">
                                 <input type="checkbox" id="store-1" class="store-checkbox" value="1">
-                                <label for="store-1" class="store-label">上海人民广场店</label>
+                                <label for="store-1" class="store-label">渋谷旗艦店</label>
                             </div>
                             <div class="store-item">
                                 <input type="checkbox" id="store-2" class="store-checkbox" value="2">
-                                <label for="store-2" class="store-label">北京王府井店</label>
+                                <label for="store-2" class="store-label">新宿店</label>
                             </div>
                             <div class="store-item">
                                 <input type="checkbox" id="store-3" class="store-checkbox" value="3">
-                                <label for="store-3" class="store-label">广州天河城店</label>
+                                <label for="store-3" class="store-label">銀座センター店</label>
                             </div>
                             <div class="store-item">
                                 <input type="checkbox" id="store-4" class="store-checkbox" value="4">
-                                <label for="store-4" class="store-label">深圳万象城店</label>
+                                <label for="store-4" class="store-label">池袋パルコ店</label>
                             </div>
                             <div class="store-item">
                                 <input type="checkbox" id="store-5" class="store-checkbox" value="5">
-                                <label for="store-5" class="store-label">杭州西湖店</label>
+                                <label for="store-5" class="store-label">横浜ランドマーク店</label>
                             </div>
                         </div>
                         <div class="quick-actions">
-                            <button type="button" class="btn-quick" id="store-quick-all">全选</button>
-                            <button type="button" class="btn-quick" id="store-quick-clear">清空</button>
+                            <button type="button" class="btn-quick" id="store-quick-all">全選</button>
+                            <button type="button" class="btn-quick" id="store-quick-clear">クリア</button>
                         </div>
                     </div>
-                    <div class="help-text">选择多个门店后，广告将发布到选中门店下的所有设备</div>
+                    <div class="help-text">複数の店舗を選択すると、選択した店舗配下の全デバイスに広告が配信されます</div>
                 </div>
 
                 <div class="new-form-item">
                     <label class="new-form-label">
-                        <span class="required">*</span>生效时间范围
+                        <span class="required">*</span>有効期間
                     </label>
                     <div class="time-range">
-                        <input type="datetime-local" class="new-form-input" placeholder="开始时间">
-                        <span class="time-separator">至</span>
-                        <input type="datetime-local" class="new-form-input" placeholder="结束时间">
+                        <input type="datetime-local" class="new-form-input" placeholder="開始日時">
+                        <span class="time-separator">〜</span>
+                        <input type="datetime-local" class="new-form-input" placeholder="終了日時">
                     </div>
-                    <div class="help-text">不填写结束时间表示永久生效</div>
+                    <div class="help-text">終了日時を未設定の場合は永久に有効となります</div>
                 </div>
 
                 <div class="new-form-item">
                     <label class="new-form-label">
-                        <span class="required">*</span>播放周期
+                        <span class="required">*</span>配信周期
                     </label>
                     <div class="week-selector">
                         <div class="week-days">
                             <div class="day-item">
                                 <input type="checkbox" id="day-1" class="day-checkbox" value="1">
-                                <label for="day-1" class="day-label">周一</label>
+                                <label for="day-1" class="day-label">月</label>
                             </div>
                             <div class="day-item">
                                 <input type="checkbox" id="day-2" class="day-checkbox" value="2">
-                                <label for="day-2" class="day-label">周二</label>
+                                <label for="day-2" class="day-label">火</label>
                             </div>
                             <div class="day-item">
                                 <input type="checkbox" id="day-3" class="day-checkbox" value="3">
-                                <label for="day-3" class="day-label">周三</label>
+                                <label for="day-3" class="day-label">水</label>
                             </div>
                             <div class="day-item">
                                 <input type="checkbox" id="day-4" class="day-checkbox" value="4">
-                                <label for="day-4" class="day-label">周四</label>
+                                <label for="day-4" class="day-label">木</label>
                             </div>
                             <div class="day-item">
                                 <input type="checkbox" id="day-5" class="day-checkbox" value="5">
-                                <label for="day-5" class="day-label">周五</label>
+                                <label for="day-5" class="day-label">金</label>
                             </div>
                             <div class="day-item">
                                 <input type="checkbox" id="day-6" class="day-checkbox" value="6">
-                                <label for="day-6" class="day-label">周六</label>
+                                <label for="day-6" class="day-label">土</label>
                             </div>
                             <div class="day-item">
                                 <input type="checkbox" id="day-7" class="day-checkbox" value="0">
-                                <label for="day-7" class="day-label">周日</label>
+                                <label for="day-7" class="day-label">日</label>
                             </div>
                         </div>
                         <div class="quick-actions">
-                            <button type="button" class="btn-quick" id="quick-all">全选</button>
-                            <button type="button" class="btn-quick" id="quick-workday">工作日</button>
-                            <button type="button" class="btn-quick" id="quick-weekend">周末</button>
-                            <button type="button" class="btn-quick" id="quick-clear">清空</button>
+                            <button type="button" class="btn-quick" id="quick-all">全選</button>
+                            <button type="button" class="btn-quick" id="quick-workday">平日</button>
+                            <button type="button" class="btn-quick" id="quick-weekend">週末</button>
+                            <button type="button" class="btn-quick" id="quick-clear">クリア</button>
                         </div>
                     </div>
-                    <div class="help-text">广告仅在选中的星期日期播放</div>
+                    <div class="help-text">選択した曜日にのみ広告が配信されます</div>
                 </div>
 
                 <div class="new-form-item">
-                    <label class="new-form-label">状态</label>
+                    <label class="new-form-label" data-i18n="status">ステータス</label>
                     <div class="target-type">
                         <label class="radio-option">
                             <input type="radio" name="status" value="1" checked>
-                            <span class="radio-label">启用</span>
+                            <span class="radio-label" data-i18n="enabled">有効</span>
                         </label>
                         <label class="radio-option">
                             <input type="radio" name="status" value="0">
-                            <span class="radio-label">停用</span>
+                            <span class="radio-label" data-i18n="disabled">無効</span>
                         </label>
                     </div>
                 </div>
             </div>
 
             <div class="new-modal-footer">
-                <button class="btn btn-outline btn-cancel" id="cancelModalBtn">取消</button>
-                <button class="btn btn-primary">确定</button>
+                <button class="btn btn-outline btn-cancel" id="cancelModalBtn" data-i18n="cancel">取消</button>
+                <button class="btn btn-primary" data-i18n="confirm">确定</button>
             </div>
         </div>
     </div>

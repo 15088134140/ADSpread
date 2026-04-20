@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="editRole">编辑角色 - 信发系统管理后台</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="i18n.js"></script>
+    <style>
+        .permission-tree {
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius);
+            max-height: 400px;
+            overflow-y: auto;
+            padding: var(--space-4);
+            background: var(--gray-50);
+        }
+        .tree-item {
+            margin-bottom: var(--space-2);
+        }
+        .tree-item.level-1 {
+            margin-left: 0;
+        }
+        .tree-item.level-2 {
+            margin-left: 28px;
+        }
+        .tree-checkbox {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            padding: var(--space-2) var(--space-3);
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .tree-checkbox:hover {
+            background: var(--primary-50);
+        }
+        .tree-checkbox input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+        }
+        .tree-checkbox label {
+            cursor: pointer;
+            font-size: 0.875rem;
+            color: var(--gray-700);
+            margin: 0;
+        }
+        .tree-icon {
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.875rem;
+        }
+        .tree-actions {
+            display: flex;
+            gap: var(--space-2);
+            margin-bottom: var(--space-4);
+            padding-bottom: var(--space-4);
+            border-bottom: 1px solid var(--gray-200);
+        }
+        .super-admin-tip {
+            background: var(--primary-50);
+            border: 1px solid var(--primary-200);
+            border-radius: var(--radius);
+            padding: var(--space-4);
+            margin-bottom: var(--space-6);
+            color: var(--primary-700);
+            font-size: 0.875rem;
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-6);
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-layout">
+        <!-- 侧边栏 -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <a href="index.html">
+                    <h1 data-i18n="systemName">信发系统</h1>
+                    <p data-i18n="adminPanel">管理后台</p>
+                </a>
+            </div>
+            <nav class="sidebar-menu">
+                <a href="store-list.html" class="menu-item">
+                    <span class="icon">🏪</span><span data-i18n="storeManagement">门店管理</span>
+                </a>
+                <a href="device-list.html" class="menu-item">
+                    <span class="icon">📺</span><span data-i18n="deviceManagement">设备管理</span>
+                </a>
+                <a href="program-list.html" class="menu-item">
+                    <span class="icon">🎬</span><span data-i18n="programProduction">节目制作</span>
+                </a>
+                <a href="material.html" class="menu-item">
+                    <span class="icon">🖼️</span><span data-i18n="materialManagement">素材管理</span>
+                </a>
+                <a href="publish.html" class="menu-item">
+                    <span class="icon">📤</span><span data-i18n="publishManagement">发布管理</span>
+                </a>
+                <div class="menu-group">
+                    <div class="menu-group-title" data-i18n="systemManagement">系统管理</div>
+                    <a href="admin-list.html" class="menu-item menu-item-child">
+                        <span class="icon">👤</span><span data-i18n="accountManagement">账号管理</span>
+                    </a>
+                    <a href="role-list.html" class="menu-item menu-item-child active">
+                        <span class="icon">👥</span><span data-i18n="roleManagement">角色管理</span>
+                    </a>
+                    <a href="menu-list.html" class="menu-item menu-item-child">
+                        <span class="icon">📋</span><span data-i18n="menuManagement">菜单管理</span>
+                    </a>
+                    <a href="operation-log.html" class="menu-item menu-item-child">
+                        <span class="icon">📝</span><span data-i18n="operationLog">操作日志</span>
+                    </a>
+                </div>
+            </nav>
+            <div class="sidebar-footer">
+                <p>v1.2.0</p>
+            </div>
+        </aside>
+
+        <!-- 主内容区 -->
+        <main class="main-content">
+            <header class="top-header">
+                <div class="breadcrumb">
+                    <a href="role-list.html" data-i18n="roleManagement">角色管理</a>
+                    <span>/</span>
+                    <strong data-i18n="editRole">编辑角色</strong>
+                </div>
+                <div class="user-info">
+                    <!-- 语言切换器 -->
+                    <div class="lang-switcher">
+                        <div class="lang-selector">
+                            <span class="lang-current-flag">🇯🇵</span>
+                            <span class="lang-current-text">日本語</span>
+                            <span>▼</span>
+                        </div>
+                        <div class="lang-dropdown">
+                            <div class="lang-option" data-lang="ja">
+                                <span class="lang-flag">🇯🇵</span>
+                                <span data-i18n="japanese">日本語</span>
+                            </div>
+                            <div class="lang-option" data-lang="zh">
+                                <span class="lang-flag">🇨🇳</span>
+                                <span data-i18n="chinese">中文</span>
+                            </div>
+                            <div class="lang-option" data-lang="en">
+                                <span class="lang-flag">🇺🇸</span>
+                                <span data-i18n="english">English</span>
+                            </div>
+                        </div>
+                    </div>
+                    <span class="user-name">admin</span>
+                    <a href="admin-login.html" class="btn-logout" data-i18n="logout">退出</a>
+                </div>
+            </header>
+
+            <div class="content">
+                <div class="page-header">
+                    <h2 class="page-title" data-i18n="editRole">编辑角色</h2>
+                </div>
+
+                <div class="form-container">
+                    <form>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label" for="roleName" data-i18n="roleName">角色名称 <span style="color: var(--danger-500)">*</span></label>
+                                <input type="text" id="roleName" class="form-input" value="運用管理者" data-i18n-placeholder="enterRoleName" placeholder="ロール名を入力してください">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" data-i18n="status">状态</label>
+                                <div style="display: flex; gap: 24px; margin-top: 8px;">
+                                    <label style="display: flex; align-items: center; gap: 6px; cursor: pointer;">
+                                        <input type="radio" name="status" checked>
+                                        <span data-i18n="enabled">启用</span>
+                                    </label>
+                                    <label style="display: flex; align-items: center; gap: 6px; cursor: pointer;">
+                                        <input type="radio" name="status">
+                                        <span data-i18n="disabled">禁用</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="roleRemark" data-i18n="roleDescription">备注说明</label>
+                            <textarea id="roleRemark" class="form-textarea" data-i18n-placeholder="enterRoleDescription" placeholder="ロールの説明を入力してください...">店舗、デバイス、番組、配信の包括的な管理を担当</textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" data-i18n="permissionSettings">菜单权限配置</label>
+                            <p style="font-size: 0.75rem; color: var(--gray-500); margin-bottom: var(--space-4);">
+                                このロールがアクセス可能なメニューを選択してください。第1レベルメニューを選択すると、自動的にすべてのサブメニューが選択されます
+                            </p>
+
+                            <div class="tree-actions">
+                                <button type="button" class="btn btn-outline btn-sm" data-i18n="selectAll">すべて選択</button>
+                                <button type="button" class="btn btn-outline btn-sm" data-i18n="invertSelection">選択を反転</button>
+                                <button type="button" class="btn btn-outline btn-sm" data-i18n="clearSelection">選択をクリア</button>
+                            </div>
+
+                            <div class="permission-tree">
+                                <div class="tree-item level-1">
+                                    <div class="tree-checkbox">
+                                        <span class="tree-icon">🏪</span>
+                                        <input type="checkbox" id="menu1" checked>
+                                        <label for="menu1"><strong data-i18n="storeManagement">门店管理</strong></label>
+                                    </div>
+                                </div>
+
+                                <div class="tree-item level-1">
+                                    <div class="tree-checkbox">
+                                        <span class="tree-icon">📺</span>
+                                        <input type="checkbox" id="menu2" checked>
+                                        <label for="menu2"><strong data-i18n="deviceManagement">设备管理</strong></label>
+                                    </div>
+                                </div>
+
+                                <div class="tree-item level-1">
+                                    <div class="tree-checkbox">
+                                        <span class="tree-icon">🎬</span>
+                                        <input type="checkbox" id="menu3" checked>
+                                        <label for="menu3"><strong data-i18n="programProduction">节目制作</strong></label>
+                                    </div>
+                                </div>
+                                <div class="tree-item level-2">
+                                    <div class="tree-checkbox">
+                                        <span class="tree-icon">📁</span>
+                                        <input type="checkbox" id="menu3-1" checked>
+                                        <label for="menu3-1" data-i18n="materialManagement">素材管理</label>
+                                    </div>
+                                </div>
+                                <div class="tree-item level-2">
+                                    <div class="tree-checkbox">
+                                        <span class="tree-icon">✏️</span>
+                                        <input type="checkbox" id="menu3-2" checked>
+                                        <label for="menu3-2" data-i18n="editProgram">节目编辑</label>
+                                    </div>
+                                </div>
+
+                                <div class="tree-item level-1">
+                                    <div class="tree-checkbox">
+                                        <span class="tree-icon">📤</span>
+                                        <input type="checkbox" id="menu4" checked>
+                                        <label for="menu4"><strong data-i18n="publishManagement">发布管理</strong></label>
+                                    </div>
+                                </div>
+
+                                <div class="tree-item level-1">
+                                    <div class="tree-checkbox">
+                                        <span class="tree-icon">⚙️</span>
+                                        <input type="checkbox" id="menu5">
+                                        <label for="menu5"><strong data-i18n="systemManagement">系统管理</strong></label>
+                                    </div>
+                                </div>
+                                <div class="tree-item level-2">
+                                    <div class="tree-checkbox">
+                                        <span class="tree-icon">👤</span>
+                                        <input type="checkbox" id="menu5-1">
+                                        <label for="menu5-1" data-i18n="accountManagement">管理员账号</label>
+                                    </div>
+                                </div>
+                                <div class="tree-item level-2">
+                                    <div class="tree-checkbox">
+                                        <span class="tree-icon">👥</span>
+                                        <input type="checkbox" id="menu5-2">
+                                        <label for="menu5-2" data-i18n="roleManagement">角色管理</label>
+                                    </div>
+                                </div>
+                                <div class="tree-item level-2">
+                                    <div class="tree-checkbox">
+                                        <span class="tree-icon">📋</span>
+                                        <input type="checkbox" id="menu5-3">
+                                        <label for="menu5-3" data-i18n="menuManagement">菜单管理</label>
+                                    </div>
+                                </div>
+                                <div class="tree-item level-2">
+                                    <div class="tree-checkbox">
+                                        <span class="tree-icon">📝</span>
+                                        <input type="checkbox" id="menu5-4">
+                                        <label for="menu5-4" data-i18n="operationLog">操作日志</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <p style="font-size: 0.75rem; color: var(--gray-500); margin-top: var(--space-2);">
+                                已选择 <strong style="color: var(--primary-600);">6</strong> 个菜单权限
+                            </p>
+                        </div>
+
+                        <div class="form-actions">
+                            <a href="role-list.html" class="btn btn-outline" data-i18n="cancel">取消</a>
+                            <button type="submit" class="btn btn-primary" data-i18n="save">保存</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>
