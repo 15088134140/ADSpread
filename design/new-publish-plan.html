@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>新建发布计划 - 信发系统</title>
+    <style>
+        :root {
+            /* 设计色彩系统 */
+            --primary-color: #1890ff;
+            --primary-hover: #40a9ff;
+            --primary-active: #096dd9;
+            --success-color: #52c41a;
+            --warning-color: #faad14;
+            --error-color: #ff4d4f;
+            --border-color: #d9d9d9;
+            --border-radius: 4px;
+            --bg-color: #f0f2f5;
+            --modal-bg: #ffffff;
+            --text-primary: #262626;
+            --text-secondary: #8c8c8c;
+            --text-disabled: #bfbfbf;
+
+            /* 间距系统 */
+            --spacing-xs: 4px;
+            --spacing-sm: 8px;
+            --spacing-md: 16px;
+            --spacing-lg: 24px;
+            --spacing-xl: 32px;
+
+            /* 字体系统 */
+            --font-size-sm: 14px;
+            --font-size-base: 16px;
+            --font-size-lg: 18px;
+            --font-size-xl: 20px;
+
+            /* 阴影 */
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.12);
+            --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.16);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--bg-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: var(--spacing-md);
+        }
+
+        /* 遮罩层 */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.45);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        /* 弹窗容器 */
+        .modal-container {
+            background-color: var(--modal-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-lg);
+            width: 100%;
+            max-width: 560px;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: modalFadeIn 0.3s ease-out;
+        }
+
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95) translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        /* 弹窗头部 */
+        .modal-header {
+            padding: var(--spacing-lg) var(--spacing-lg) var(--spacing-md);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .modal-title {
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .modal-close {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border-radius: var(--border-radius);
+            transition: all 0.3s;
+            color: var(--text-secondary);
+        }
+
+        .modal-close:hover {
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+        }
+
+        /* 弹窗内容 */
+        .modal-body {
+            padding: var(--spacing-lg);
+        }
+
+        /* 表单项 */
+        .form-item {
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .form-label {
+            display: block;
+            font-size: var(--font-size-sm);
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .form-label .required {
+            color: var(--error-color);
+            margin-right: var(--spacing-xs);
+        }
+
+        .form-input,
+        .form-select {
+            width: 100%;
+            padding: 8px 12px;
+            font-size: var(--font-size-sm);
+            line-height: 1.5;
+            color: var(--text-primary);
+            background-color: var(--modal-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            transition: all 0.3s;
+        }
+
+        .form-input:focus,
+        .form-select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+        }
+
+        .form-input:hover,
+        .form-select:hover {
+            border-color: var(--primary-hover);
+        }
+
+        /* 时间输入区域 */
+        .time-range {
+            display: flex;
+            gap: var(--spacing-md);
+            align-items: center;
+        }
+
+        .time-range .form-input {
+            flex: 1;
+        }
+
+        .time-separator {
+            color: var(--text-secondary);
+            white-space: nowrap;
+        }
+
+        /* 播放周期选择器 */
+        .week-selector {
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-md);
+        }
+
+        .week-days {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: var(--spacing-sm);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .day-item {
+            position: relative;
+        }
+
+        .day-checkbox {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .day-label {
+            display: block;
+            text-align: center;
+            padding: var(--spacing-sm) var(--spacing-xs);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: var(--font-size-sm);
+            color: var(--text-primary);
+            background-color: var(--modal-bg);
+            transition: all 0.2s ease;
+            user-select: none;
+        }
+
+        .day-checkbox:checked + .day-label {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            color: #ffffff;
+        }
+
+        .day-label:hover {
+            border-color: var(--primary-hover);
+        }
+
+        .day-checkbox:checked + .day-label:hover {
+            background-color: var(--primary-hover);
+            border-color: var(--primary-hover);
+        }
+
+        /* 快捷操作按钮 */
+        .quick-actions {
+            display: flex;
+            gap: var(--spacing-sm);
+            padding-top: var(--spacing-md);
+            border-top: 1px solid var(--border-color);
+        }
+
+        .btn-quick {
+            padding: 4px 12px;
+            font-size: 12px;
+            border: 1px solid var(--border-color);
+            background-color: var(--modal-bg);
+            color: var(--text-primary);
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-quick:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        /* 目标选择 */
+        .target-type {
+            display: flex;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .radio-option {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            cursor: pointer;
+        }
+
+        .radio-option input {
+            cursor: pointer;
+        }
+
+        .radio-label {
+            font-size: var(--font-size-sm);
+            color: var(--text-primary);
+            cursor: pointer;
+        }
+
+        /* 弹窗底部 */
+        .modal-footer {
+            padding: var(--spacing-md) var(--spacing-lg) var(--spacing-lg);
+            display: flex;
+            justify-content: flex-end;
+            gap: var(--spacing-md);
+            border-top: 1px solid transparent;
+        }
+
+        .btn {
+            padding: 6px 16px;
+            font-size: var(--font-size-sm);
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 1px solid transparent;
+        }
+
+        .btn-cancel {
+            background-color: var(--modal-bg);
+            border-color: var(--border-color);
+            color: var(--text-primary);
+        }
+
+        .btn-cancel:hover {
+            border-color: var(--primary-hover);
+            color: var(--primary-color);
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            color: #ffffff;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+            border-color: var(--primary-hover);
+        }
+
+        .btn-primary:active {
+            background-color: var(--primary-active);
+            border-color: var(--primary-active);
+        }
+
+        /* 帮助文本 */
+        .help-text {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: var(--spacing-xs);
+        }
+
+        /* 响应式适配 */
+        @media (max-width: 600px) {
+            .week-days {
+                grid-template-columns: repeat(4, 1fr);
+            }
+
+            .quick-actions {
+                flex-wrap: wrap;
+            }
+
+            .time-range {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .time-separator {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="modal-overlay">
+        <div class="modal-container">
+            <div class="modal-header">
+                <div class="modal-title">新建发布计划</div>
+                <div class="modal-close">✕</div>
+            </div>
+
+            <div class="modal-body">
+                <div class="form-item">
+                    <label class="form-label">
+                        <span class="required">*</span>选择节目
+                    </label>
+                    <select class="form-select">
+                        <option value="">请选择已发布的节目</option>
+                        <option value="1">开业促销活动 - 横屏1分屏</option>
+                        <option value="2">新品推荐 - 横屏4分屏</option>
+                        <option value="3">价格表展示 - 竖屏1分屏</option>
+                    </select>
+                </div>
+
+                <div class="form-item">
+                    <label class="form-label">
+                        <span class="required">*</span>发布目标
+                    </label>
+                    <div class="target-type">
+                        <label class="radio-option">
+                            <input type="radio" name="targetType" value="store" checked>
+                            <span class="radio-label">按门店</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="targetType" value="device">
+                            <span class="radio-label">按设备</span>
+                        </label>
+                    </div>
+                    <select class="form-select">
+                        <option value="">请选择目标门店（可多选）</option>
+                        <option value="1">上海人民广场店</option>
+                        <option value="2">北京王府井店</option>
+                        <option value="3">广州天河城店</option>
+                    </select>
+                </div>
+
+                <div class="form-item">
+                    <label class="form-label">
+                        <span class="required">*</span>生效时间范围
+                    </label>
+                    <div class="time-range">
+                        <input type="datetime-local" class="form-input" placeholder="开始时间">
+                        <span class="time-separator">至</span>
+                        <input type="datetime-local" class="form-input" placeholder="结束时间">
+                    </div>
+                    <div class="help-text">不填写结束时间表示永久生效</div>
+                </div>
+
+                <div class="form-item">
+                    <label class="form-label">
+                        <span class="required">*</span>播放周期
+                    </label>
+                    <div class="week-selector">
+                        <div class="week-days">
+                            <div class="day-item">
+                                <input type="checkbox" id="day-1" class="day-checkbox" value="1">
+                                <label for="day-1" class="day-label">周一</label>
+                            </div>
+                            <div class="day-item">
+                                <input type="checkbox" id="day-2" class="day-checkbox" value="2">
+                                <label for="day-2" class="day-label">周二</label>
+                            </div>
+                            <div class="day-item">
+                                <input type="checkbox" id="day-3" class="day-checkbox" value="3">
+                                <label for="day-3" class="day-label">周三</label>
+                            </div>
+                            <div class="day-item">
+                                <input type="checkbox" id="day-4" class="day-checkbox" value="4">
+                                <label for="day-4" class="day-label">周四</label>
+                            </div>
+                            <div class="day-item">
+                                <input type="checkbox" id="day-5" class="day-checkbox" value="5">
+                                <label for="day-5" class="day-label">周五</label>
+                            </div>
+                            <div class="day-item">
+                                <input type="checkbox" id="day-6" class="day-checkbox" value="6">
+                                <label for="day-6" class="day-label">周六</label>
+                            </div>
+                            <div class="day-item">
+                                <input type="checkbox" id="day-7" class="day-checkbox" value="0">
+                                <label for="day-7" class="day-label">周日</label>
+                            </div>
+                        </div>
+                        <div class="quick-actions">
+                            <button type="button" class="btn-quick" id="quick-all">全选</button>
+                            <button type="button" class="btn-quick" id="quick-workday">工作日</button>
+                            <button type="button" class="btn-quick" id="quick-weekend">周末</button>
+                            <button type="button" class="btn-quick" id="quick-clear">清空</button>
+                        </div>
+                    </div>
+                    <div class="help-text">广告仅在选中的星期日期播放</div>
+                </div>
+
+                <div class="form-item">
+                    <label class="form-label">状态</label>
+                    <div class="target-type">
+                        <label class="radio-option">
+                            <input type="radio" name="status" value="1" checked>
+                            <span class="radio-label">启用</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="status" value="0">
+                            <span class="radio-label">停用</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-cancel">取消</button>
+                <button class="btn btn-primary">确定</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 快捷操作功能
+        document.getElementById('quick-all').addEventListener('click', function() {
+            document.querySelectorAll('.day-checkbox').forEach(cb => {
+                cb.checked = true;
+            });
+        });
+
+        document.getElementById('quick-workday').addEventListener('click', function() {
+            document.querySelectorAll('.day-checkbox').forEach((cb, index) => {
+                // 周一到周五选中
+                cb.checked = index < 5;
+            });
+        });
+
+        document.getElementById('quick-weekend').addEventListener('click', function() {
+            document.querySelectorAll('.day-checkbox').forEach((cb, index) => {
+                // 周六周日选中
+                cb.checked = index >= 5;
+            });
+        });
+
+        document.getElementById('quick-clear').addEventListener('click', function() {
+            document.querySelectorAll('.day-checkbox').forEach(cb => {
+                cb.checked = false;
+            });
+        });
+
+        // 默认全选所有日期
+        document.querySelectorAll('.day-checkbox').forEach(cb => {
+            cb.checked = true;
+        });
+    </script>
+</body>
+</html>

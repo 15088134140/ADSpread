@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>节目编辑 - 信发系统管理后台</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="admin-layout">
+        <!-- 侧边栏 -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h1>信发系统</h1>
+                <p>管理后台</p>
+            </div>
+            <nav class="sidebar-menu">
+                <a href="store-list.html" class="menu-item">
+                    <span class="icon">🏪</span>门店管理
+                </a>
+                <a href="device-list.html" class="menu-item">
+                    <span class="icon">📺</span>设备管理
+                </a>
+                <a href="program-list.html" class="menu-item active">
+                    <span class="icon">🎬</span>节目制作
+                </a>
+                <a href="material.html" class="menu-item">
+                    <span class="icon">🖼️</span>素材管理
+                </a>
+                <a href="publish.html" class="menu-item">
+                    <span class="icon">📤</span>发布管理
+                </a>
+                <a href="admin-list.html" class="menu-item">
+                    <span class="icon">👤</span>管理员账号管理
+                </a>
+                <a href="operation-log.html" class="menu-item">
+                    <span class="icon">📋</span>操作日志
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <p>v1.0.0</p>
+            </div>
+        </aside>
+
+        <!-- 主内容区 -->
+        <main class="main-content">
+            <header class="top-header">
+                <div class="breadcrumb">
+                    <a href="program-list.html">节目制作</a>
+                    <span>/</span>
+                    <strong>编辑节目</strong>
+                </div>
+                <div class="user-info">
+                    <span class="user-name">admin</span>
+                    <a href="admin-login.html" class="btn-logout">退出</a>
+                </div>
+            </header>
+
+            <div class="content">
+                <div class="page-header">
+                    <h2 class="page-title">编辑节目 - 春季促销活动</h2>
+                </div>
+
+                <div class="form-container" style="max-width: 100%; margin-bottom: 24px;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px;">
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label class="form-label">节目名称 <span style="color: var(--danger-500)">*</span></label>
+                            <input type="text" class="form-input" value="春季促销活动" placeholder="请输入节目名称">
+                        </div>
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label class="form-label">适配屏幕方向</label>
+                            <select class="form-select">
+                                <option>任意</option>
+                                <option value="landscape" selected>横屏</option>
+                                <option value="portrait">竖屏</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label class="form-label">适配分屏类型</label>
+                            <select class="form-select">
+                                <option>任意</option>
+                                <option value="1">1分屏</option>
+                                <option value="2">2分屏</option>
+                                <option value="3">3分屏</option>
+                                <option value="3-1" selected>3-1分屏</option>
+                                <option value="4">4分屏</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="program-editor">
+                    <!-- 素材面板 -->
+                    <div class="material-panel">
+                        <h4 style="margin-bottom: 12px;">素材库</h4>
+                        <input type="text" class="search-input" placeholder="搜索素材..." style="margin-bottom: 12px;">
+                        <div style="display: flex; gap: 8px; margin-bottom: 12px;">
+                            <button class="btn btn-outline btn-sm">全部</button>
+                            <button class="btn btn-primary btn-sm">图片</button>
+                            <button class="btn btn-outline btn-sm">视频</button>
+                        </div>
+                        <div class="material-grid">
+                            <div class="material-item">
+                                <div class="material-thumb">🖼️</div>
+                                <div class="material-name">promo1.jpg</div>
+                            </div>
+                            <div class="material-item">
+                                <div class="material-thumb">🖼️</div>
+                                <div class="material-name">spring_banner.png</div>
+                            </div>
+                            <div class="material-item">
+                                <div class="material-thumb">🖼️</div>
+                                <div class="material-name">sale_50off.gif</div>
+                            </div>
+                            <div class="material-item">
+                                <div class="material-thumb">🖼️</div>
+                                <div class="material-name">new_arrival.jpg</div>
+                            </div>
+                            <div class="material-item">
+                                <div class="material-thumb">🎬</div>
+                                <div class="material-name">video_ad.mp4</div>
+                            </div>
+                            <div class="material-item">
+                                <div class="material-thumb">🖼️</div>
+                                <div class="material-name">discount.png</div>
+                            </div>
+                            <div class="material-item">
+                                <div class="material-thumb">🖼️</div>
+                                <div class="material-name">opening.jpg</div>
+                            </div>
+                            <div class="material-item">
+                                <div class="material-thumb">🖼️</div>
+                                <div class="material-name">coupon.png</div>
+                            </div>
+                        </div>
+                        <div style="margin-top: 16px;">
+                            <a href="material.html" target="_blank" class="btn btn-outline" style="width: 100%;">管理素材 →</a>
+                        </div>
+                    </div>
+
+                    <!-- 预览编排面板 -->
+                    <div class="preview-panel">
+                        <h4 style="margin-bottom: 16px;">编排区域（点击左侧素材添加到对应区域，拖拽调整顺序）</h4>
+                        <div class="preview-container layout-3-1">
+                            <div class="preview-region has-content region-main">
+                                <div class="region-label">区域1（左侧大屏）</div>
+                                <div class="region-content">
+                                    <div class="region-material">
+                                        <span class="region-material-name">promo1.jpg（5秒）</span>
+                                        <button class="btn-remove">移除</button>
+                                    </div>
+                                    <div class="region-material">
+                                        <span class="region-material-name">spring_banner.png（5秒）</span>
+                                        <button class="btn-remove">移除</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="side-wrapper">
+                                <div class="preview-region has-content">
+                                    <div class="region-label">区域2（右上）</div>
+                                    <div class="region-content">
+                                        <div class="region-material">
+                                            <span class="region-material-name">sale_50off.gif（5秒）</span>
+                                            <button class="btn-remove">移除</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="preview-region has-content">
+                                    <div class="region-label">区域3（右下）</div>
+                                    <div class="region-content">
+                                        <div class="region-material">
+                                            <span class="region-material-name">new_arrival.jpg（5秒）</span>
+                                            <button class="btn-remove">移除</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 24px;">
+                            <a href="program-list.html" class="btn btn-outline">取消</a>
+                            <button class="btn btn-outline">保存草稿</button>
+                            <button class="btn btn-primary">保存并发布</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // 简单交互演示
+        document.querySelectorAll('.material-item').forEach(item => {
+            item.addEventListener('click', function() {
+                alert('素材已添加到选中区域（原型演示）');
+            });
+        });
+    </script>
+</body>
+</html>

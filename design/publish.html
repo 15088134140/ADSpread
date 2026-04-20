@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>发布管理 - 信发系统管理后台</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        :root {
+            /* 补充弹窗设计色彩系统，保持与原有设计一致 */
+            --primary-color: #1890ff;
+            --primary-hover: #40a9ff;
+            --primary-active: #096dd9;
+            --success-color: #52c41a;
+            --warning-color: #faad14;
+            --error-color: #ff4d4f;
+            --border-color: #d9d9d9;
+            --border-radius: 4px;
+            --bg-color: #f0f2f5;
+            --modal-bg: #ffffff;
+            --text-primary: #262626;
+            --text-secondary: #8c8c8c;
+            --text-disabled: #bfbfbf;
+
+            /* 间距系统 */
+            --spacing-xs: 4px;
+            --spacing-sm: 8px;
+            --spacing-md: 16px;
+            --spacing-lg: 24px;
+            --spacing-xl: 32px;
+
+            /* 字体系统 */
+            --font-size-sm: 14px;
+            --font-size-base: 16px;
+            --font-size-lg: 18px;
+            --font-size-xl: 20px;
+
+            /* 阴影 */
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.12);
+            --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.16);
+        }
+
+        /* 弹窗默认隐藏 */
+        #publishModal {
+            display: none;
+        }
+
+        /* 弹窗显示时 */
+        #publishModal.show {
+            display: flex;
+        }
+
+        /* 弹窗容器动画 */
+        .new-modal-container {
+            background-color: var(--modal-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-lg);
+            width: 100%;
+            max-width: 560px;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: modalFadeIn 0.3s ease-out;
+        }
+
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95) translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        /* 弹窗头部 */
+        .new-modal-header {
+            padding: var(--spacing-lg) var(--spacing-lg) var(--spacing-md);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .new-modal-title {
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .new-modal-close {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border-radius: var(--border-radius);
+            transition: all 0.3s;
+            color: var(--text-secondary);
+            font-size: 18px;
+        }
+
+        .new-modal-close:hover {
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+        }
+
+        /* 弹窗内容 */
+        .new-modal-body {
+            padding: var(--spacing-lg);
+        }
+
+        /* 表单项 */
+        .new-form-item {
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .new-form-label {
+            display: block;
+            font-size: var(--font-size-sm);
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .new-form-label .required {
+            color: var(--error-color);
+            margin-right: var(--spacing-xs);
+        }
+
+        .new-form-input,
+        .new-form-select {
+            width: 100%;
+            padding: 8px 12px;
+            font-size: var(--font-size-sm);
+            line-height: 1.5;
+            color: var(--text-primary);
+            background-color: var(--modal-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            transition: all 0.3s;
+        }
+
+        .new-form-input:focus,
+        .new-form-select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+        }
+
+        .new-form-input:hover,
+        .new-form-select:hover {
+            border-color: var(--primary-hover);
+        }
+
+        /* 时间输入区域 */
+        .time-range {
+            display: flex;
+            gap: var(--spacing-md);
+            align-items: center;
+        }
+
+        .time-range .new-form-input {
+            flex: 1;
+        }
+
+        .time-separator {
+            color: var(--text-secondary);
+            white-space: nowrap;
+        }
+
+        /* 播放周期选择器 */
+        .week-selector {
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-md);
+        }
+
+        .week-days {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: var(--spacing-sm);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .day-item {
+            position: relative;
+        }
+
+        .day-checkbox {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .day-label {
+            display: block;
+            text-align: center;
+            padding: var(--spacing-sm) var(--spacing-xs);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: var(--font-size-sm);
+            color: var(--text-primary);
+            background-color: var(--modal-bg);
+            transition: all 0.2s ease;
+            user-select: none;
+        }
+
+        .day-checkbox:checked + .day-label {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            color: #ffffff;
+        }
+
+        .day-label:hover {
+            border-color: var(--primary-hover);
+        }
+
+        .day-checkbox:checked + .day-label:hover {
+            background-color: var(--primary-hover);
+            border-color: var(--primary-hover);
+        }
+
+        /* 快捷操作按钮 */
+        .quick-actions {
+            display: flex;
+            gap: var(--spacing-sm);
+            padding-top: var(--spacing-md);
+            border-top: 1px solid var(--border-color);
+        }
+
+        .btn-quick {
+            padding: 4px 12px;
+            font-size: 12px;
+            border: 1px solid var(--border-color);
+            background-color: var(--modal-bg);
+            color: var(--text-primary);
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-quick:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        /* 目标选择 */
+        .target-type {
+            display: flex;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .radio-option {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            cursor: pointer;
+        }
+
+        .radio-option input {
+            cursor: pointer;
+        }
+
+        .radio-label {
+            font-size: var(--font-size-sm);
+            color: var(--text-primary);
+            cursor: pointer;
+        }
+
+        /* 门店选择器 */
+        .store-selector {
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-md);
+        }
+
+        .store-list {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--spacing-sm);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .store-item {
+            position: relative;
+        }
+
+        .store-checkbox {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .store-label {
+            display: block;
+            padding: var(--spacing-sm) var(--spacing-md);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: var(--font-size-sm);
+            color: var(--text-primary);
+            background-color: var(--modal-bg);
+            transition: all 0.2s ease;
+            user-select: none;
+        }
+
+        .store-checkbox:checked + .store-label {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            color: #ffffff;
+        }
+
+        .store-label:hover {
+            border-color: var(--primary-hover);
+        }
+
+        .store-checkbox:checked + .store-label:hover {
+            background-color: var(--primary-hover);
+            border-color: var(--primary-hover);
+        }
+
+        /* 弹窗底部 */
+        .new-modal-footer {
+            padding: var(--spacing-md) var(--spacing-lg) var(--spacing-lg);
+            display: flex;
+            justify-content: flex-end;
+            gap: var(--spacing-md);
+            border-top: 1px solid transparent;
+        }
+
+        .btn-cancel {
+            background-color: var(--modal-bg);
+            border-color: var(--border-color);
+            color: var(--text-primary);
+        }
+
+        .btn-cancel:hover {
+            border-color: var(--primary-hover);
+            color: var(--primary-color);
+        }
+
+        /* 帮助文本 */
+        .help-text {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: var(--spacing-xs);
+        }
+
+        /* 响应式适配 */
+        @media (max-width: 600px) {
+            .week-days {
+                grid-template-columns: repeat(4, 1fr);
+            }
+
+            .store-list {
+                grid-template-columns: repeat(1, 1fr);
+            }
+
+            .quick-actions {
+                flex-wrap: wrap;
+            }
+
+            .time-range {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .time-separator {
+                display: none;
+            }
+
+            .new-modal-container {
+                max-height: 85vh;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-layout">
+        <!-- 侧边栏 -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h1>信发系统</h1>
+                <p>管理后台</p>
+            </div>
+            <nav class="sidebar-menu">
+                <a href="store-list.html" class="menu-item">
+                    <span class="icon">🏪</span>门店管理
+                </a>
+                <a href="device-list.html" class="menu-item">
+                    <span class="icon">📺</span>设备管理
+                </a>
+                <a href="program-list.html" class="menu-item">
+                    <span class="icon">🎬</span>节目制作
+                </a>
+                <a href="material.html" class="menu-item">
+                    <span class="icon">🖼️</span>素材管理
+                </a>
+                <a href="publish.html" class="menu-item active">
+                    <span class="icon">📤</span>发布管理
+                </a>
+                <a href="admin-list.html" class="menu-item">
+                    <span class="icon">👤</span>管理员账号管理
+                </a>
+                <a href="operation-log.html" class="menu-item">
+                    <span class="icon">📋</span>操作日志
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <p>v1.0.0</p>
+            </div>
+        </aside>
+
+        <!-- 主内容区 -->
+        <main class="main-content">
+            <header class="top-header">
+                <div class="breadcrumb">
+                    <a href="#">首页</a>
+                    <span>/</span>
+                    <strong>发布管理</strong>
+                </div>
+                <div class="user-info">
+                    <span class="user-name">admin</span>
+                    <a href="admin-login.html" class="btn-logout">退出</a>
+                </div>
+            </header>
+
+            <div class="content">
+                <div class="page-header">
+                    <h2 class="page-title">发布计划管理</h2>
+                    <button class="btn btn-primary" id="openModalBtn">+ 新建发布计划</button>
+                </div>
+
+                <!-- 搜索筛选 -->
+                <div class="filter-bar">
+                    <input type="text" class="search-input" placeholder="搜索节目名称...">
+                    <select class="select-filter">
+                        <option value="">全部状态</option>
+                        <option value="1">启用</option>
+                        <option value="0">停用</option>
+                    </select>
+                    <button class="btn btn-outline">搜索</button>
+                    <button class="btn btn-outline">重置</button>
+                    <button class="btn btn-primary">批量推送</button>
+                </div>
+
+                <!-- 发布计划列表 -->
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th><input type="checkbox"></th>
+                                <th>发布计划名称</th>
+                                <th>节目名称</th>
+                                <th>发布目标</th>
+                                <th>生效时间</th>
+                                <th>结束时间</th>
+                                <th>播放周期</th>
+                                <th>状态</th>
+                                <th>创建时间</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><input type="checkbox"></td>
+                                <td>春季促销中关村投放</td>
+                                <td>春季促销活动</td>
+                                <td>门店：中关村旗舰店（3台设备）</td>
+                                <td>2024-01-15 00:00</td>
+                                <td>2024-02-15 23:59</td>
+                                <td>周一至周五</td>
+                                <td><span class="status-badge status-enabled">启用</span></td>
+                                <td>2024-01-12 17:00</td>
+                                <td>
+                                    <button class="btn btn-outline btn-sm">编辑</button>
+                                    <button class="btn btn-outline btn-sm">停用</button>
+                                    <button class="btn btn-primary btn-sm">推送</button>
+                                    <button class="btn btn-danger btn-sm">删除</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox"></td>
+                                <td>新品上市全门店</td>
+                                <td>新品上市宣传片</td>
+                                <td>全部门店（14台设备）</td>
+                                <td>2024-01-10 00:00</td>
+                                <td>- 永久 -</td>
+                                <td>每天</td>
+                                <td><span class="status-badge status-enabled">启用</span></td>
+                                <td>2024-01-10 15:30</td>
+                                <td>
+                                    <button class="btn btn-outline btn-sm">编辑</button>
+                                    <button class="btn btn-outline btn-sm">停用</button>
+                                    <button class="btn btn-primary btn-sm">推送</button>
+                                    <button class="btn btn-danger btn-sm">删除</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox"></td>
+                                <td>年终促销活动</td>
+                                <td>上下双栏目</td>
+                                <td>门店：王府井店、西单店（5台设备）</td>
+                                <td>2023-12-01 00:00</td>
+                                <td>2023-12-31 23:59</td>
+                                <td>周末</td>
+                                <td><span class="status-badge status-disabled">已停用</span></td>
+                                <td>2023-11-28 09:45</td>
+                                <td>
+                                    <button class="btn btn-outline btn-sm">编辑</button>
+                                    <button class="btn btn-outline btn-sm">启用</button>
+                                    <button class="btn btn-primary btn-sm">推送</button>
+                                    <button class="btn btn-danger btn-sm">删除</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox"></td>
+                                <td>元旦优惠活动</td>
+                                <td>三屏产品推荐</td>
+                                <td>全部门店（14台设备）</td>
+                                <td>2023-12-30 00:00</td>
+                                <td>2024-01-02 23:59</td>
+                                <td>每天</td>
+                                <td><span class="status-badge status-disabled">已停用</span></td>
+                                <td>2023-12-28 16:20</td>
+                                <td>
+                                    <button class="btn btn-outline btn-sm">编辑</button>
+                                    <button class="btn btn-outline btn-sm">启用</button>
+                                    <button class="btn btn-primary btn-sm">推送</button>
+                                    <button class="btn btn-danger btn-sm">删除</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="pagination">
+                        <a href="#" class="page-item">上一页</a>
+                        <a href="#" class="page-item active">1</a>
+                        <a href="#" class="page-item">2</a>
+                        <a href="#" class="page-item">下一页</a>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- 新建发布计划弹窗 -->
+    <div class="modal-overlay" id="publishModal">
+        <div class="new-modal-container">
+            <div class="new-modal-header">
+                <div class="new-modal-title">新建发布计划</div>
+                <div class="new-modal-close" id="closeModalBtn">✕</div>
+            </div>
+
+            <div class="new-modal-body">
+                <div class="new-form-item">
+                    <label class="new-form-label">
+                        <span class="required">*</span>选择节目
+                    </label>
+                    <select class="new-form-select">
+                        <option value="">请选择已发布的节目</option>
+                        <option value="1">开业促销活动 - 横屏1分屏</option>
+                        <option value="2">新品推荐 - 横屏4分屏</option>
+                        <option value="3">价格表展示 - 竖屏1分屏</option>
+                    </select>
+                </div>
+
+                <div class="new-form-item">
+                    <label class="new-form-label">
+                        <span class="required">*</span>发布目标（只支持按门店发布）
+                    </label>
+                    <div class="store-selector">
+                        <div class="store-list">
+                            <div class="store-item">
+                                <input type="checkbox" id="store-1" class="store-checkbox" value="1">
+                                <label for="store-1" class="store-label">上海人民广场店</label>
+                            </div>
+                            <div class="store-item">
+                                <input type="checkbox" id="store-2" class="store-checkbox" value="2">
+                                <label for="store-2" class="store-label">北京王府井店</label>
+                            </div>
+                            <div class="store-item">
+                                <input type="checkbox" id="store-3" class="store-checkbox" value="3">
+                                <label for="store-3" class="store-label">广州天河城店</label>
+                            </div>
+                            <div class="store-item">
+                                <input type="checkbox" id="store-4" class="store-checkbox" value="4">
+                                <label for="store-4" class="store-label">深圳万象城店</label>
+                            </div>
+                            <div class="store-item">
+                                <input type="checkbox" id="store-5" class="store-checkbox" value="5">
+                                <label for="store-5" class="store-label">杭州西湖店</label>
+                            </div>
+                        </div>
+                        <div class="quick-actions">
+                            <button type="button" class="btn-quick" id="store-quick-all">全选</button>
+                            <button type="button" class="btn-quick" id="store-quick-clear">清空</button>
+                        </div>
+                    </div>
+                    <div class="help-text">选择多个门店后，广告将发布到选中门店下的所有设备</div>
+                </div>
+
+                <div class="new-form-item">
+                    <label class="new-form-label">
+                        <span class="required">*</span>生效时间范围
+                    </label>
+                    <div class="time-range">
+                        <input type="datetime-local" class="new-form-input" placeholder="开始时间">
+                        <span class="time-separator">至</span>
+                        <input type="datetime-local" class="new-form-input" placeholder="结束时间">
+                    </div>
+                    <div class="help-text">不填写结束时间表示永久生效</div>
+                </div>
+
+                <div class="new-form-item">
+                    <label class="new-form-label">
+                        <span class="required">*</span>播放周期
+                    </label>
+                    <div class="week-selector">
+                        <div class="week-days">
+                            <div class="day-item">
+                                <input type="checkbox" id="day-1" class="day-checkbox" value="1">
+                                <label for="day-1" class="day-label">周一</label>
+                            </div>
+                            <div class="day-item">
+                                <input type="checkbox" id="day-2" class="day-checkbox" value="2">
+                                <label for="day-2" class="day-label">周二</label>
+                            </div>
+                            <div class="day-item">
+                                <input type="checkbox" id="day-3" class="day-checkbox" value="3">
+                                <label for="day-3" class="day-label">周三</label>
+                            </div>
+                            <div class="day-item">
+                                <input type="checkbox" id="day-4" class="day-checkbox" value="4">
+                                <label for="day-4" class="day-label">周四</label>
+                            </div>
+                            <div class="day-item">
+                                <input type="checkbox" id="day-5" class="day-checkbox" value="5">
+                                <label for="day-5" class="day-label">周五</label>
+                            </div>
+                            <div class="day-item">
+                                <input type="checkbox" id="day-6" class="day-checkbox" value="6">
+                                <label for="day-6" class="day-label">周六</label>
+                            </div>
+                            <div class="day-item">
+                                <input type="checkbox" id="day-7" class="day-checkbox" value="0">
+                                <label for="day-7" class="day-label">周日</label>
+                            </div>
+                        </div>
+                        <div class="quick-actions">
+                            <button type="button" class="btn-quick" id="quick-all">全选</button>
+                            <button type="button" class="btn-quick" id="quick-workday">工作日</button>
+                            <button type="button" class="btn-quick" id="quick-weekend">周末</button>
+                            <button type="button" class="btn-quick" id="quick-clear">清空</button>
+                        </div>
+                    </div>
+                    <div class="help-text">广告仅在选中的星期日期播放</div>
+                </div>
+
+                <div class="new-form-item">
+                    <label class="new-form-label">状态</label>
+                    <div class="target-type">
+                        <label class="radio-option">
+                            <input type="radio" name="status" value="1" checked>
+                            <span class="radio-label">启用</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="status" value="0">
+                            <span class="radio-label">停用</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="new-modal-footer">
+                <button class="btn btn-outline btn-cancel" id="cancelModalBtn">取消</button>
+                <button class="btn btn-primary">确定</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 获取弹窗元素
+        const modal = document.getElementById('publishModal');
+        const openBtn = document.getElementById('openModalBtn');
+        const closeBtn = document.getElementById('closeModalBtn');
+        const cancelBtn = document.getElementById('cancelModalBtn');
+
+        // 打开弹窗
+        openBtn.addEventListener('click', function() {
+            modal.classList.add('show');
+            document.body.style.overflow = 'hidden';
+            // 默认全选所有日期
+            document.querySelectorAll('.day-checkbox').forEach(cb => {
+                cb.checked = true;
+            });
+        });
+
+        // 关闭弹窗
+        function closeModal() {
+            modal.classList.remove('show');
+            document.body.style.overflow = '';
+        }
+
+        closeBtn.addEventListener('click', closeModal);
+        cancelBtn.addEventListener('click', closeModal);
+
+        // 点击遮罩层关闭
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+
+        // ESC键关闭弹窗
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && modal.classList.contains('show')) {
+                closeModal();
+            }
+        });
+
+        // 快捷操作功能
+        document.getElementById('quick-all').addEventListener('click', function() {
+            document.querySelectorAll('.day-checkbox').forEach(cb => {
+                cb.checked = true;
+            });
+        });
+
+        document.getElementById('quick-workday').addEventListener('click', function() {
+            document.querySelectorAll('.day-checkbox').forEach((cb, index) => {
+                // 周一到周五选中
+                cb.checked = index < 5;
+            });
+        });
+
+        document.getElementById('quick-weekend').addEventListener('click', function() {
+            document.querySelectorAll('.day-checkbox').forEach((cb, index) => {
+                // 周六周日选中
+                cb.checked = index >= 5;
+            });
+        });
+
+        document.getElementById('quick-clear').addEventListener('click', function() {
+            document.querySelectorAll('.day-checkbox').forEach(cb => {
+                cb.checked = false;
+            });
+        });
+
+        // 门店选择快捷操作
+        document.getElementById('store-quick-all').addEventListener('click', function() {
+            document.querySelectorAll('.store-checkbox').forEach(cb => {
+                cb.checked = true;
+            });
+        });
+
+        document.getElementById('store-quick-clear').addEventListener('click', function() {
+            document.querySelectorAll('.store-checkbox').forEach(cb => {
+                cb.checked = false;
+            });
+        });
+    </script>
+</body>
+</html>

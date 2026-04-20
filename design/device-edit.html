@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>设备编辑 - 信发系统管理后台</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="admin-layout">
+        <!-- 侧边栏 -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h1>信发系统</h1>
+                <p>管理后台</p>
+            </div>
+            <nav class="sidebar-menu">
+                <a href="store-list.html" class="menu-item">
+                    <span class="icon">🏪</span>门店管理
+                </a>
+                <a href="device-list.html" class="menu-item active">
+                    <span class="icon">📺</span>设备管理
+                </a>
+                <a href="program-list.html" class="menu-item">
+                    <span class="icon">🎬</span>节目制作
+                </a>
+                <a href="material.html" class="menu-item">
+                    <span class="icon">🖼️</span>素材管理
+                </a>
+                <a href="publish.html" class="menu-item">
+                    <span class="icon">📤</span>发布管理
+                </a>
+                <a href="admin-list.html" class="menu-item">
+                    <span class="icon">👤</span>管理员账号管理
+                </a>
+                <a href="operation-log.html" class="menu-item">
+                    <span class="icon">📋</span>操作日志
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <p>v1.0.0</p>
+            </div>
+        </aside>
+
+        <!-- 主内容区 -->
+        <main class="main-content">
+            <header class="top-header">
+                <div class="breadcrumb">
+                    <a href="device-list.html">设备管理</a>
+                    <span>/</span>
+                    <strong>编辑设备</strong>
+                </div>
+                <div class="user-info">
+                    <span class="user-name">admin</span>
+                    <a href="admin-login.html" class="btn-logout">退出</a>
+                </div>
+            </header>
+
+            <div class="content">
+                <div class="page-header">
+                    <h2 class="page-title">编辑设备</h2>
+                </div>
+
+                <div class="form-container">
+                    <form>
+                        <div class="form-group">
+                            <label class="form-label" for="storeId">所属门店</label>
+                            <select id="storeId" class="form-select">
+                                <option value="" selected>请选择门店（可选，可为空）</option>
+                                <option value="1">中关村旗舰店</option>
+                                <option value="2">王府井店</option>
+                                <option value="3">国贸中心店</option>
+                                <option value="4">西单商场店</option>
+                                <option value="5">朝阳大悦城店</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="deviceName">设备名称 <span style="color: var(--danger-500)">*</span></label>
+                            <input type="text" id="deviceName" class="form-input" value="入口大屏" placeholder="请输入设备名称">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="deviceCode">设备编码 <span style="color: var(--danger-500)">*</span></label>
+                            <input type="text" id="deviceCode" class="form-input" value="DEV001" placeholder="请输入唯一设备编码">
+                            <p style="font-size: 0.75rem; color: var(--gray-500); margin-top: 4px;">设备编码全局唯一，安卓客户端使用此编码拉取对应节目</p>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">屏幕方向</label>
+                            <div style="display: flex; gap: 24px; margin-top: 8px;">
+                                <label style="display: flex; align-items: center; gap: 6px; cursor: pointer;">
+                                    <input type="radio" name="orientation" checked>
+                                    <span>横屏</span>
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 6px; cursor: pointer;">
+                                    <input type="radio" name="orientation">
+                                    <span>竖屏</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">分屏类型</label>
+                            <select class="form-select">
+                                <option value="">请选择分屏类型</option>
+                                <option value="1">1分屏 - 全屏一个区域</option>
+                                <option value="2">2分屏 - 上下两个相等区域</option>
+                                <option value="3">3分屏 - 水平三个相等区域</option>
+                                <option value="3-1" selected>3-1分屏 - 左侧1/2，右侧上下各1/4</option>
+                                <option value="4">4分屏 - 田字格四个相等区域</option>
+                            </select>
+                            <div style="margin-top: 12px; display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px;">
+                                <div style="border: 1px solid var(--gray-300); border-radius: 4px; padding: 4px; text-align: center; font-size: 11px; background: var(--gray-50);">1分屏</div>
+                                <div style="border: 1px solid var(--gray-300); border-radius: 4px; padding: 4px; text-align: center; font-size: 11px; background: var(--gray-50);">2分屏</div>
+                                <div style="border: 1px solid var(--gray-300); border-radius: 4px; padding: 4px; text-align: center; font-size: 11px; background: var(--gray-50);">3分屏</div>
+                                <div style="border: 2px solid var(--primary-500); border-radius: 4px; padding: 4px; text-align: center; font-size: 11px; background: var(--primary-50);">3-1分屏</div>
+                                <div style="border: 1px solid var(--gray-300); border-radius: 4px; padding: 4px; text-align: center; font-size: 11px; background: var(--gray-50);">4分屏</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">屏幕分辨率 <span style="color: var(--danger-500)">*</span></label>
+                            <select class="form-select">
+                                <option value="">请选择分辨率</option>
+                                <option value="1920x1080" selected>1920 × 1080 (FHD)</option>
+                                <option value="3840x2160">3840 × 2160 (4K)</option>
+                                <option value="1080x1920">1080 × 1920 (竖屏FHD)</option>
+                                <option value="720x1280">720 × 1280 (竖屏HD)</option>
+                                <option value="1280x720">1280 × 720 (HD)</option>
+                                <option value="custom">+ 自定义新增...</option>
+                            </select>
+                            <p style="font-size: 0.75rem; color: var(--gray-500); margin-top: 4px;">选择预设分辨率或自定义添加新分辨率</p>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="remark">备注</label>
+                            <textarea id="remark" class="form-input" style="min-height: 80px;" placeholder="可填写设备故障说明或其他备注信息">机柜故障</textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">状态</label>
+                            <div style="display: flex; gap: 24px; margin-top: 8px;">
+                                <label style="display: flex; align-items: center; gap: 6px; cursor: pointer;">
+                                    <input type="radio" name="status" checked>
+                                    <span>启用</span>
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 6px; cursor: pointer;">
+                                    <input type="radio" name="status">
+                                    <span>禁用</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <a href="device-list.html" class="btn btn-outline">取消</a>
+                            <button type="submit" class="btn btn-primary">保存</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录 - 信发系统管理后台</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="login-page">
+        <div class="login-box">
+            <div class="login-header">
+                <h1>信发系统</h1>
+                <p>门店广告投放管理平台</p>
+            </div>
+            <form class="login-form">
+                <div class="form-group">
+                    <label class="form-label" for="username">用户名</label>
+                    <input type="text" id="username" class="form-input" placeholder="请输入用户名">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="password">密码</label>
+                    <input type="password" id="password" class="form-input" placeholder="请输入密码">
+                </div>
+                <button type="submit" class="btn btn-primary login-btn">登 录</button>
+            </form>
+        </div>
+    </div>
+    <script>
+        document.querySelector('.login-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            // 原型中直接跳转到管理端首页
+            window.location.href = 'store-list.html';
+        });
+    </script>
+</body>
+</html>

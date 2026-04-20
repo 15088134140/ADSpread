@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>管理员账号管理 - 信发系统管理后台</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="admin-layout">
+        <!-- 侧边栏 -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h1>信发系统</h1>
+                <p>管理后台</p>
+            </div>
+            <nav class="sidebar-menu">
+                <a href="store-list.html" class="menu-item">
+                    <span class="icon">🏪</span>门店管理
+                </a>
+                <a href="device-list.html" class="menu-item">
+                    <span class="icon">📺</span>设备管理
+                </a>
+                <a href="program-list.html" class="menu-item">
+                    <span class="icon">🎬</span>节目制作
+                </a>
+                <a href="material.html" class="menu-item">
+                    <span class="icon">🖼️</span>素材管理
+                </a>
+                <a href="publish.html" class="menu-item">
+                    <span class="icon">📤</span>发布管理
+                </a>
+                <a href="admin-list.html" class="menu-item active">
+                    <span class="icon">👤</span>管理员账号管理
+                </a>
+                <a href="operation-log.html" class="menu-item">
+                    <span class="icon">📋</span>操作日志
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <p>v1.0.0</p>
+            </div>
+        </aside>
+
+        <!-- 主内容区 -->
+        <main class="main-content">
+            <header class="top-header">
+                <div class="breadcrumb">
+                    <a href="#">首页</a>
+                    <span>/</span>
+                    <strong>管理员账号管理</strong>
+                </div>
+                <div class="user-info">
+                    <span class="user-name">admin</span>
+                    <a href="admin-login.html" class="btn-logout">退出</a>
+                </div>
+            </header>
+
+            <div class="content">
+                <div class="page-header">
+                    <h2 class="page-title">管理员账号管理</h2>
+                    <button class="btn btn-primary" onclick="alert('打开新增管理员弹窗')">+ 新增管理员</button>
+                </div>
+
+                <!-- 搜索筛选 -->
+                <div class="filter-bar">
+                    <input type="text" class="search-input" placeholder="搜索用户名或姓名...">
+                    <select class="select-filter">
+                        <option value="">全部状态</option>
+                        <option value="1">启用</option>
+                        <option value="0">禁用</option>
+                    </select>
+                    <button class="btn btn-outline">搜索</button>
+                    <button class="btn btn-outline">重置</button>
+                </div>
+
+                <!-- 管理员列表 -->
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>用户名</th>
+                                <th>姓名</th>
+                                <th>角色</th>
+                                <th>创建时间</th>
+                                <th>最后登录</th>
+                                <th>状态</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>admin</td>
+                                <td>超级管理员</td>
+                                <td>超级管理员</td>
+                                <td>2026-01-01</td>
+                                <td>2026-04-08 10:30</td>
+                                <td><span class="status-badge status-enabled">启用</span></td>
+                                <td>
+                                    <button class="btn btn-outline btn-sm">修改密码</button>
+                                    <button class="btn btn-danger btn-sm">禁用</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>operation</td>
+                                <td>运营人员</td>
+                                <td>运营管理员</td>
+                                <td>2026-02-15</td>
+                                <td>2026-04-07 16:45</td>
+                                <td><span class="status-badge status-enabled">启用</span></td>
+                                <td>
+                                    <button class="btn btn-outline btn-sm">修改密码</button>
+                                    <button class="btn btn-danger btn-sm">禁用</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>editor</td>
+                                <td>内容编辑</td>
+                                <td>内容编辑</td>
+                                <td>2026-03-10</td>
+                                <td>2026-04-06 09:12</td>
+                                <td><span class="status-badge status-enabled">启用</span></td>
+                                <td>
+                                    <button class="btn btn-outline btn-sm">修改密码</button>
+                                    <button class="btn btn-danger btn-sm">禁用</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>guest</td>
+                                <td>访客账号</td>
+                                <td>只读访客</td>
+                                <td>2026-03-20</td>
+                                <td>2026-03-28 14:20</td>
+                                <td><span class="status-badge status-disabled">禁用</span></td>
+                                <td>
+                                    <button class="btn btn-outline btn-sm">修改密码</button>
+                                    <button class="btn btn-success btn-sm">启用</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>zhangsan</td>
+                                <td>张三</td>
+                                <td>运营管理员</td>
+                                <td>2026-04-01</td>
+                                <td>2026-04-01 11:05</td>
+                                <td><span class="status-badge status-enabled">启用</span></td>
+                                <td>
+                                    <button class="btn btn-outline btn-sm">修改密码</button>
+                                    <button class="btn btn-danger btn-sm">禁用</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="pagination">
+                        <a href="#" class="page-item">上一页</a>
+                        <a href="#" class="page-item active">1</a>
+                        <a href="#" class="page-item">2</a>
+                        <a href="#" class="page-item">下一页</a>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

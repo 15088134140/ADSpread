@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>设备管理 - 信发系统管理后台</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="admin-layout">
+        <!-- 侧边栏 -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h1>信发系统</h1>
+                <p>管理后台</p>
+            </div>
+            <nav class="sidebar-menu">
+                <a href="store-list.html" class="menu-item">
+                    <span class="icon">🏪</span>门店管理
+                </a>
+                <a href="device-list.html" class="menu-item active">
+                    <span class="icon">📺</span>设备管理
+                </a>
+                <a href="program-list.html" class="menu-item">
+                    <span class="icon">🎬</span>节目制作
+                </a>
+                <a href="material.html" class="menu-item">
+                    <span class="icon">🖼️</span>素材管理
+                </a>
+                <a href="publish.html" class="menu-item">
+                    <span class="icon">📤</span>发布管理
+                </a>
+                <a href="admin-list.html" class="menu-item">
+                    <span class="icon">👤</span>管理员账号管理
+                </a>
+                <a href="operation-log.html" class="menu-item">
+                    <span class="icon">📋</span>操作日志
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <p>v1.0.0</p>
+            </div>
+        </aside>
+
+        <!-- 主内容区 -->
+        <main class="main-content">
+            <header class="top-header">
+                <div class="breadcrumb">
+                    <a href="#">首页</a>
+                    <span>/</span>
+                    <strong>设备管理</strong>
+                </div>
+                <div class="user-info">
+                    <span class="user-name">admin</span>
+                    <a href="admin-login.html" class="btn-logout">退出</a>
+                </div>
+            </header>
+
+            <div class="content">
+                <div class="page-header">
+                    <h2 class="page-title">设备管理</h2>
+                    <div style="display: flex; gap: 12px;">
+                        <button class="btn btn-outline" onclick="alert('下载Excel导入模板')">📥 下载模板</button>
+                        <button class="btn btn-primary" onclick="alert('打开Excel文件上传弹窗')">📤 Excel导入</button>
+                        <button class="btn btn-primary" onclick="alert('打开新增设备弹窗')">+ 新增设备</button>
+                    </div>
+                </div>
+
+                <!-- 搜索筛选 -->
+                <div class="filter-bar">
+                    <input type="text" class="search-input" placeholder="搜索设备名称或编码...">
+                    <select class="select-filter">
+                        <option value="">全部门店</option>
+                        <option>中关村旗舰店</option>
+                        <option>王府井店</option>
+                        <option>国贸中心店</option>
+                    </select>
+                    <select class="select-filter">
+                        <option value="">全部状态</option>
+                        <option value="1">启用</option>
+                        <option value="0">禁用</option>
+                    </select>
+                    <button class="btn btn-outline">搜索</button>
+                    <button class="btn btn-outline">重置</button>
+                </div>
+
+                <!-- 设备列表 -->
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>设备名称</th>
+                                <th>设备编码</th>
+                                <th>所属门店</th>
+                                <th>屏幕方向</th>
+                                <th>分辨率</th>
+                                <th>分屏类型</th>
+                                <th>备注</th>
+                                <th>最后活跃</th>
+                                <th>状态</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>入口大屏</td>
+                                <td>DEV001</td>
+                                <td>中关村旗舰店</td>
+                                <td>横屏</td>
+                                <td>1920×1080</td>
+                                <td>3-1分屏</td>
+                                <td>机柜故障</td>
+                                <td>2024-01-15 10:30</td>
+                                <td><span class="status-badge status-enabled">启用</span></td>
+                                <td>
+                                    <a href="device-edit.html" class="btn btn-outline btn-sm">编辑</a>
+                                    <button class="btn btn-danger btn-sm">删除</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>一楼宣传屏</td>
+                                <td>DEV002</td>
+                                <td>中关村旗舰店</td>
+                                <td>竖屏</td>
+                                <td>1080×1920</td>
+                                <td>1分屏</td>
+                                <td></td>
+                                <td>2024-01-15 09:45</td>
+                                <td><span class="status-badge status-enabled">启用</span></td>
+                                <td>
+                                    <a href="device-edit.html" class="btn btn-outline btn-sm">编辑</a>
+                                    <button class="btn btn-danger btn-sm">删除</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>促销区屏</td>
+                                <td>DEV003</td>
+                                <td>中关村旗舰店</td>
+                                <td>横屏</td>
+                                <td>3840×2160</td>
+                                <td>4分屏</td>
+                                <td></td>
+                                <td>2024-01-14 18:20</td>
+                                <td><span class="status-badge status-enabled">启用</span></td>
+                                <td>
+                                    <a href="device-edit.html" class="btn btn-outline btn-sm">编辑</a>
+                                    <button class="btn btn-danger btn-sm">删除</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>正门广告屏</td>
+                                <td>DEV004</td>
+                                <td>王府井店</td>
+                                <td>横屏</td>
+                                <td>1920×1080</td>
+                                <td>2分屏</td>
+                                <td>待更换硬件</td>
+                                <td>2024-01-13 12:00</td>
+                                <td><span class="status-badge status-disabled">禁用</span></td>
+                                <td>
+                                    <a href="device-edit.html" class="btn btn-outline btn-sm">编辑</a>
+                                    <button class="btn btn-danger btn-sm">删除</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>大厅屏</td>
+                                <td>DEV005</td>
+                                <td>国贸中心店</td>
+                                <td>横屏</td>
+                                <td>1920×1080</td>
+                                <td>3分屏</td>
+                                <td></td>
+                                <td>2024-01-15 10:00</td>
+                                <td><span class="status-badge status-enabled">启用</span></td>
+                                <td>
+                                    <a href="device-edit.html" class="btn btn-outline btn-sm">编辑</a>
+                                    <button class="btn btn-danger btn-sm">删除</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>电梯口屏</td>
+                                <td>DEV006</td>
+                                <td>国贸中心店</td>
+                                <td>竖屏</td>
+                                <td>1080×1920</td>
+                                <td>1分屏</td>
+                                <td></td>
+                                <td>2024-01-15 08:30</td>
+                                <td><span class="status-badge status-enabled">启用</span></td>
+                                <td>
+                                    <a href="device-edit.html" class="btn btn-outline btn-sm">编辑</a>
+                                    <button class="btn btn-danger btn-sm">删除</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>外墙大屏</td>
+                                <td>DEV007</td>
+                                <td></td>
+                                <td>横屏</td>
+                                <td>3840×2160</td>
+                                <td>1分屏</td>
+                                <td>总部直管</td>
+                                <td>2024-01-14 16:10</td>
+                                <td><span class="status-badge status-enabled">启用</span></td>
+                                <td>
+                                    <a href="device-edit.html" class="btn btn-outline btn-sm">编辑</a>
+                                    <button class="btn btn-danger btn-sm">删除</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="pagination">
+                        <a href="#" class="page-item">上一页</a>
+                        <a href="#" class="page-item active">1</a>
+                        <a href="#" class="page-item">2</a>
+                        <a href="#" class="page-item">下一页</a>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>
