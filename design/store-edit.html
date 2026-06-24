@@ -50,7 +50,7 @@
                 </div>
             </nav>
             <div class="sidebar-footer">
-                <p>v1.2.0</p>
+                <p>v1.3.0</p>
             </div>
         </aside>
 
@@ -109,6 +109,21 @@
                         </div>
 
                         <div class="form-group">
+                            <label class="form-label" for="industryCategory" data-i18n="industryCategory">業種カテゴリ <span style="color: var(--danger-500)">*</span></label>
+                            <select id="industryCategory" class="form-input">
+                                <option value="" data-i18n="selectCategory">業種を選択してください</option>
+                                <option value="catering" selected data-i18n="catering">飲食</option>
+                                <option value="retail" data-i18n="retail">小売</option>
+                                <option value="beauty" data-i18n="beauty">美容</option>
+                                <option value="hospitality" data-i18n="hospitality">宿泊・旅行</option>
+                                <option value="education" data-i18n="education">教育</option>
+                                <option value="automotive" data-i18n="automotive">自動車</option>
+                                <option value="localLife" data-i18n="localLife">地域生活</option>
+                                <option value="other" data-i18n="other">その他</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
                             <label class="form-label" for="storeAddress" data-i18n="storeAddress">店舗住所</label>
                             <textarea id="storeAddress" class="form-textarea" data-i18n-placeholder="enterAddress" placeholder="店舗の詳細住所を入力してください">東京都渋谷区渋谷1丁目1番1号</textarea>
                         </div>
@@ -161,6 +176,20 @@
                                 <div class="form-group">
                                     <label class="form-label" data-i18n="storeCode">店舗コード *</label>
                                     <input type="text" class="form-input" data-i18n-placeholder="enterStoreCode" placeholder="一意のコードを入力してください">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" data-i18n="industryCategory">業種カテゴリ *</label>
+                                    <select class="form-input">
+                                        <option value="" data-i18n="selectCategory">業種を選択してください</option>
+                                        <option value="catering" data-i18n="catering">飲食</option>
+                                        <option value="retail" data-i18n="retail">小売</option>
+                                        <option value="beauty" data-i18n="beauty">美容</option>
+                                        <option value="hospitality" data-i18n="hospitality">宿泊・旅行</option>
+                                        <option value="education" data-i18n="education">教育</option>
+                                        <option value="automotive" data-i18n="automotive">自動車</option>
+                                        <option value="localLife" data-i18n="localLife">地域生活</option>
+                                        <option value="other" data-i18n="other">その他</option>
+                                    </select>
                                 </div>
                                 <div class="form-group">
                                     <label class="form-label" data-i18n="address">住所</label>

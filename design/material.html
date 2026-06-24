@@ -50,7 +50,7 @@
                 </div>
             </nav>
             <div class="sidebar-footer">
-                <p>v1.2.0</p>
+                <p>v1.3.0</p>
             </div>
         </aside>
 
@@ -104,6 +104,12 @@
                         <option value="image" data-i18n="image">图片</option>
                         <option value="video" data-i18n="video">视频</option>
                     </select>
+                    <select class="select-filter">
+                        <option value="" data-i18n="allAuditStatus">全部状态</option>
+                        <option value="pending" data-i18n="pending">待审核</option>
+                        <option value="approved" data-i18n="approved">审核通过</option>
+                        <option value="rejected" data-i18n="rejected">审核驳回</option>
+                    </select>
                     <button class="btn btn-outline" data-i18n="search">搜索</button>
                     <button class="btn btn-outline" data-i18n="reset">重置</button>
                 </div>
@@ -118,6 +124,7 @@
                                 <th data-i18n="materialType">タイプ</th>
                                 <th data-i18n="fileSize">ファイルサイズ</th>
                                 <th data-i18n="uploadTime">アップロード日時</th>
+                                <th data-i18n="auditStatus">審査ステータス</th>
                                 <th data-i18n="action">操作</th>
                             </tr>
                         </thead>
@@ -130,8 +137,10 @@
                                 <td><span style="background: var(--primary-100); color: var(--primary-700); padding: 2px 8px; border-radius: 4px; font-size: 12px;" data-i18n="image">画像</span></td>
                                 <td>2.4 MB</td>
                                 <td>2024-01-10 14:30</td>
+                                <td><span style="background: #fff7e6; color: #fa8c16; padding: 2px 8px; border-radius: 4px; font-size: 12px;" data-i18n="pending">審査待ち</span></td>
                                 <td>
                                     <button class="btn btn-outline btn-sm" data-i18n="preview">プレビュー</button>
+                                    <button class="btn btn-primary btn-sm" data-i18n="audit" onclick="alert('打开审核弹窗')">審査</button>
                                     <button class="btn btn-danger btn-sm" data-i18n="delete">削除</button>
                                 </td>
                             </tr>
@@ -143,6 +152,7 @@
                                 <td><span style="background: var(--warning-100); color: var(--warning-700); padding: 2px 8px; border-radius: 4px; font-size: 12px;" data-i18n="video">動画</span></td>
                                 <td>45.8 MB</td>
                                 <td>2024-01-09 10:15</td>
+                                <td><span style="background: #f6ffed; color: #52c41a; padding: 2px 8px; border-radius: 4px; font-size: 12px;" data-i18n="approved">審査通過</span></td>
                                 <td>
                                     <button class="btn btn-outline btn-sm" data-i18n="preview">プレビュー</button>
                                     <button class="btn btn-danger btn-sm" data-i18n="delete">削除</button>
@@ -156,6 +166,7 @@
                                 <td><span style="background: var(--primary-100); color: var(--primary-700); padding: 2px 8px; border-radius: 4px; font-size: 12px;" data-i18n="image">画像</span></td>
                                 <td>1.8 MB</td>
                                 <td>2024-01-08 16:45</td>
+                                <td><span style="background: #fff1f0; color: #f5222d; padding: 2px 8px; border-radius: 4px; font-size: 12px;" data-i18n="rejected">審査却下</span></td>
                                 <td>
                                     <button class="btn btn-outline btn-sm" data-i18n="preview">プレビュー</button>
                                     <button class="btn btn-danger btn-sm" data-i18n="delete">削除</button>
@@ -169,8 +180,10 @@
                                 <td><span style="background: var(--primary-100); color: var(--primary-700); padding: 2px 8px; border-radius: 4px; font-size: 12px;" data-i18n="image">画像</span></td>
                                 <td>3.2 MB</td>
                                 <td>2024-01-07 09:20</td>
+                                <td><span style="background: #fff7e6; color: #fa8c16; padding: 2px 8px; border-radius: 4px; font-size: 12px;" data-i18n="pending">審査待ち</span></td>
                                 <td>
                                     <button class="btn btn-outline btn-sm" data-i18n="preview">プレビュー</button>
+                                    <button class="btn btn-primary btn-sm" data-i18n="audit" onclick="alert('打开审核弹窗')">審査</button>
                                     <button class="btn btn-danger btn-sm" data-i18n="delete">削除</button>
                                 </td>
                             </tr>
@@ -182,6 +195,7 @@
                                 <td><span style="background: var(--warning-100); color: var(--warning-700); padding: 2px 8px; border-radius: 4px; font-size: 12px;" data-i18n="video">動画</span></td>
                                 <td>78.5 MB</td>
                                 <td>2024-01-06 11:00</td>
+                                <td><span style="background: #f6ffed; color: #52c41a; padding: 2px 8px; border-radius: 4px; font-size: 12px;" data-i18n="approved">審査通過</span></td>
                                 <td>
                                     <button class="btn btn-outline btn-sm" data-i18n="preview">プレビュー</button>
                                     <button class="btn btn-danger btn-sm" data-i18n="delete">削除</button>
@@ -238,6 +252,38 @@
                                     <p><strong>ファイルサイズ：</strong> 2.4 MB</p>
                                     <p><strong>タイプ：</strong> 画像</p>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 审核弹窗（示例） -->
+                <div style="display: none;">
+                    <div class="modal-overlay">
+                        <div class="modal-content" style="max-width: 600px;">
+                            <div class="modal-header">
+                                <h3 class="modal-title" data-i18n="auditMaterial">素材審査</h3>
+                                <button class="modal-close">&times;</button>
+                            </div>
+                            <div class="modal-body">
+                                <div style="aspect-ratio: 16/9; background: var(--gray-100); border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 16px;">
+                                    <div style="width: 100%; height: 100%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 8px;"></div>
+                                </div>
+                                <div style="margin-bottom: 16px; padding: 12px; background: var(--gray-50); border-radius: 8px;">
+                                    <p><strong data-i18n="materialName">素材名：</strong> spring_promotion.jpg</p>
+                                    <p><strong data-i18n="fileSize">ファイルサイズ：</strong> 2.4 MB</p>
+                                    <p><strong data-i18n="materialType">タイプ：</strong> 画像</p>
+                                    <p><strong data-i18n="uploadTime">アップロード日時：</strong> 2024-01-10 14:30</p>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" data-i18n="rejectReason">却下理由（却下する場合必須）</label>
+                                    <textarea class="form-textarea" data-i18n-placeholder="enterRejectReason" placeholder="却下理由を入力してください（10文字以上）"></textarea>
+                                </div>
+                            </div>
+                            <div class="modal-footer" style="display: flex; gap: 12px; justify-content: flex-end;">
+                                <button class="btn btn-outline" data-i18n="cancel">キャンセル</button>
+                                <button class="btn btn-danger" data-i18n="reject" onclick="alert('驳回成功')">却下</button>
+                                <button class="btn btn-success" data-i18n="pass" onclick="alert('审核通过')">通過</button>
                             </div>
                         </div>
                     </div>

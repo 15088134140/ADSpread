@@ -50,7 +50,7 @@
                 </div>
             </nav>
             <div class="sidebar-footer">
-                <p>v1.2.0</p>
+                <p>v1.3.0</p>
             </div>
         </aside>
 
@@ -100,6 +100,17 @@
                 <div class="filter-bar">
                     <input type="text" class="search-input" data-i18n-placeholder="searchStorePlaceholder" placeholder="搜索门店名称或编码...">
                     <select class="select-filter">
+                        <option value="" data-i18n="allCategories">全部分类</option>
+                        <option value="catering" data-i18n="catering">餐饮</option>
+                        <option value="retail" data-i18n="retail">零售</option>
+                        <option value="beauty" data-i18n="beauty">美妆</option>
+                        <option value="hospitality" data-i18n="hospitality">酒旅</option>
+                        <option value="education" data-i18n="education">教育</option>
+                        <option value="automotive" data-i18n="automotive">汽车</option>
+                        <option value="localLife" data-i18n="localLife">本地生活</option>
+                        <option value="other" data-i18n="other">其他</option>
+                    </select>
+                    <select class="select-filter">
                         <option value="" data-i18n="allStatus">全部状态</option>
                         <option value="1" data-i18n="enabled">启用</option>
                         <option value="0" data-i18n="disabled">禁用</option>
@@ -115,6 +126,7 @@
                             <tr>
                                 <th data-i18n="storeName">店舗名</th>
                                 <th data-i18n="storeCode">店舗コード</th>
+                                <th data-i18n="industryCategory">業種カテゴリ</th>
                                 <th data-i18n="address">住所</th>
                                 <th data-i18n="contactPerson">担当者</th>
                                 <th data-i18n="contactPhone">連絡先</th>
@@ -127,6 +139,7 @@
                             <tr>
                                 <td>渋谷旗艦店</td>
                                 <td>SH001</td>
+                                <td><span style="background: #e6f7ff; color: #1890ff; padding: 2px 8px; border-radius: 4px; font-size: 12px;" data-i18n="catering">飲食</span></td>
                                 <td>東京都渋谷区渋谷1丁目</td>
                                 <td>田中太郎</td>
                                 <td>03-1234-5678</td>
@@ -140,6 +153,7 @@
                             <tr>
                                 <td>新宿店</td>
                                 <td>SH002</td>
+                                <td><span style="background: #f6ffed; color: #52c41a; padding: 2px 8px; border-radius: 4px; font-size: 12px;" data-i18n="retail">小売</span></td>
                                 <td>東京都新宿区新宿3丁目</td>
                                 <td>山田花子</td>
                                 <td>03-2345-6789</td>
@@ -153,6 +167,7 @@
                             <tr>
                                 <td>銀座センター店</td>
                                 <td>SH003</td>
+                                <td><span style="background: #fff0f6; color: #eb2f96; padding: 2px 8px; border-radius: 4px; font-size: 12px;" data-i18n="beauty">美容</span></td>
                                 <td>東京都中央区銀座4丁目</td>
                                 <td>佐藤健</td>
                                 <td>03-3456-7890</td>
@@ -166,6 +181,7 @@
                             <tr>
                                 <td>池袋パルコ店</td>
                                 <td>SH004</td>
+                                <td><span style="background: #fff7e6; color: #fa8c16; padding: 2px 8px; border-radius: 4px; font-size: 12px;" data-i18n="education">教育</span></td>
                                 <td>東京都豊島区池袋1丁目</td>
                                 <td>鈴木一郎</td>
                                 <td>03-4567-8901</td>
@@ -179,6 +195,7 @@
                             <tr>
                                 <td>横浜ランドマーク店</td>
                                 <td>SH005</td>
+                                <td><span style="background: #f9f0ff; color: #722ed1; padding: 2px 8px; border-radius: 4px; font-size: 12px;" data-i18n="hospitality">宿泊・旅行</span></td>
                                 <td>神奈川県横浜市西区みなとみらい</td>
                                 <td>高橋美咲</td>
                                 <td>045-567-8901</td>
