@@ -1,0 +1,30 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Check commit message format
+# Expected format: type(scope): message
+# Example: feat(store): add industry category management
+
+COMMIT_MSG=$(cat "$1")
+COMMIT_REGEX="^(feat|fix|docs|style|refactor|perf|test|chore|ci|build)\([a-z-]+\): .+"
+
+if ! echo "$COMMIT_MSG" | grep -qE "$COMMIT_REGEX"; then
+  echo "❌ Invalid commit message format"
+  echo ""
+  echo "Expected format: type(scope): message"
+  echo ""
+  echo "Types:"
+  echo "  feat: New feature"
+  echo "  fix: Bug fix"
+  echo "  docs: Documentation changes"
+  echo "  style: Code formatting changes"
+  echo "  refactor: Code refactoring"
+  echo "  perf: Performance optimization"
+  echo "  test: Test related changes"
+  echo "  chore: Build/tooling changes"
+  echo ""
+  echo "Example: feat(store): add industry category management"
+  exit 1
+fi
+
+echo "✅ Commit message format validated"

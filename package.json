@@ -1,0 +1,47 @@
+{
+  "name": "adspread-monorepo",
+  "version": "1.3.0",
+  "private": true,
+  "description": "信发系统 - 门店广告投放展示系统",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspaces --if-present",
+    "dev:backend": "npm run dev --workspace=@adspread/backend",
+    "dev:admin": "npm run dev --workspace=@adspread/admin",
+    "build": "npm run build --workspaces --if-present",
+    "build:backend": "npm run build --workspace=@adspread/backend",
+    "build:admin": "npm run build --workspace=@adspread/admin",
+    "lint": "npm run lint --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "format": "prettier --write \"**/*.{ts,tsx,js,json,md}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,js,json,md}\"",
+    "prepare": "husky install",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "prisma:generate": "npm run prisma:generate --workspace=@adspread/backend",
+    "prisma:migrate": "npm run prisma:migrate --workspace=@adspread/backend"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.4.0",
+    "prettier": "^3.2.0",
+    "eslint": "^8.57.0",
+    "husky": "^9.0.0",
+    "lint-staged": "^15.2.0"
+  },
+  "lint-staged": {
+    "**/*.{ts,tsx,js}": [
+      "eslint --fix"
+    ],
+    "**/*.{ts,tsx,js,json,md}": [
+      "prettier --write"
+    ]
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=10.0.0"
+  }
+}

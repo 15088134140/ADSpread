@@ -1,0 +1,254 @@
+// ADSpread Database Schema v1.3
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// ==================== 系统管理模块 ====================
+
+model Admin {
+  id           Int         @id @default(autoincrement())
+  username     String      @unique @db.VarChar(50)
+  passwordHash String      @db.VarChar(255)
+  name         String      @db.VarChar(50)
+  roleId       Int?
+  status       Int         @default(1) // 1: 启用, 0: 禁用
+  avatar       String?     @db.VarChar(255)
+  phone        String?     @db.VarChar(20)
+  email        String?     @db.VarChar(100)
+  lastLoginAt  DateTime?
+  lastLoginIp  String?     @db.VarChar(50)
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+
+  role         Role?       @relation(fields: [roleId], references: [id], onDelete: SetNull)
+  materials    Material[]  @relation("MaterialCreator")
+  auditMaterials Material[] @relation("MaterialAuditor")
+  programs     Program[]
+  publishPlans PublishPlan[]
+  operationLogs OperationLog[]
+
+  @@map("admins")
+}
+
+model Role {
+  id          Int           @id @default(autoincrement())
+  name        String        @unique @db.VarChar(50)
+  remark      String?       @db.VarChar(255)
+  status      Int           @default(1) // 1: 启用, 0: 禁用
+  menuIds     Json?         // JSON array of menu IDs
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  admins      Admin[]
+  operationLogs OperationLog[]
+
+  @@map("roles")
+}
+
+model Menu {
+  id          Int           @id @default(autoincrement())
+  parentId    Int?
+  name        String        @db.VarChar(50)
+  path        String?       @db.VarChar(200)
+  component   String?       @db.VarChar(200)
+  icon        String?       @db.VarChar(50)
+  sort        Int           @default(0)
+  type        Int           @default(1) // 1: 目录, 2: 菜单, 3: 按钮
+  permission  String?       @db.VarChar(100)
+  status      Int           @default(1)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  children    Menu[]        @relation("MenuParent", fields: [parentId], references: [id])
+  operationLogs OperationLog[]
+
+  @@map("menus")
+}
+
+model OperationLog {
+  id          Int           @id @default(autoincrement())
+  adminId     Int?
+  username    String        @db.VarChar(50)
+  operation   String        @db.VarChar(100)
+  method      String?       @db.VarChar(20)
+  params      Json?
+  time        Int           // 耗时(ms)
+  ip          String?       @db.VarChar(50)
+  userAgent   String?       @db.VarChar(500)
+  status      Int           @default(1) // 1: 成功, 0: 失败
+  errorMsg    String?       @db.Text
+  createdAt   DateTime      @default(now())
+
+  admin       Admin?        @relation(fields: [adminId], references: [id], onDelete: SetNull)
+
+  @@index([adminId])
+  @@index([createdAt])
+  @@map("operation_logs")
+}
+
+// ==================== 门店管理模块 ====================
+
+enum IndustryCategory {
+  CATERING      // 餐饮
+  RETAIL        // 零售
+  BEAUTY        // 美妆
+  HOTEL         // 酒旅
+  EDUCATION     // 教育
+  AUTOMOTIVE    // 汽车
+  LIFE_SERVICE  // 本地生活
+  OTHER         // 其他
+}
+
+model Store {
+  id              Int           @id @default(autoincrement())
+  name            String        @db.VarChar(100)
+  code            String        @unique @db.VarChar(50)
+  industryCategory IndustryCategory @default(OTHER)
+  address         String?       @db.VarChar(255)
+  contactPerson   String?       @db.VarChar(50)
+  contactPhone    String?       @db.VarChar(20)
+  status          Int           @default(1) // 1: 启用, 0: 禁用
+  remark          String?       @db.Text
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  devices         Device[]
+
+  @@index([industryCategory])
+  @@index([status])
+  @@map("stores")
+}
+
+// ==================== 设备管理模块 ====================
+
+enum ScreenOrientation {
+  LANDSCAPE // 横屏
+  PORTRAIT  // 竖屏
+}
+
+enum SplitType {
+  SPLIT_1       // 全屏
+  SPLIT_2_H     // 上下分屏
+  SPLIT_2_V     // 左右分屏
+  SPLIT_3_H     // 上一下二分
+  SPLIT_3_V     // 左一右二分
+  SPLIT_4       // 四分屏
+}
+
+model Device {
+  id              Int           @id @default(autoincrement())
+  storeId         Int
+  name            String        @db.VarChar(100)
+  code            String        @unique @db.VarChar(50)
+  screenOrientation ScreenOrientation @default(LANDSCAPE)
+  screenResolution String?      @db.VarChar(20) // e.g. "1920x1080"
+  splitType       SplitType     @default(SPLIT_1)
+  remark          String?       @db.Text
+  status          Int           @default(1) // 1: 在线, 0: 离线, -1: 禁用
+  lastActiveAt    DateTime?
+  ipAddress       String?       @db.VarChar(50)
+  macAddress      String?       @db.VarChar(20)
+  appVersion      String?       @db.VarChar(20)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  store           Store         @relation(fields: [storeId], references: [id], onDelete: Cascade)
+
+  @@index([storeId])
+  @@index([status])
+  @@map("devices")
+}
+
+// ==================== 素材管理模块 ====================
+
+enum MaterialType {
+  IMAGE
+  VIDEO
+}
+
+enum AuditStatus {
+  PENDING     // 待审核
+  APPROVED    // 审核通过
+  REJECTED    // 审核驳回
+}
+
+model Material {
+  id              Int           @id @default(autoincrement())
+  name            String        @db.VarChar(200)
+  type            MaterialType
+  fileUrl         String        @db.VarChar(500)
+  fileSize        Int           // 文件大小(字节)
+  fileExtension   String        @db.VarChar(10)
+  width           Int?
+  height          Int?
+  duration        Int?          // 视频时长(秒)
+  thumbnailUrl    String?       @db.VarChar(500)
+  auditStatus     AuditStatus   @default(PENDING)
+  auditUserId     Int?
+  auditTime       DateTime?
+  auditReason     String?       @db.Text
+  createdBy       Int
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  creator         Admin         @relation("MaterialCreator", fields: [createdBy], references: [id])
+  auditor         Admin?        @relation("MaterialAuditor", fields: [auditUserId], references: [id])
+
+  @@index([type])
+  @@index([auditStatus])
+  @@index([createdBy])
+  @@map("materials")
+}
+
+// ==================== 节目制作模块 ====================
+
+model Program {
+  id              Int           @id @default(autoincrement())
+  name            String        @db.VarChar(200)
+  screenOrientation ScreenOrientation @default(LANDSCAPE)
+  splitType       SplitType     @default(SPLIT_1)
+  layoutConfig    Json          // JSON configuration for split layout
+  status          Int           @default(1) // 1: 草稿, 2: 已发布
+  publishedAt     DateTime?
+  createdBy       Int
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  creator         Admin         @relation(fields: [createdBy], references: [id])
+  publishPlans    PublishPlan[]
+
+  @@index([status])
+  @@index([createdBy])
+  @@map("programs")
+}
+
+// ==================== 发布管理模块 ====================
+
+model PublishPlan {
+  id              Int           @id @default(autoincrement())
+  programId       Int
+  name            String        @db.VarChar(200)
+  targetStoreIds  Json          // JSON array of store IDs
+  startTime       DateTime
+  endTime         DateTime?
+  playDays        Json?         // JSON array of days: [1,2,3,4,5] = Mon-Fri
+  status          Int           @default(1) // 1: 待发布, 2: 已发布, 3: 已过期
+  lastPushedAt    DateTime?
+  createdBy       Int
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  program         Program       @relation(fields: [programId], references: [id], onDelete: Cascade)
+  creator         Admin         @relation(fields: [createdBy], references: [id])
+
+  @@index([programId])
+  @@index([status])
+  @@index([createdBy])
+  @@map("publish_plans")
+}
