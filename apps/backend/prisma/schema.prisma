@@ -32,6 +32,7 @@ model Admin {
   programs     Program[]
   publishPlans PublishPlan[]
   operationLogs OperationLog[]
+  pushMessageLogs PushMessageLog[]
 
   @@map("admins")
 }
@@ -65,7 +66,8 @@ model Menu {
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
 
-  children    Menu[]        @relation("MenuParent", fields: [parentId], references: [id])
+  parent      Menu?         @relation("MenuParent", fields: [parentId], references: [id])
+  children    Menu[]        @relation("MenuParent")
   operationLogs OperationLog[]
 
   @@map("menus")
@@ -74,6 +76,8 @@ model Menu {
 model OperationLog {
   id          Int           @id @default(autoincrement())
   adminId     Int?
+  roleId      Int?
+  menuId      Int?
   username    String        @db.VarChar(50)
   operation   String        @db.VarChar(100)
   method      String?       @db.VarChar(20)
@@ -86,8 +90,12 @@ model OperationLog {
   createdAt   DateTime      @default(now())
 
   admin       Admin?        @relation(fields: [adminId], references: [id], onDelete: SetNull)
+  role        Role?         @relation(fields: [roleId], references: [id], onDelete: SetNull)
+  menu        Menu?         @relation(fields: [menuId], references: [id], onDelete: SetNull)
 
   @@index([adminId])
+  @@index([roleId])
+  @@index([menuId])
   @@index([createdAt])
   @@map("operation_logs")
 }
@@ -98,10 +106,10 @@ enum IndustryCategory {
   CATERING      // 餐饮
   RETAIL        // 零售
   BEAUTY        // 美妆
-  HOTEL         // 酒旅
+  HOSPITALITY   // 酒旅
   EDUCATION     // 教育
   AUTOMOTIVE    // 汽车
-  LIFE_SERVICE  // 本地生活
+  LOCAL_LIFE    // 本地生活
   OTHER         // 其他
 }
 
@@ -130,35 +138,36 @@ model Store {
 enum ScreenOrientation {
   LANDSCAPE // 横屏
   PORTRAIT  // 竖屏
+  ANY       // 任意
 }
 
 enum SplitType {
-  SPLIT_1       // 全屏
-  SPLIT_2_H     // 上下分屏
-  SPLIT_2_V     // 左右分屏
-  SPLIT_3_H     // 上一下二分
-  SPLIT_3_V     // 左一右二分
-  SPLIT_4       // 四分屏
+  SPLIT_1
+  SPLIT_2
+  SPLIT_3
+  SPLIT_3_1
+  SPLIT_4
+  ANY
 }
 
 model Device {
-  id              Int           @id @default(autoincrement())
-  storeId         Int
-  name            String        @db.VarChar(100)
-  code            String        @unique @db.VarChar(50)
+  id                Int               @id @default(autoincrement())
+  storeId           Int?
+  name              String            @db.VarChar(100)
+  code              String            @unique @db.VarChar(50)
   screenOrientation ScreenOrientation @default(LANDSCAPE)
-  screenResolution String?      @db.VarChar(20) // e.g. "1920x1080"
-  splitType       SplitType     @default(SPLIT_1)
-  remark          String?       @db.Text
-  status          Int           @default(1) // 1: 在线, 0: 离线, -1: 禁用
-  lastActiveAt    DateTime?
-  ipAddress       String?       @db.VarChar(50)
-  macAddress      String?       @db.VarChar(20)
-  appVersion      String?       @db.VarChar(20)
-  createdAt       DateTime      @default(now())
-  updatedAt       DateTime      @updatedAt
+  screenResolution  String            @db.VarChar(20)
+  splitType         SplitType         @default(SPLIT_1)
+  remark            String?           @db.Text
+  status            Int               @default(1) // 1: 启用, 0: 禁用
+  lastActiveAt      DateTime?
+  ipAddress         String?           @db.VarChar(50)
+  macAddress        String?           @db.VarChar(20)
+  appVersion        String?           @db.VarChar(20)
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
 
-  store           Store         @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  store             Store?            @relation(fields: [storeId], references: [id], onDelete: SetNull)
 
   @@index([storeId])
   @@index([status])
@@ -173,9 +182,9 @@ enum MaterialType {
 }
 
 enum AuditStatus {
-  PENDING     // 待审核
-  APPROVED    // 审核通过
-  REJECTED    // 审核驳回
+  PENDING
+  APPROVED
+  REJECTED
 }
 
 model Material {
@@ -183,7 +192,7 @@ model Material {
   name            String        @db.VarChar(200)
   type            MaterialType
   fileUrl         String        @db.VarChar(500)
-  fileSize        Int           // 文件大小(字节)
+  fileSize        BigInt        // 文件大小(字节)
   fileExtension   String        @db.VarChar(10)
   width           Int?
   height          Int?
@@ -209,19 +218,19 @@ model Material {
 // ==================== 节目制作模块 ====================
 
 model Program {
-  id              Int           @id @default(autoincrement())
-  name            String        @db.VarChar(200)
-  screenOrientation ScreenOrientation @default(LANDSCAPE)
-  splitType       SplitType     @default(SPLIT_1)
-  layoutConfig    Json          // JSON configuration for split layout
-  status          Int           @default(1) // 1: 草稿, 2: 已发布
-  publishedAt     DateTime?
-  createdBy       Int
-  createdAt       DateTime      @default(now())
-  updatedAt       DateTime      @updatedAt
+  id                Int               @id @default(autoincrement())
+  name              String            @db.VarChar(200)
+  screenOrientation ScreenOrientation @default(ANY)
+  splitType         SplitType         @default(ANY)
+  layoutConfig      Json              // JSON configuration for split layout
+  status            Int               @default(0) // 0: 草稿, 1: 已发布
+  publishedAt       DateTime?
+  createdBy         Int
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
 
-  creator         Admin         @relation(fields: [createdBy], references: [id])
-  publishPlans    PublishPlan[]
+  creator           Admin             @relation(fields: [createdBy], references: [id])
+  publishPlans      PublishPlan[]
 
   @@index([status])
   @@index([createdBy])
@@ -231,24 +240,43 @@ model Program {
 // ==================== 发布管理模块 ====================
 
 model PublishPlan {
-  id              Int           @id @default(autoincrement())
-  programId       Int
-  name            String        @db.VarChar(200)
-  targetStoreIds  Json          // JSON array of store IDs
-  startTime       DateTime
-  endTime         DateTime?
-  playDays        Json?         // JSON array of days: [1,2,3,4,5] = Mon-Fri
-  status          Int           @default(1) // 1: 待发布, 2: 已发布, 3: 已过期
-  lastPushedAt    DateTime?
-  createdBy       Int
-  createdAt       DateTime      @default(now())
-  updatedAt       DateTime      @updatedAt
+  id                Int               @id @default(autoincrement())
+  programId         Int
+  name              String            @db.VarChar(200)
+  targetStoreIds    Json              // JSON array of store IDs
+  startTime         DateTime
+  endTime           DateTime?
+  playDays          Json              // JSON array of days: [1,2,3,4,5] = Mon-Fri
+  status            Int               @default(1) // 1: 启用, 0: 停用
+  lastPushedAt      DateTime?
+  createdBy         Int
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
 
-  program         Program       @relation(fields: [programId], references: [id], onDelete: Cascade)
-  creator         Admin         @relation(fields: [createdBy], references: [id])
+  program           Program           @relation(fields: [programId], references: [id], onDelete: Cascade)
+  creator           Admin             @relation(fields: [createdBy], references: [id])
+  pushMessageLogs   PushMessageLog[]
 
   @@index([programId])
   @@index([status])
   @@index([createdBy])
   @@map("publish_plans")
+}
+
+model PushMessageLog {
+  id                Int      @id @default(autoincrement())
+  publishPlanId     Int?
+  targetDeviceCount Int      @default(0)
+  messageType        String   @db.VarChar(50)
+  content            Json?
+  status             Int      @default(1) // 1: 已记录, 0: 失败
+  createdBy          Int?
+  createdAt          DateTime @default(now())
+
+  publishPlan        PublishPlan? @relation(fields: [publishPlanId], references: [id], onDelete: SetNull)
+  creator            Admin?       @relation(fields: [createdBy], references: [id], onDelete: SetNull)
+
+  @@index([publishPlanId])
+  @@index([createdAt])
+  @@map("push_message_logs")
 }

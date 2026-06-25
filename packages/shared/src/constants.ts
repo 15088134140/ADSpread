@@ -17,14 +17,13 @@ export const DEVICE_STATUS_DISABLED = -1;
 
 // ==================== 节目状态 ====================
 
-export const PROGRAM_STATUS_DRAFT = 1;
-export const PROGRAM_STATUS_PUBLISHED = 2;
+export const PROGRAM_STATUS_DRAFT = 0;
+export const PROGRAM_STATUS_PUBLISHED = 1;
 
 // ==================== 发布计划状态 ====================
 
-export const PUBLISH_STATUS_PENDING = 1;
-export const PUBLISH_STATUS_PUSHED = 2;
-export const PUBLISH_STATUS_EXPIRED = 3;
+export const PUBLISH_STATUS_DISABLED = 0;
+export const PUBLISH_STATUS_ENABLED = 1;
 
 // ==================== 菜单类型 ====================
 
