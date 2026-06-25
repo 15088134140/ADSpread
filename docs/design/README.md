@@ -58,16 +58,16 @@ open http://localhost:8080
 
 设计稿包含多种屏幕方向和分屏模板：
 
-| 模板类型 | 屏幕方向 | 分屏方式 | 说明 |
-|---------|----------|----------|------|
-| tablet-landscape-1split | 横屏 | 全屏 | 单屏广告 |
-| tablet-landscape-2split | 横屏 | 左右分屏 | 视频 + 图片 |
-| tablet-landscape-3split | 横屏 | 左 1 右 2 | 多内容组合 |
-| tablet-landscape-3-1split | 横屏 | 上 1 下 3 | 跑马灯布局 |
-| tablet-landscape-4split | 横屏 | 四分屏 | 网格布局 |
-| android-portrait-1split | 竖屏 | 全屏 | 竖屏广告 |
-| android-portrait-2split | 竖屏 | 上下分屏 | 图片 + 文字 |
-| android-portrait-3split | 竖屏 | 三分屏 | 多区域内容 |
+| 模板类型                  | 屏幕方向 | 分屏方式  | 说明        |
+| ------------------------- | -------- | --------- | ----------- |
+| tablet-landscape-1split   | 横屏     | 全屏      | 单屏广告    |
+| tablet-landscape-2split   | 横屏     | 左右分屏  | 视频 + 图片 |
+| tablet-landscape-3split   | 横屏     | 左 1 右 2 | 多内容组合  |
+| tablet-landscape-3-1split | 横屏     | 上 1 下 3 | 跑马灯布局  |
+| tablet-landscape-4split   | 横屏     | 四分屏    | 网格布局    |
+| android-portrait-1split   | 竖屏     | 全屏      | 竖屏广告    |
+| android-portrait-2split   | 竖屏     | 上下分屏  | 图片 + 文字 |
+| android-portrait-3split   | 竖屏     | 三分屏    | 多区域内容  |
 
 详细设计哲学请参考：[tablet-landscape-philosophy.md](./mockups/tablet-landscape-philosophy.md)
 
@@ -86,13 +86,13 @@ open http://localhost:8080
 
 ### 色彩规范
 
-| 颜色类型 | 色值 | 用途 |
-|----------|------|------|
-| 主色 | #409EFF | 主要按钮、链接、选中态 |
-| 成功色 | #67C23A | 成功状态、通过审核 |
-| 警告色 | #E6A23C | 警告状态、待审核 |
-| 危险色 | #F56C6C | 删除、驳回、错误 |
-| 信息色 | #909399 | 次要信息 |
+| 颜色类型 | 色值    | 用途                   |
+| -------- | ------- | ---------------------- |
+| 主色     | #409EFF | 主要按钮、链接、选中态 |
+| 成功色   | #67C23A | 成功状态、通过审核     |
+| 警告色   | #E6A23C | 警告状态、待审核       |
+| 危险色   | #F56C6C | 删除、驳回、错误       |
+| 信息色   | #909399 | 次要信息               |
 
 ---
 
@@ -100,4 +100,4 @@ open http://localhost:8080
 
 - [产品需求文档](../requirements/信发系统_产品需求文档.md)
 - [技术设计文档](../architecture/信发系统_技术设计文档.md)
-- [开发指南](../guides/development.md)
+- [编码规范](../../.ai/coding-standards.md)

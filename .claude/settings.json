@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm --version)",
+      "Bash(HTTP_PROXY=http://127.0.0.1:7890 HTTPS_PROXY=http://127.0.0.1:7890 npm install)",
+      "Bash(pnpm install *)",
+      "Bash(pnpm run *)",
+      "Bash(git status *)",
+      "Bash(npm run *)",
+      "Bash(git add *)"
+    ]
+  }
+}
