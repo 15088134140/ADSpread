@@ -3,11 +3,6 @@
     "target": "ES2022",
     "module": "commonjs",
     "lib": ["ES2022"],
-    "declaration": true,
-    "declarationMap": true,
-    "sourceMap": true,
-    "outDir": "./dist",
-    "rootDir": "./src",
     "strict": true,
     "noImplicitAny": false,
     "strictNullChecks": true,
@@ -21,20 +16,20 @@
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "moduleResolution": "node",
-    "baseUrl": ".",
     "paths": {
-      "@adspread/shared": ["packages/shared/src/index.ts"],
-      "@adspread/types": ["packages/types/src/index.ts"]
+      "@adspread/shared": ["./packages/shared/src/index.ts"],
+      "@adspread/types": ["./packages/types/src/index.ts"]
     },
-    "types": ["node", "jest"],
+    "types": ["node"],
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "noEmit": true
   },
-  "include": ["apps/**/*", "packages/**/*"],
+  "include": ["packages/**/*"],
   "exclude": ["node_modules", "dist", "**/*.spec.ts"]
 }
