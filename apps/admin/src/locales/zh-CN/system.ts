@@ -5,6 +5,11 @@ export default {
     createAdmin: '新增管理员',
     editAdmin: '编辑管理员',
     resetPassword: '重置密码',
+    filter: {
+      username: '用户名',
+      name: '姓名',
+      status: '状态',
+    },
     table: {
       username: '用户名',
       name: '姓名',
@@ -20,16 +25,24 @@ export default {
       username: '用户名',
       name: '姓名',
       role: '角色',
+      rolePlaceholder: '请选择角色',
       phone: '手机号',
       email: '邮箱',
       status: '状态',
       password: '密码',
+      passwordPlaceholder: '至少 8 位，含大小写字母与数字',
       confirmPassword: '确认密码',
+    },
+    operations: {
+      enable: '启用',
+      disable: '禁用',
     },
     messages: {
       confirmDelete: '确定要删除管理员 "{name}" 吗？',
       cannotDeleteSelf: '不可删除自己',
       resetPasswordSuccess: '密码已重置',
+      confirmResetPassword: '确定要重置管理员 "{name}" 的密码吗？',
+      confirmToggleStatus: '确定要更改管理员 "{name}" 的状态吗？',
     },
   },
   role: {
@@ -38,10 +51,15 @@ export default {
     editRole: '编辑角色',
     assignPermissions: '分配权限',
     copyRole: '复制角色',
+    filter: {
+      name: '角色名称',
+      status: '状态',
+    },
     table: {
       name: '角色名称',
       remark: '备注',
       status: '状态',
+      adminCount: '管理员数',
       createdAt: '创建时间',
       operation: '操作',
     },
@@ -50,17 +68,28 @@ export default {
       remark: '备注',
       status: '状态',
     },
+    assignDialog: {
+      title: '分配权限 - {name}',
+      tip: '请勾选菜单与按钮权限',
+    },
     messages: {
       confirmDelete: '确定要删除角色 "{name}" 吗？',
       cannotDeleteWithAdmin: '有管理员关联时不可删除',
       cannotDeleteSuperAdmin: '超级管理员角色不可删除',
       cannotModifySuperAdminPermissions: '不可修改超级管理员角色的权限',
+      copySuccess: '已复制角色权限，请在新增表单中填写',
+      assignSuccess: '权限分配成功',
     },
   },
   menu: {
     title: '菜单',
     createMenu: '新增菜单',
     editMenu: '编辑菜单',
+    filter: {
+      name: '菜单名称',
+      status: '状态',
+      type: '类型',
+    },
     table: {
       name: '菜单名称',
       type: '类型',
@@ -73,6 +102,8 @@ export default {
     },
     form: {
       parent: '父菜单',
+      parentPlaceholder: '请选择父菜单',
+      root: '顶级菜单',
       name: '菜单名称',
       type: '类型',
       path: '路径',
@@ -94,15 +125,24 @@ export default {
   },
   log: {
     title: '操作日志',
+    filter: {
+      status: '状态',
+    },
     search: {
       username: '用户名',
+      operation: '操作内容',
       operationType: '操作类型',
       targetType: '对象类型',
       timeRange: '时间范围',
     },
+    status: {
+      success: '成功',
+      failure: '失败',
+    },
     table: {
       username: '操作人',
       operationType: '操作类型',
+      operation: '操作内容',
       method: '方法',
       targetType: '对象类型',
       params: '参数',
@@ -113,8 +153,13 @@ export default {
       errorMsg: '错误信息',
       menuId: '关联菜单ID',
       createdAt: '时间',
-      operation: '操作',
       detail: '详情',
+    },
+    detail: {
+      title: '日志详情',
+      params: '请求参数',
+      errorMsg: '错误信息',
+      empty: '无',
     },
   },
 };

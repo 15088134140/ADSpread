@@ -5,6 +5,11 @@ export default {
     createAdmin: 'New Administrator',
     editAdmin: 'Edit Administrator',
     resetPassword: 'Reset Password',
+    filter: {
+      username: 'Username',
+      name: 'Name',
+      status: 'Status',
+    },
     table: {
       username: 'Username',
       name: 'Name',
@@ -20,16 +25,24 @@ export default {
       username: 'Username',
       name: 'Name',
       role: 'Role',
+      rolePlaceholder: 'Please select a role',
       phone: 'Phone',
       email: 'Email',
       status: 'Status',
       password: 'Password',
+      passwordPlaceholder: 'At least 8 chars, with upper/lower case and digit',
       confirmPassword: 'Confirm Password',
+    },
+    operations: {
+      enable: 'Enable',
+      disable: 'Disable',
     },
     messages: {
       confirmDelete: 'Are you sure you want to delete administrator "{name}"?',
       cannotDeleteSelf: 'You cannot delete yourself',
       resetPasswordSuccess: 'Password has been reset',
+      confirmResetPassword: 'Reset the password for administrator "{name}"?',
+      confirmToggleStatus: 'Change the status of administrator "{name}"?',
     },
   },
   role: {
@@ -38,10 +51,15 @@ export default {
     editRole: 'Edit Role',
     assignPermissions: 'Assign Permissions',
     copyRole: 'Copy Role',
+    filter: {
+      name: 'Role Name',
+      status: 'Status',
+    },
     table: {
       name: 'Role Name',
       remark: 'Remark',
       status: 'Status',
+      adminCount: 'Admin Count',
       createdAt: 'Created At',
       operation: 'Action',
     },
@@ -50,17 +68,28 @@ export default {
       remark: 'Remark',
       status: 'Status',
     },
+    assignDialog: {
+      title: 'Assign Permissions - {name}',
+      tip: 'Select menu and button permissions',
+    },
     messages: {
       confirmDelete: 'Are you sure you want to delete role "{name}"?',
       cannotDeleteWithAdmin: 'Cannot delete a role that has administrators associated',
       cannotDeleteSuperAdmin: 'The super admin role cannot be deleted',
       cannotModifySuperAdminPermissions: 'The super admin role permissions cannot be modified',
+      copySuccess: 'Role permissions copied. Please fill in the new role form',
+      assignSuccess: 'Permissions assigned',
     },
   },
   menu: {
     title: 'Menus',
     createMenu: 'New Menu',
     editMenu: 'Edit Menu',
+    filter: {
+      name: 'Menu Name',
+      status: 'Status',
+      type: 'Type',
+    },
     table: {
       name: 'Menu Name',
       type: 'Type',
@@ -73,6 +102,8 @@ export default {
     },
     form: {
       parent: 'Parent Menu',
+      parentPlaceholder: 'Select parent menu',
+      root: 'Top Level',
       name: 'Menu Name',
       type: 'Type',
       path: 'Path',
@@ -94,15 +125,24 @@ export default {
   },
   log: {
     title: 'Operation Logs',
+    filter: {
+      status: 'Status',
+    },
     search: {
       username: 'Username',
+      operation: 'Operation',
       operationType: 'Operation Type',
       targetType: 'Target Type',
       timeRange: 'Time Range',
     },
+    status: {
+      success: 'Success',
+      failure: 'Failure',
+    },
     table: {
       username: 'Operator',
       operationType: 'Operation Type',
+      operation: 'Operation',
       method: 'Method',
       targetType: 'Target Type',
       params: 'Parameters',
@@ -113,8 +153,13 @@ export default {
       errorMsg: 'Error Message',
       menuId: 'Related Menu ID',
       createdAt: 'Time',
-      operation: 'Action',
       detail: 'Detail',
+    },
+    detail: {
+      title: 'Log Detail',
+      params: 'Request Parameters',
+      errorMsg: 'Error Message',
+      empty: 'None',
     },
   },
 };

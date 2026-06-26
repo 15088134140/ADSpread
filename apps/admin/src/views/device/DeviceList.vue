@@ -4,7 +4,12 @@
       <template #header>
         <div class="card-header">
           <span>设备管理</span>
-          <el-button type="primary" @click="openCreate">新增设备</el-button>
+          <div class="card-header-actions">
+            <el-button v-permission="'device:import'" @click="importDialogVisible = true">
+              {{ t('device.batchImport') }}
+            </el-button>
+            <el-button type="primary" @click="openCreate">新增设备</el-button>
+          </div>
         </div>
       </template>
 
@@ -101,19 +106,26 @@
         <el-button type="primary" @click="submitForm">保存</el-button>
       </template>
     </el-dialog>
+
+    <ExcelImportDialog v-model="importDialogVisible" @success="fetchData" />
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, reactive, computed, watch, onMounted } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { ElMessage, ElMessageBox, type FormInstance, type FormRules } from 'element-plus';
 import { deviceApi, type Device } from '@/api/device';
 import { storeApi } from '@/api/store';
 import { screenOrientationOptions, splitTypeOptions, getDeviceSplitTypeOptions } from '@/utils/options';
 import { dateUtils } from '@/utils/date';
 import { ScreenOrientation, SplitType } from '@adspread/types';
+import ExcelImportDialog from '@/components/business/ExcelImportDialog.vue';
 
+const { t } = useI18n();
 const { formatDateTime } = dateUtils;
+
+const importDialogVisible = ref(false);
 
 const loading = ref(false);
 const list = ref<Device[]>([]);
@@ -298,6 +310,11 @@ onMounted(() => {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.card-header-actions {
+  display: flex;
+  gap: 8px;
 }
 
 .pagination-container {

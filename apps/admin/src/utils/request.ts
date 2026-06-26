@@ -32,6 +32,11 @@ service.interceptors.request.use(
 // Response interceptor
 service.interceptors.response.use(
   (response: AxiosResponse) => {
+    // 文件下载（blob）直接返回原始数据，跳过业务码解析
+    if (response.config.responseType === 'blob') {
+      return response.data;
+    }
+
     const { code, message, data } = response.data;
 
     if (code === 0) {
