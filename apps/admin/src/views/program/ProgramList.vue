@@ -25,6 +25,7 @@
       </el-form>
 
       <el-table v-loading="loading" :data="list">
+        <el-table-column prop="id" :label="t('common.id')" width="80" />
         <el-table-column prop="name" :label="t('program.table.name')" />
         <el-table-column :label="t('program.table.screenOrientation')">
           <template #default="{ row }">{{ getOrientationLabel(row.screenOrientation) }}</template>

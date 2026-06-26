@@ -1,4 +1,5 @@
 export default {
+  id: 'ID',
   confirm: '確認',
   cancel: 'キャンセル',
   save: '保存',

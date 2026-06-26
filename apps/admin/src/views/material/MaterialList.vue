@@ -37,6 +37,7 @@
       </el-form>
 
       <el-table v-loading="loading" :data="list">
+        <el-table-column prop="id" :label="t('common.id')" width="80" />
         <el-table-column prop="name" :label="t('material.table.name')" />
         <el-table-column :label="t('material.table.type')">
           <template #default="{ row }">{{ getMaterialTypeLabel(row.type) }}</template>

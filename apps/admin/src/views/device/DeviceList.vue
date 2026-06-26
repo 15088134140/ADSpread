@@ -35,6 +35,7 @@
       </el-form>
 
       <el-table v-loading="loading" :data="list">
+        <el-table-column prop="id" :label="t('common.id')" width="80" />
         <el-table-column prop="name" :label="t('device.table.name')" />
         <el-table-column prop="code" :label="t('device.table.code')" />
         <el-table-column :label="t('device.table.store')">

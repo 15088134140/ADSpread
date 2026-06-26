@@ -29,6 +29,7 @@
 
       <el-table v-loading="loading" :data="list" @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="50" />
+        <el-table-column prop="id" :label="t('common.id')" width="80" />
         <el-table-column prop="name" :label="t('publish.table.name')" />
         <el-table-column :label="t('publish.table.program')">
           <template #default="{ row }">{{ row.program?.name || row.programId }}</template>

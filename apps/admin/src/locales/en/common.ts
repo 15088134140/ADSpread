@@ -1,4 +1,5 @@
 export default {
+  id: 'ID',
   confirm: 'Confirm',
   cancel: 'Cancel',
   save: 'Save',
