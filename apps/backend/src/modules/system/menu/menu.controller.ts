@@ -8,10 +8,8 @@ import {
   Post,
   Put,
   Query,
-  UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { JwtAuthGuard } from '../../../common/guards/jwt-auth.guard';
 import { RequirePermission } from '../../../common/decorators/require-permission.decorator';
 import { OperationLog } from '../../../common/decorators/operation-log.decorator';
 import { MenuService } from './menu.service';
@@ -21,7 +19,6 @@ import { QueryMenuDto } from './dto/query-menu.dto';
 
 @ApiTags('系统管理-菜单')
 @ApiBearerAuth()
-@UseGuards(JwtAuthGuard)
 @Controller('admin/menus')
 export class MenuController {
   constructor(private readonly menuService: MenuService) {}

@@ -8,10 +8,10 @@ import {
   Post,
   Put,
   Query,
-  UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
+import { RequirePermission } from '../../common/decorators/require-permission.decorator';
+import { OperationLog } from '../../common/decorators/operation-log.decorator';
 import { CreateStoreDto } from './dto/create-store.dto';
 import { StoreQueryDto } from './dto/store-query.dto';
 import { UpdateStoreDto } from './dto/update-store.dto';
@@ -19,12 +19,12 @@ import { StoreService } from './store.service';
 
 @ApiTags('门店管理')
 @ApiBearerAuth()
-@UseGuards(JwtAuthGuard)
 @Controller('stores')
 export class StoreController {
   constructor(private readonly storeService: StoreService) {}
 
   @Get()
+  @RequirePermission('store:list')
   @ApiOperation({
     summary: '获取门店列表',
     description: '分页查询门店列表，支持按关键词、行业分类和状态筛选',
@@ -35,6 +35,7 @@ export class StoreController {
   }
 
   @Get('industry-categories')
+  @RequirePermission('store:list')
   @ApiOperation({ summary: '获取行业分类列表', description: '获取所有可用的门店行业分类选项' })
   @ApiOkResponse({ description: '成功返回行业分类列表' })
   industryCategories() {
@@ -42,6 +43,7 @@ export class StoreController {
   }
 
   @Get('options')
+  @RequirePermission('store:list')
   @ApiOperation({ summary: '获取门店选项', description: '获取门店下拉选项列表，用于表单选择' })
   @ApiOkResponse({ description: '成功返回门店选项列表' })
   options() {
@@ -49,6 +51,8 @@ export class StoreController {
   }
 
   @Post()
+  @RequirePermission('store:create')
+  @OperationLog('create', 'store')
   @ApiOperation({ summary: '创建门店', description: '创建一个新的门店' })
   @ApiOkResponse({ description: '成功创建门店，返回门店信息' })
   create(@Body() dto: CreateStoreDto) {
@@ -56,6 +60,8 @@ export class StoreController {
   }
 
   @Put(':id')
+  @RequirePermission('store:update')
+  @OperationLog('update', 'store')
   @ApiOperation({ summary: '更新门店', description: '更新指定门店的信息' })
   @ApiOkResponse({ description: '成功更新门店，返回更新后的门店信息' })
   update(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateStoreDto) {
@@ -63,6 +69,8 @@ export class StoreController {
   }
 
   @Delete(':id')
+  @RequirePermission('store:delete')
+  @OperationLog('delete', 'store')
   @ApiOperation({ summary: '删除门店', description: '删除指定的门店' })
   @ApiOkResponse({ description: '成功删除门店' })
   remove(@Param('id', ParseIntPipe) id: number) {

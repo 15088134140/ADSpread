@@ -1,5 +1,6 @@
 import { Controller, Get, Query } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { Public } from '../../common/decorators/public.decorator';
 import { DeviceApiService } from './device-api.service';
 
 @ApiTags('设备端接口')
@@ -8,6 +9,7 @@ export class DeviceApiController {
   constructor(private readonly deviceApiService: DeviceApiService) {}
 
   @Get('program')
+  @Public()
   @ApiOperation({
     summary: '获取设备当前播放节目',
     description:

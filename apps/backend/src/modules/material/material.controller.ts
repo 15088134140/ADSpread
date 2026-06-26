@@ -9,7 +9,6 @@ import {
   Body,
   UploadedFile,
   UseInterceptors,
-  UseGuards,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -20,7 +19,8 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
+import { RequirePermission } from '../../common/decorators/require-permission.decorator';
+import { OperationLog } from '../../common/decorators/operation-log.decorator';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import { MaterialService } from './material.service';
 import { MaterialQueryDto } from './dto/material-query.dto';
@@ -28,12 +28,12 @@ import { ApproveMaterialDto, RejectMaterialDto } from './dto/audit-material.dto'
 
 @ApiTags('素材管理')
 @ApiBearerAuth()
-@UseGuards(JwtAuthGuard)
 @Controller('materials')
 export class MaterialController {
   constructor(private readonly materialService: MaterialService) {}
 
   @Get()
+  @RequirePermission('material:list')
   @ApiOperation({ summary: '分页查询素材列表', description: '支持按关键词、类型、审核状态筛选' })
   @ApiOkResponse({ description: '返回分页素材列表' })
   findAll(@Query() query: MaterialQueryDto) {
@@ -41,6 +41,7 @@ export class MaterialController {
   }
 
   @Get('available')
+  @RequirePermission('material:list')
   @ApiOperation({ summary: '获取可用素材', description: '返回所有审核通过的素材，供节目制作选择' })
   @ApiOkResponse({ description: '审核通过的素材列表' })
   available() {
@@ -48,6 +49,8 @@ export class MaterialController {
   }
 
   @Post('upload')
+  @RequirePermission('material:upload')
+  @OperationLog('upload', 'material')
   @ApiOperation({ summary: '上传素材', description: '上传图片或视频素材，上传后状态为待审核' })
   @ApiConsumes('multipart/form-data')
   @ApiBody({
@@ -66,6 +69,8 @@ export class MaterialController {
   }
 
   @Put(':id/approve')
+  @RequirePermission('material:audit')
+  @OperationLog('audit', 'material')
   @ApiOperation({ summary: '审核通过', description: '通过指定素材的审核，清空原驳回原因' })
   @ApiOkResponse({ description: '审核通过，返回更新后的素材信息' })
   approve(
@@ -77,6 +82,8 @@ export class MaterialController {
   }
 
   @Put(':id/reject')
+  @RequirePermission('material:audit')
+  @OperationLog('audit', 'material')
   @ApiOperation({ summary: '审核驳回', description: '驳回指定素材，需提供至少10个字符的驳回原因' })
   @ApiOkResponse({ description: '审核驳回，返回更新后的素材信息' })
   reject(
@@ -88,6 +95,8 @@ export class MaterialController {
   }
 
   @Delete(':id')
+  @RequirePermission('material:delete')
+  @OperationLog('delete', 'material')
   @ApiOperation({ summary: '删除素材', description: '素材被节目引用时禁止删除' })
   @ApiOkResponse({ description: '删除成功' })
   remove(@Param('id') id: number) {

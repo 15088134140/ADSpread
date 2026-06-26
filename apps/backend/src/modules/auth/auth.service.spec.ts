@@ -4,6 +4,8 @@ import * as bcrypt from 'bcryptjs';
 jest.mock('bcryptjs');
 import { AuthService } from './auth.service';
 import { PrismaService } from '../prisma/prisma.service';
+import { OperationLogService } from '../system/log/operation-log.service';
+import { MenuService } from '../system/menu/menu.service';
 
 jest.mock('bcrypt');
 
@@ -19,11 +21,18 @@ describe('AuthService', () => {
     signAsync: jest.fn(),
   } as unknown as JwtService;
 
+  const operationLogService = {
+    create: jest.fn().mockResolvedValue({}),
+  } as unknown as OperationLogService;
+
+  const menuService = {} as unknown as MenuService;
+
   let service: AuthService;
 
   beforeEach(() => {
     jest.clearAllMocks();
-    service = new AuthService(prisma, jwtService);
+    (operationLogService.create as jest.Mock).mockResolvedValue({});
+    service = new AuthService(prisma, jwtService, operationLogService, menuService);
   });
 
   it('rejects missing admin', async () => {
@@ -89,5 +98,9 @@ describe('AuthService', () => {
     expect(result.userInfo.username).toBe('admin');
     // Verify passwordHash is not in userInfo
     expect(result.userInfo).not.toHaveProperty('passwordHash');
+    // login 成功后显式写 login 操作日志
+    expect(operationLogService.create).toHaveBeenCalledWith(
+      expect.objectContaining({ operation: 'login', status: 1 })
+    );
   });
 });

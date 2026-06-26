@@ -1,13 +1,11 @@
-import { Controller, Get, Query, UseGuards } from '@nestjs/common';
+import { Controller, Get, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { JwtAuthGuard } from '../../../common/guards/jwt-auth.guard';
 import { RequirePermission } from '../../../common/decorators/require-permission.decorator';
 import { OperationLogService } from './operation-log.service';
 import { QueryOperationLogDto } from './dto/query-operation-log.dto';
 
 @ApiTags('系统管理-操作日志')
 @ApiBearerAuth()
-@UseGuards(JwtAuthGuard)
 @Controller('admin/logs')
 export class OperationLogController {
   constructor(private readonly operationLogService: OperationLogService) {}

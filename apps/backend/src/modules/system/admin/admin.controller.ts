@@ -8,10 +8,8 @@ import {
   Post,
   Put,
   Query,
-  UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { JwtAuthGuard } from '../../../common/guards/jwt-auth.guard';
 import { RequirePermission } from '../../../common/decorators/require-permission.decorator';
 import { OperationLog } from '../../../common/decorators/operation-log.decorator';
 import { CurrentUser } from '../../../common/decorators/current-user.decorator';
@@ -23,7 +21,6 @@ import { QueryAdminDto } from './dto/query-admin.dto';
 
 @ApiTags('系统管理-管理员')
 @ApiBearerAuth()
-@UseGuards(JwtAuthGuard)
 @Controller('admin/admins')
 export class AdminController {
   constructor(private readonly adminService: AdminService) {}

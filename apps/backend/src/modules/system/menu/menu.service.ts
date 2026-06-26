@@ -51,6 +51,38 @@ export class MenuService {
     return this.buildTree(menus);
   }
 
+  /**
+   * 返回当前用户可见的菜单树（specs §5.5 `/api/auth/menus`）。
+   *
+   * - 超级管理员：返回全部 status=1 菜单树。
+   * - 普通用户：取 `menuIds` 对应节点 + 其所有祖先节点组成可见集，再建树。
+   *   按钮节点（type=3）若在 menuIds 中一并返回，供前端按钮级判断。
+   *
+   * 祖先补全保证树结构完整（不会出现悬挂子节点）。
+   */
+  async findUserTree(menuIds: number[], isSuperAdmin: boolean): Promise<MenuTreeNode[]> {
+    const menus = await this.prisma.menu.findMany({
+      where: { status: 1 },
+      orderBy: [{ sort: 'asc' }, { id: 'asc' }],
+    });
+
+    if (isSuperAdmin) {
+      return this.buildTree(menus);
+    }
+
+    const visibleIds = new Set<number>(menuIds);
+    const byId = new Map<number, Menu>(menus.map((m) => [m.id, m]));
+    for (const id of menuIds) {
+      let current = byId.get(id);
+      while (current && current.parentId !== null && !visibleIds.has(current.parentId)) {
+        visibleIds.add(current.parentId);
+        current = byId.get(current.parentId);
+      }
+    }
+
+    return this.buildTree(menus.filter((m) => visibleIds.has(m.id)));
+  }
+
   async options() {
     return this.prisma.menu.findMany({
       where: { status: 1 },

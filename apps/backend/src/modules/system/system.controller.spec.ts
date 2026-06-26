@@ -21,21 +21,14 @@ import { SUPER_ADMIN_ROLE_NAME } from '../../common/constants/rbac.constants';
 /**
  * 系统管理模块集成测试。
  *
- * 两个跨任务依赖（Task 7 收口前需绕过）：
+ * Task 7 已修复全局守卫顺序（JwtAuthGuard 先于 PermissionGuard 注册为
+ * APP_GUARD），AppModule 也已注册 SystemModule 与全局拦截器。本测试为
+ * 隔离 DB 状态与模块注册，仍保留独立组装模块的方式（不导入 AppModule），
+ * 并按 [JwtAuthGuard, PermissionGuard] 顺序注册 APP_GUARD，与 AppModule
+ * 全局注册的协作顺序一致。
  *
- * 1. SystemModule 尚未在 AppModule 全局注册——本测试显式导入 SystemModule。
- *
- * 2. PermissionGuard 作为全局 APP_GUARD，按 NestJS 执行顺序
- *    `[globalGuards, controllerGuards, methodGuards]`，会在控制器级
- *    JwtAuthGuard 之前执行，导致 request.user 未被填充即被判 401。
- *    Task 3 的 PermissionGuard 注释假设 JwtAuthGuard 先执行，与实际相反，
- *    需 Task 7 调整。在此期间，本测试不导入 AppModule（避免其 APP_GUARD
- *    注册顺序问题），而是自行组装模块，并按 [JwtAuthGuard, PermissionGuard]
- *    顺序注册两个 APP_GUARD，模拟 Task 7 修复后的协作顺序。
- *
- * Token 签发：auth.controller 在 Task 7 才会补 @Public()，在此之前 login
- * 接口会被 PermissionGuard 拦截。本测试聚焦 system 模块本身，故直接用
- * JwtService 签发 token 绕过 login 流程。
+ * Token 签发：本测试聚焦 system 模块本身，直接用 JwtService 签发 token，
+ * 不经过 AuthController.login（后者已补 @Public，可正常工作）。
  */
 describe('SystemController (e2e)', () => {
   let app: INestApplication;

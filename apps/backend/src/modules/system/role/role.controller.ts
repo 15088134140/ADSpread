@@ -8,10 +8,8 @@ import {
   Post,
   Put,
   Query,
-  UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { JwtAuthGuard } from '../../../common/guards/jwt-auth.guard';
 import { RequirePermission } from '../../../common/decorators/require-permission.decorator';
 import { OperationLog } from '../../../common/decorators/operation-log.decorator';
 import { RoleService } from './role.service';
@@ -22,7 +20,6 @@ import { AssignRoleMenusDto } from './dto/assign-role-menus.dto';
 
 @ApiTags('系统管理-角色')
 @ApiBearerAuth()
-@UseGuards(JwtAuthGuard)
 @Controller('admin/roles')
 export class RoleController {
   constructor(private readonly roleService: RoleService) {}
@@ -48,6 +45,7 @@ export class RoleController {
 
   @Post()
   @RequirePermission('role:create')
+  @OperationLog('create', 'role')
   @ApiOperation({ summary: '创建角色', description: '新建角色，名称唯一' })
   @ApiOkResponse({ description: '成功创建角色' })
   create(@Body() dto: CreateRoleDto) {
@@ -56,6 +54,7 @@ export class RoleController {
 
   @Put(':id')
   @RequirePermission('role:update')
+  @OperationLog('update', 'role')
   @ApiOperation({ summary: '更新角色', description: '更新指定角色信息' })
   @ApiOkResponse({ description: '成功更新角色' })
   update(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateRoleDto) {
@@ -64,6 +63,7 @@ export class RoleController {
 
   @Delete(':id')
   @RequirePermission('role:delete')
+  @OperationLog('delete', 'role')
   @ApiOperation({
     summary: '删除角色',
     description: '删除指定角色；有关联管理员或超管角色不可删除',
