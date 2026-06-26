@@ -8,10 +8,24 @@ import {
   Post,
   Put,
   Query,
+  Res,
+  UploadedFile,
+  UseInterceptors,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { FileInterceptor } from '@nestjs/platform-express';
+import type { Response } from 'express';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiConsumes,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
+import type { ImportResult } from '@adspread/types';
 import { RequirePermission } from '../../common/decorators/require-permission.decorator';
 import { OperationLog } from '../../common/decorators/operation-log.decorator';
+import { BusinessException } from '../../common/errors/business.exception';
 import { CreateDeviceDto } from './dto/create-device.dto';
 import { DeviceQueryDto } from './dto/device-query.dto';
 import { UpdateDeviceDto } from './dto/update-device.dto';
@@ -56,6 +70,47 @@ export class DeviceController {
   @ApiOkResponse({ description: '成功返回设备选项列表' })
   options() {
     return this.deviceService.options();
+  }
+
+  @Get('import-template')
+  @RequirePermission('device:import')
+  @ApiOperation({
+    summary: '下载设备导入模板',
+    description: '生成并下载 xlsx 模板（含表头、示例行与填写说明）',
+  })
+  @ApiOkResponse({ description: '返回 xlsx 模板文件' })
+  importTemplate(@Res() res: Response) {
+    const buffer = this.deviceService.getImportTemplate();
+    res.set({
+      'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      'Content-Disposition': 'attachment; filename="device-import-template.xlsx"',
+    });
+    res.send(buffer);
+  }
+
+  @Post('import')
+  @RequirePermission('device:import')
+  @OperationLog('batch-import', 'device')
+  @UseInterceptors(FileInterceptor('file'))
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        file: { type: 'string', format: 'binary' },
+      },
+    },
+  })
+  @ApiOperation({
+    summary: '批量导入设备',
+    description: '上传 xlsx 文件，逐行校验并批量创建设备，返回成功/失败明细',
+  })
+  @ApiOkResponse({ description: '返回导入结果' })
+  async import(@UploadedFile() file: Express.Multer.File): Promise<ImportResult> {
+    if (!file) {
+      throw new BusinessException('未上传文件');
+    }
+    return this.deviceService.batchImport(file);
   }
 
   @Post()
