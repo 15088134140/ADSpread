@@ -111,37 +111,44 @@
 | 前端 build | PASS | 13.38s，1765 模块               |
 | seed       | PASS | 39 菜单 + 2 角色 + 2 账号，幂等 |
 
-### 手工验收（待执行）
+### 手工验收（已完成）
 
-- 登录与动态菜单渲染（UI 实时效果）
-- operator 权限隔离的前端按钮显隐
-- 三语切换的 Element Plus 组件文案变化
+人工核查已通过：
 
-详见验证记录"手工验收清单"节，标注为"待手工执行"的项。
+- 登录与动态菜单渲染（admin 全菜单、operator 过滤后菜单）✓
+- operator 权限隔离：系统管理接口 403、删除接口 403、列表接口 200 ✓
+- 菜单文案 i18n 正常显示（修复 name→slug 映射）✓
+- 业务列表 ID 列展示（门店/设备/素材/节目/发布）✓
+- 三语切换、Element Plus locale 联动 ✓
+
+详见验证记录"手工验收清单"节。
 
 ## 实施 commit 列表
 
-| commit     | 说明                                                                 |
-| ---------- | -------------------------------------------------------------------- |
-| `1d26d89`  | feat(shared): align industry category enum and add rbac types        |
-| `adf92f6`  | feat(backend): add rbac constants and decorators                     |
-| `d2d7329`  | feat(backend): add permission guard and operation log interceptor    |
-| `0d6f0c8`  | feat(backend): add system management modules (admin/role/menu/log)   |
-| `877a56c`  | feat(backend): expand seed with menus, operator role and account     |
-| `78a83fa`  | feat(backend): extend auth and annotate controllers with permissions |
-| `7db4827`  | feat(backend): add excel device import                               |
-| `a6a9fd2`  | feat(admin): add i18n with ja/zh-CN/en                               |
-| `e2c54ca`  | feat(admin): add permission store and dynamic menu                   |
-| `f22d9da`  | feat(admin): add system pages and excel import dialog                |
-| `ba72056`  | feat(admin): migrate existing pages to i18n                          |
-| `8331812`  | fix(backend): order cleanDatabase by fk deps and clear menu self-ref |
-| （待提交） | docs(phase2): sync design docs and add verification record           |
+| commit    | 说明                                                                    |
+| --------- | ----------------------------------------------------------------------- |
+| `1d26d89` | feat(shared): align industry category enum and add rbac types           |
+| `adf92f6` | feat(backend): add rbac constants and decorators                        |
+| `d2d7329` | feat(backend): add permission guard and operation log interceptor       |
+| `0d6f0c8` | feat(backend): add system management modules (admin/role/menu/log)      |
+| `877a56c` | feat(backend): expand seed with menus, operator role and account        |
+| `78a83fa` | feat(backend): extend auth and annotate controllers with permissions    |
+| `7db4827` | feat(backend): add excel device import                                  |
+| `a6a9fd2` | feat(admin): add i18n with ja/zh-CN/en                                  |
+| `e2c54ca` | feat(admin): add permission store and dynamic menu                      |
+| `f22d9da` | feat(admin): add system pages and excel import dialog                   |
+| `ba72056` | feat(admin): migrate existing pages to i18n                             |
+| `8331812` | fix(backend): order cleanDatabase by fk deps and clear menu self-ref    |
+| `ed342c2` | docs(architecture): sync phase2 design docs and add verification record |
+| `9032e82` | fix(admin): map backend menu name to i18n slug in sidebar               |
+| `50505e3` | feat(admin): show store id column for device import reference           |
+| `5183101` | feat(admin): show id column on business list pages                      |
 
 ## 备注
 
 ### 实施状态
 
-**已完成**。所有 14 个 Task（Task 1–14）均按实施计划执行完毕，后端与前端构建通过，后端全量测试通过，seed 验证通过。本任务（Task 14）为文档同步与验证记录，由技术文档工程师子代理执行。
+**已完成并人工验收**。所有 14 个 Task（Task 1–14）均按实施计划执行完毕，后端与前端构建通过，后端全量测试通过，seed 验证通过，人工核查通过。分支已合并至 main。
 
 ### 已知偏差与遗留
 
@@ -151,6 +158,8 @@
 4. 前端动态菜单 vs 静态路由——路由静态注册 + 守卫拦截，组件级动态加载列为后续增强。
 5. Dashboard `recentLogs` mock 数据——待真实 API 接入替换。
 6. `cleanDatabase` 当前未被 spec 调用——已修正为可用以备将来。
+7. seed 幂等对已存在账号不重置密码——核查时发现 operator 账号因历史脏哈希无法登录，已直接重置 DB；根因是 seed upsert 对已存在记录不校正密码，后续若需环境可复现，应调整 seed 对示例账号每次重置密码（列为后续改进）。
+8. 角色改名提权缺口——`RoleService.update` 已禁止超管角色自身改名，但未禁止把其它角色改名为"超级管理员"（等同提权）。建议后续在 update 中拒绝 `dto.name === SUPER_ADMIN_ROLE_NAME` 的非超管角色改名。
 
 详见验证记录"已知问题与偏差"节。
 
