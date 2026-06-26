@@ -35,14 +35,14 @@
 
 ## 验收标准
 
-- [ ] `/dashboard` 所有数字来自 `GET /api/dashboard/overview`，无 mock 残留。
-- [ ] 设备在线率 = 在线/启用，"在线"为 `lastActiveAt >= now-5min` 且 `status=1`。
-- [ ] 待审核素材数与 `/material?auditStatus=PENDING` 列表一致，可点击跳转。
-- [ ] operator 登录看不到操作日志区块（无 `log:list`）；超管全区块可见。
-- [ ] 切换 ja/zh-CN/en 文案正确。
-- [ ] 后端 `jest` 全绿（含新增 `dashboard.service.spec.ts`），前端 `build` 通过。
-- [ ] `docs/api/README.md` 新增 dashboard 模块说明。
-- [ ] `docs/superpowers/reviews/` 产出验证记录。
+- [x] `/dashboard` 所有数字来自 `GET /api/dashboard/overview`，无 mock 残留。
+- [x] 设备在线率 = 在线/启用，"在线"为 `lastActiveAt >= now-5min` 且 `status=1`。
+- [x] 待审核素材数与 `/material?auditStatus=PENDING` 列表一致，可点击跳转。
+- [x] operator 登录看不到操作日志区块（无 `log:list`）；超管全区块可见。
+- [x] 切换 ja/zh-CN/en 文案正确。
+- [x] 后端 `jest` 全绿（含新增 `dashboard.service.spec.ts`），前端 `build` 通过。
+- [x] `docs/api/README.md` 新增 dashboard 模块说明。
+- [x] `docs/superpowers/reviews/` 产出验证记录。
 
 ## 验证方式
 

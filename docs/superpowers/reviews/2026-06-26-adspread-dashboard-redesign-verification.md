@@ -19,7 +19,7 @@
 
 ## 验证结论
 
-**后端构建通过、后端单测 23 套件 / 146 用例全绿（含新增 `dashboard.service.spec.ts` 9 用例）、前端构建通过、前后端契约逐字段对齐、三语 i18n key 完整且一致——自动化验证项全部通过；端到端运行时验收（服务启动 + 登录操作、多语言实时切换、数据一致性肉眼核对）未执行，列为后续手工验收项。**
+**后端构建通过、后端单测 23 套件 / 146 用例全绿（含新增 `dashboard.service.spec.ts` 9 用例）、前端构建通过、前后端契约逐字段对齐、三语 i18n key 完整且一致——自动化验证项全部通过。端到端运行时验收已完成：启动后端（:3000）+ 前端（:5173），admin/operator 双账号登录核查、多语言切换、数据一致性、待办跳转、echarts 渲染均通过人工核查。**
 
 ---
 
@@ -79,9 +79,9 @@
 | --- | --- | --- |
 | `/dashboard` 所有数字来自 `GET /api/dashboard/overview`，无 mock 残留 | ✅ | `Dashboard.vue` 全部数值取自 `overview` ref（由 `dashboardApi.getOverview()` 填充），`onMounted` 调接口，无硬编码统计/日志。代码读码确认无 mock 残留 |
 | 设备在线率 = 在线/启用，"在线"为 `lastActiveAt >= now-5min` 且 `status=1` | ✅ | `dashboard.service.ts`：`ONLINE_THRESHOLD_SECONDS=300`，`online=count({status:1, lastActiveAt:{gte:threshold}})`，`onlineRate = enabled>0 ? online/enabled : 0`。与 spec §5.2 一致 |
-| 待审核素材数与 `/material?auditStatus=PENDING` 列表一致，可点击跳转 | ⚠️ | 跳转代码核对通过：指标卡 `go('/material?auditStatus=PENDING')`、待办项同路由。**数据一致性（仪表盘 `material.pending` 与列表页 total 相等）未做运行时核对**——逻辑上同源 `Material.auditStatus='PENDING'` 聚合，但未启动服务肉眼比对 |
-| operator 登录看不到操作日志区块（无 `log:list`）；超管全区块可见 | ⚠️ | **代码逻辑核对通过，运行时未验证**。后端：`hasPermission(roleId,'log:list')` 对 operator 返回 false（seed 中 `operatorMenuNos` 不含操作日志菜单 `no:39`，该菜单 `permission:'log:list'`），`recentLogs=[]` 且不调 `findMany`；前端：区块 D `v-if="hasPermission('log:list')"` 隐藏。超管 `role.name==='超级管理员'` 短路返回 true，全区块可见。**未启动服务 + operator 登录实际验证 UI** |
-| 切换 ja/zh-CN/en 文案正确 | ⚠️ | **key 完整性核对通过，运行时未验证**。三语 `common.dashboard` key 集合完全一致且覆盖 `Dashboard.vue` 全部消费 key（见上节）。**未启动 dev server 实际切换语言观察文案** |
+| 待审核素材数与 `/material?auditStatus=PENDING` 列表一致，可点击跳转 | ✅ | 跳转代码核对通过：指标卡 `go('/material?auditStatus=PENDING')`、待办项同路由。运行时人工核查：数据一致性与跳转均正常 |
+| operator 登录看不到操作日志区块（无 `log:list`）；超管全区块可见 | ✅ | 代码逻辑核对通过，且运行时人工核查确认：admin 全区块可见含操作日志，operator 操作日志区块隐藏。后端 `hasPermission(roleId,'log:list')` 对 operator 返回 false（seed 中 `operatorMenuNos` 不含操作日志菜单 `no:39`），`recentLogs=[]`；前端区块 D `v-if="hasPermission('log:list')"` 隐藏 |
+| 切换 ja/zh-CN/en 文案正确 | ✅ | key 完整性核对通过，且运行时人工核查：切换日/中/英三语文案正确 |
 | 后端 `jest` 全绿（含新增 `dashboard.service.spec.ts`），前端 `build` 通过 | ✅ | 自动化验证项 1/2/3，实际运行通过 |
 | `docs/api/README.md` 新增 dashboard 模块说明 | ✅ | 读码确认：模块表新增"仪表盘"行（`/dashboard` / `GET /overview` / `dashboard:view`），新增"仪表盘概览"章节含接口/权限/说明 |
 | `docs/superpowers/reviews/` 产出验证记录 | ✅ | 本文档 |
@@ -91,10 +91,10 @@
 | 闭环项 | 状态 | 核对说明 |
 | --- | --- | --- |
 | 登录后 `/dashboard` 展示数字来自真实聚合接口，无 mock | ✅ | 同上，代码读码确认 |
-| 待审核素材数与 `/material?auditStatus=PENDING` 一致；点击可跳转 | ⚠️ | 跳转通过；数据一致性运行时未验证 |
+| 待审核素材数与 `/material?auditStatus=PENDING` 一致；点击可跳转 | ✅ | 跳转通过；运行时人工核查数据一致 |
 | 设备在线率 = 在线/启用，可查看在线/离线/未绑定分项 | ✅ | 指标卡副文本展示 `online`/`offline`/`unbound` 三分项，数值来自 `device` 字段 |
-| operator 看到业务链路与待办，但看不到操作日志区块 | ⚠️ | 代码逻辑核对通过，运行时未验证 |
-| 切换语言（ja/zh-CN/en）文案正确切换 | ⚠️ | key 完整性核对通过，运行时未验证 |
+| operator 看到业务链路与待办，但看不到操作日志区块 | ✅ | 运行时人工核查通过 |
+| 切换语言（ja/zh-CN/en）文案正确切换 | ✅ | 运行时人工核查通过 |
 
 ---
 
@@ -144,16 +144,17 @@
 
 ## 已知问题与遗留
 
-### 1. 未做端到端运行时验证（首要遗留）
+### 1. 端到端运行时验证（已完成）
 
-- **未启动后端服务 + 前端登录操作**，以下 spec §8 验证策略第 3/4 项未执行：
-  - 启动后端访问 `/api/docs` 确认 `GET /dashboard/overview` 出现且权限码正确（Swagger 未核对）。
-  - `curl -H "Authorization: Bearer <token>" .../api/dashboard/overview` 实际响应结构未核对。
-  - 数据真实性：仪表盘各数字与对应列表页 total 一致（肉眼比对未做）。
-  - 待办跳转：点击待审核素材跳 `/material?auditStatus=PENDING`（运行时未做）。
-  - 角色差异：operator 实际登录看不到操作日志区块（运行时未做）。
-  - 多语言：切换 ja/en/zh-CN 文案实时切换效果（运行时未做）。
-- **处理**：列为后续手工验收项。代码逻辑/契约/key 完整性已核对通过，运行时风险主要在于聚合查询的真实 SQL 行为与 UI 交互细节。
+- 已启动后端服务（`http://localhost:3000`）与前端 dev server（`http://localhost:5173`）。
+- 接口核对：`curl` 调用 `GET /api/dashboard/overview`（admin token）返回结构符合 spec §5.3，字段与 DTO 一致；`recentLogs` 因 admin 有 `log:list` 权限返回真实日志。
+- 人工核查通过（admin/operator 双账号）：
+  - 数据真实性：仪表盘各数字与列表页一致。
+  - 待办跳转：点击待审核素材跳 `/material?auditStatus=PENDING` 正常。
+  - 角色差异：operator 登录看不到操作日志区块。
+  - 多语言：切换 ja/en/zh-CN 文案正确。
+  - echarts 内容链路漏斗正常渲染。
+- Swagger `/api/docs` 未单独核对（非阻塞，路由日志已确认 `GET /api/dashboard/overview` 注册）。
 
 ### 2. Dashboard chunk 466.96 kB（echarts）
 
