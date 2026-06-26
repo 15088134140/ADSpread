@@ -29,8 +29,8 @@
 - 真实 Socket.io 设备长连接、ack、失败重试队列。
 - 设备心跳上报接口（`POST /api/device/heartbeat`）。
 - v2.x 后续规划：统计报表、素材标签、节目优先级、时段轮播、APK 升级。
-- 后端错误消息的多语言国际化（业务错误码已统一；错误消息暂保持中文，列为后续增强）。
-- 前端组件级动态加载（路由仍静态注册，仅侧边栏菜单按权限动态渲染）。
+- 后端错误消息的多语言国际化（业务错误码已统一；错误消息暂保持中文，列为后续增强）。（已于 2026-06-26 增强落实，见 `specs/2026-06-26-adspread-phase2-i18n-dynamic-route-design.md`）
+- 前端组件级动态加载（路由仍静态注册，仅侧边栏菜单按权限动态渲染）。（已于 2026-06-26 增强落实，见 `specs/2026-06-26-adspread-phase2-i18n-dynamic-route-design.md`）
 
 ### 1.2 完成后应能验证的闭环
 
@@ -547,8 +547,8 @@ apps/admin/src/
 
 - 真实 Socket.io 推送通道、设备心跳、ack、失败重试。
 - Android 客户端。
-- 后端错误消息国际化。
-- 前端组件级动态加载。
+- 后端错误消息国际化。（已于 2026-06-26 增强落实，见 `specs/2026-06-26-adspread-phase2-i18n-dynamic-route-design.md`）
+- 前端组件级动态加载。（已于 2026-06-26 增强落实，见 `specs/2026-06-26-adspread-phase2-i18n-dynamic-route-design.md`）
 - v2.x：统计报表、素材标签、节目优先级、时段轮播、APK 升级。
 - 权限码集合 Redis 缓存。
 

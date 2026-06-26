@@ -39,7 +39,7 @@
 - **授权**：全局 `PermissionGuard` 采用严格兜底——受保护接口必须显式声明 `@RequirePermission('xxx:yyy')` 权限码、`@AuthenticatedOnly()`（仅需登录）或 `@Public()`（公开），否则一律 403。
 - **权限码**：与菜单 `permission` 字段一致（如 `store:list`、`device:import`、`admin:create`、`role:assign`、`log:list`）。完整接口↔权限码映射见技术设计文档 §5.3.7/§5.3.8 与设计规格 `docs/superpowers/specs/2026-06-26-adspread-phase2-rbac-audit-i18n-excel-design.md` §4.4.2。
 - **超级管理员**：名称约定 `超级管理员` 的角色自动放行所有接口。
-- **多语言**：请求头携带 `Accept-Language: ja | zh-CN | en`（默认日语，遵 PRD §4.12）。当前后端业务错误消息保持中文，国际化列为后续增强。
+- **多语言**：请求头携带 `Accept-Language: ja | zh-CN | en`（默认日语，遵 PRD §4.12）。后端业务错误消息（`BusinessException`）与通用 HTTP 兜底消息按 `Accept-Language` 返回日/中/英三语，不带该头时默认 `zh-CN`；class-validator 字段级校验消息仍为英文。
 - **HTTP method 偏差**（实现保留 MVP 既有调用约定，权限码不变）：
   - `PUT /api/materials/:id/approve`、`PUT /api/materials/:id/reject`（映射表建议 POST，权限码 `material:audit`）
   - `PUT /api/programs/:id/publish`（映射表建议 POST，权限码 `program:publish`）
@@ -84,6 +84,8 @@
 ```
 
 > 后端成功响应 `code: 0`，业务错误返回非 0 业务码（400xx 参数 / 401xx 认证 / 403xx 权限 / 404xx 资源不存在 / 500xx 服务端错误）。`timestamp` 为毫秒级数字时间戳。前端 `utils/request.ts` 仅接受 `code === 0`。
+
+**错误消息多语言**：错误响应 body 的 `message` 字段会随请求头 `Accept-Language`（`ja` / `zh-CN` / `en`）返回对应语言——`BusinessException` 业务错误消息与 `AllExceptionsFilter` 通用 HTTP 兜底消息（401/403/404/500）均已本地化；不带该头时默认 `zh-CN`。消息目录见 `apps/backend/src/common/i18n/error-messages.ts`。**class-validator 字段级校验消息仍为英文**（如 `name must be a string`），不在本地化范围。
 
 ---
 
