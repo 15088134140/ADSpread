@@ -30,6 +30,7 @@
 | 素材     | `/materials` | 素材上传、审核（`PUT /:id/approve`、`PUT /:id/reject`）、删除、预览                        |
 | 节目     | `/programs`  | 节目 CRUD、发布 `PUT /:id/publish`、分屏配置                                               |
 | 发布     | `/publish`   | 发布计划 CRUD、启用/停用 `PUT /:id/status`、推送、批量推送                                 |
+| 仪表盘   | `/dashboard` | 概览聚合 `GET /overview`（设备/素材/节目/发布/门店/待办/最近日志）                         |
 | 系统管理 | `/admin`     | 管理员 `/admins`、角色 `/roles`、菜单 `/menus`、操作日志 `/logs`                           |
 | 设备接口 | `/device`    | 设备拉取节目 `GET /program`（公开，无需登录）                                              |
 
@@ -71,6 +72,71 @@
   "timestamp": 1716547200000
 }
 ```
+
+### 仪表盘概览
+
+- **接口**: `GET /api/dashboard/overview`
+- **权限**: `dashboard:view`
+- **说明**: 聚合设备在线状态、素材审核状态、节目状态、发布计划状态、近 7 天推送统计、门店计数、运营待办与最近操作日志，供管理端仪表盘展示。`recentLogs` 按当前用户 `log:list` 权限裁剪——无权限时返回空数组。
+- **响应 `data` 结构**:
+
+```json
+{
+  "device": {
+    "total": 156,
+    "enabled": 150,
+    "online": 148,
+    "offline": 2,
+    "unbound": 6,
+    "onlineRate": 0.987
+  },
+  "material": {
+    "pending": 3,
+    "approved": 320,
+    "rejected": 19
+  },
+  "program": {
+    "draft": 12,
+    "published": 8
+  },
+  "publish": {
+    "active": 5,
+    "inactive": 2,
+    "recentPushTotal": 42,
+    "recentPushSuccess": 40,
+    "recentPushFail": 2,
+    "pushSuccessRate": 0.952
+  },
+  "store": {
+    "total": 24,
+    "active": 22
+  },
+  "todo": {
+    "pendingMaterial": 3,
+    "pushFail": 2,
+    "unboundDevice": 6
+  },
+  "recentLogs": [
+    {
+      "id": 1,
+      "username": "admin",
+      "operation": "创建门店",
+      "status": 1,
+      "durationMs": 120,
+      "createdAt": "2026-06-26T03:00:00.000Z"
+    }
+  ]
+}
+```
+
+字段说明：
+
+- `device.onlineRate` = `online` / `enabled`，保留 3 位小数；`enabled=0` 时为 0
+- `device.online` = `status=1` 且 `lastActiveAt` 在 5 分钟内
+- `device.unbound` = `storeId` 为空（含禁用设备）
+- `publish.pushSuccessRate` = 近 7 天成功数 / 总数，保留 3 位小数；`recentPushTotal=0` 时为 0
+- `recentLogs[].durationMs` 对应 `OperationLog.time`（耗时 ms，仅本响应内重命名）
+- `todo.pendingMaterial` / `todo.pushFail` / `todo.unboundDevice` 分别等于 `material.pending`、`publish.recentPushFail`、`device.unbound`
 
 ### 错误响应格式
 
