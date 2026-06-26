@@ -30,7 +30,7 @@ service.interceptors.response.use(
   (response: AxiosResponse) => {
     const { code, message, data } = response.data;
 
-    if (code === 200 || code === 0) {
+    if (code === 0) {
       return data;
     }
 

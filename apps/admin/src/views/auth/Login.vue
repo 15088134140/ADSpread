@@ -58,7 +58,7 @@ import { ref, reactive } from 'vue';
 import { useRouter } from 'vue-router';
 import { ElMessage, type FormInstance, type FormRules } from 'element-plus';
 import { useUserStore } from '@/stores/user';
-import { http } from '@/utils/request';
+import { authApi } from '@/api/auth';
 import type { LoginRequest } from '@adspread/types';
 
 const router = useRouter();
@@ -84,8 +84,7 @@ const handleLogin = async () => {
     if (valid) {
       try {
         loading.value = true;
-        // Mock login - will be replaced with actual API call
-        const response = await http.post('/auth/login', loginForm);
+        const response = await authApi.login(loginForm);
         const { token, userInfo } = response;
 
         userStore.setToken(token);

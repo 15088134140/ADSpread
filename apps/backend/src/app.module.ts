@@ -6,8 +6,7 @@ import { DeviceModule } from './modules/device/device.module';
 import { MaterialModule } from './modules/material/material.module';
 import { ProgramModule } from './modules/program/program.module';
 import { PublishModule } from './modules/publish/publish.module';
-import { SystemModule } from './modules/system/system.module';
-import { SocketModule } from './modules/socket/socket.module';
+import { DeviceApiModule } from './modules/device-api/device-api.module';
 import { PrismaModule } from './modules/prisma/prisma.module';
 import { LoggingMiddleware } from './middleware/logging.middleware';
 
@@ -21,7 +20,6 @@ import { LoggingMiddleware } from './middleware/logging.middleware';
 
     // Core modules
     PrismaModule,
-    SocketModule,
 
     // Auth modules
     AuthModule,
@@ -32,7 +30,9 @@ import { LoggingMiddleware } from './middleware/logging.middleware';
     MaterialModule,
     ProgramModule,
     PublishModule,
-    SystemModule,
+
+    // Device-side API (public)
+    DeviceApiModule,
   ],
 })
 export class AppModule implements NestModule {

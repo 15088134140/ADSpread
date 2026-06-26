@@ -1,18 +1,31 @@
 import { NestFactory } from '@nestjs/core';
+import { NestExpressApplication } from '@nestjs/platform-express';
+import { join } from 'path';
 import { ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import { HttpAdapterHost } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { AllExceptionsFilter } from './filters/all-exceptions.filter';
 import { TransformInterceptor } from './interceptors/transform.interceptor';
-import { LoggingMiddleware } from './middleware/logging.middleware';
+
+// 全局支持 BigInt 序列化（Material.fileSize 等字段）
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+(BigInt.prototype as any).toJSON = function () {
+  return Number(this);
+};
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
   // CORS configuration
   app.enableCors({
     origin: process.env.CORS_ORIGIN || 'http://localhost:5173',
     credentials: true,
+  });
+
+  // Serve static files from uploads directory
+  app.useStaticAssets(join(process.cwd(), 'uploads'), {
+    prefix: '/uploads/',
   });
 
   // Global prefix
@@ -26,17 +39,17 @@ async function bootstrap() {
       transformOptions: {
         enableImplicitConversion: true,
       },
-    }),
+    })
   );
 
   // Global exception filter
-  app.useGlobalFilters(new AllExceptionsFilter());
+  const httpAdapterHost = app.get(HttpAdapterHost);
+  app.useGlobalFilters(new AllExceptionsFilter(httpAdapterHost));
 
   // Global transform interceptor
   app.useGlobalInterceptors(new TransformInterceptor());
 
-  // Logging middleware
-  app.use(new LoggingMiddleware().use);
+  // Logging middleware is registered via AppModule (consumer.apply)
 
   // Swagger documentation
   if (process.env.SWAGGER_ENABLED !== 'false') {
@@ -56,4 +69,4 @@ async function bootstrap() {
   console.log(`📚 API docs: http://localhost:${port}/api/docs`);
 }
 
-bootstrap();
+void bootstrap();

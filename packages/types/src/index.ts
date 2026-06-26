@@ -14,15 +14,31 @@ export enum IndustryCategory {
 export enum ScreenOrientation {
   LANDSCAPE = 'LANDSCAPE',
   PORTRAIT = 'PORTRAIT',
+  ANY = 'ANY',
 }
 
 export enum SplitType {
   SPLIT_1 = 'SPLIT_1',
-  SPLIT_2_H = 'SPLIT_2_H',
-  SPLIT_2_V = 'SPLIT_2_V',
-  SPLIT_3_H = 'SPLIT_3_H',
-  SPLIT_3_V = 'SPLIT_3_V',
+  SPLIT_2 = 'SPLIT_2',
+  SPLIT_3 = 'SPLIT_3',
+  SPLIT_3_1 = 'SPLIT_3_1',
   SPLIT_4 = 'SPLIT_4',
+  ANY = 'ANY',
+}
+
+export enum Status {
+  DISABLED = 0,
+  ENABLED = 1,
+}
+
+export enum ProgramStatus {
+  DRAFT = 0,
+  PUBLISHED = 1,
+}
+
+export enum PublishPlanStatus {
+  DISABLED = 0,
+  ENABLED = 1,
 }
 
 export enum MaterialType {
@@ -176,7 +192,7 @@ export interface ApiResponse<T = any> {
   code: number;
   message: string;
   data: T;
-  timestamp: string;
+  timestamp: number;
 }
 
 export interface PaginatedResponse<T> {
@@ -220,6 +236,7 @@ export const IndustryCategoryLabels: Record<IndustryCategory, string> = {
 export const ScreenOrientationLabels: Record<ScreenOrientation, string> = {
   [ScreenOrientation.LANDSCAPE]: '横屏',
   [ScreenOrientation.PORTRAIT]: '竖屏',
+  [ScreenOrientation.ANY]: '任意',
 };
 
 export const AuditStatusLabels: Record<AuditStatus, string> = {

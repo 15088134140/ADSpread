@@ -50,37 +50,6 @@ const routes: RouteRecordRaw[] = [
         component: () => import('@/views/publish/PublishList.vue'),
         meta: { title: 'menu.publish', icon: 'Promotion' },
       },
-      {
-        path: 'system',
-        redirect: '/system/admin',
-        meta: { title: 'menu.system', icon: 'Setting' },
-        children: [
-          {
-            path: 'admin',
-            name: 'SystemAdmin',
-            component: () => import('@/views/system/AdminList.vue'),
-            meta: { title: 'menu.admin' },
-          },
-          {
-            path: 'role',
-            name: 'SystemRole',
-            component: () => import('@/views/system/RoleList.vue'),
-            meta: { title: 'menu.role' },
-          },
-          {
-            path: 'menu',
-            name: 'SystemMenu',
-            component: () => import('@/views/system/MenuList.vue'),
-            meta: { title: 'menu.menu' },
-          },
-          {
-            path: 'log',
-            name: 'SystemLog',
-            component: () => import('@/views/system/LogList.vue'),
-            meta: { title: 'menu.log' },
-          },
-        ],
-      },
     ],
   },
   {
@@ -96,7 +65,7 @@ const router = createRouter({
 });
 
 // Navigation guard
-router.beforeEach((to, from, next) => {
+router.beforeEach((to, _, next) => {
   const token = localStorage.getItem('token');
 
   if (to.meta.requiresAuth && !token) {

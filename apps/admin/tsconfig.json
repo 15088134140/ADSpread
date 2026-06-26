@@ -18,7 +18,8 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"],
-      "@adspread/types": ["../../packages/types/src/index.ts"]
+      "@adspread/types": ["../../packages/types/src/index.ts"],
+      "@adspread/shared": ["../../packages/shared/src/index.ts"]
     }
   },
   "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
