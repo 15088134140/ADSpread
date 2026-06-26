@@ -10,6 +10,7 @@ export default {
     all: 'All',
   },
   table: {
+    id: 'ID',
     name: 'Store Name',
     code: 'Store Code',
     industryCategory: 'Industry Category',

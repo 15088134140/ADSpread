@@ -10,6 +10,7 @@ export default {
     all: '全部',
   },
   table: {
+    id: 'ID',
     name: '门店名称',
     code: '门店编码',
     industryCategory: '行业分类',

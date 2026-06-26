@@ -10,6 +10,7 @@ export default {
     all: 'すべて',
   },
   table: {
+    id: 'ID',
     name: '店舗名',
     code: '店舗コード',
     industryCategory: '業種カテゴリ',

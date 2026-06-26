@@ -30,6 +30,7 @@
       </el-form>
 
       <el-table v-loading="loading" :data="list">
+        <el-table-column prop="id" :label="t('store.table.id')" width="80" />
         <el-table-column prop="name" :label="t('store.table.name')" />
         <el-table-column prop="code" :label="t('store.table.code')" />
         <el-table-column :label="t('store.table.industryCategory')">
