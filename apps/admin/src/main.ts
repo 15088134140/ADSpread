@@ -8,6 +8,7 @@ import i18n from './locales';
 import App from './App.vue';
 import router from './router';
 import { useUserStore } from './stores/user';
+import { permission } from './directives/permission';
 
 import './assets/styles/main.scss';
 
@@ -22,6 +23,9 @@ app.use(createPinia());
 app.use(router);
 app.use(ElementPlus);
 app.use(i18n);
+
+// Register permission directive
+app.directive('permission', permission);
 
 // Initialize user store
 const userStore = useUserStore();

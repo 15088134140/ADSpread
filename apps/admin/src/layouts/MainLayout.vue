@@ -13,30 +13,12 @@
         text-color="#bfcbd9"
         active-text-color="#409eff"
       >
-        <el-menu-item index="/dashboard">
-          <el-icon><Odometer /></el-icon>
-          <template #title>仪表盘</template>
-        </el-menu-item>
-        <el-menu-item index="/store">
-          <el-icon><Shop /></el-icon>
-          <template #title>门店管理</template>
-        </el-menu-item>
-        <el-menu-item index="/device">
-          <el-icon><Monitor /></el-icon>
-          <template #title>设备管理</template>
-        </el-menu-item>
-        <el-menu-item index="/material">
-          <el-icon><Picture /></el-icon>
-          <template #title>素材管理</template>
-        </el-menu-item>
-        <el-menu-item index="/program">
-          <el-icon><Film /></el-icon>
-          <template #title>节目制作</template>
-        </el-menu-item>
-        <el-menu-item index="/publish">
-          <el-icon><Promotion /></el-icon>
-          <template #title>发布管理</template>
-        </el-menu-item>
+        <side-menu-item
+          v-for="node in permissionStore.menuTree"
+          :key="node.id"
+          :node="node"
+          i18n-prefix="menu"
+        />
       </el-menu>
     </el-aside>
 
@@ -51,6 +33,16 @@
           />
         </div>
         <div class="header-right">
+          <el-select
+            :model-value="appStore.locale"
+            size="small"
+            class="locale-switch"
+            @change="handleLocaleChange"
+          >
+            <el-option label="日本語" value="ja" />
+            <el-option label="简体中文" value="zh-CN" />
+            <el-option label="English" value="en" />
+          </el-select>
           <el-dropdown @command="handleCommand">
             <span class="user-info">
               <el-avatar :size="32" :src="userStore.userInfo.avatar">
@@ -62,15 +54,15 @@
               <el-dropdown-menu>
                 <el-dropdown-item command="profile">
                   <el-icon><User /></el-icon>
-                  个人中心
+                  {{ t('common.profile') }}
                 </el-dropdown-item>
                 <el-dropdown-item command="settings">
                   <el-icon><Setting /></el-icon>
-                  系统设置
+                  {{ t('common.settings') }}
                 </el-dropdown-item>
                 <el-dropdown-item divided command="logout">
                   <el-icon><SwitchButton /></el-icon>
-                  退出登录
+                  {{ t('common.logout') }}
                 </el-dropdown-item>
               </el-dropdown-menu>
             </template>
@@ -92,24 +84,27 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import { useI18n } from 'vue-i18n';
 import {
   Fold,
   Expand,
-  Odometer,
-  Shop,
-  Monitor,
-  Picture,
-  Film,
-  Promotion,
   User,
+  Setting,
   SwitchButton,
 } from '@element-plus/icons-vue';
-import { useUserStore } from '@/stores/user';
 import { ElMessageBox } from 'element-plus';
+import { useUserStore } from '@/stores/user';
+import { useAppStore } from '@/stores/app';
+import { usePermissionStore } from '@/stores/permission';
+import type { AppLocale } from '@/locales';
+import SideMenuItem from './SideMenuItem.vue';
 
 const route = useRoute();
 const router = useRouter();
+const { t } = useI18n();
 const userStore = useUserStore();
+const appStore = useAppStore();
+const permissionStore = usePermissionStore();
 
 const isCollapse = ref(false);
 const activeMenu = computed(() => route.path);
@@ -118,14 +113,22 @@ const toggleSidebar = () => {
   isCollapse.value = !isCollapse.value;
 };
 
+function handleLocaleChange(value: AppLocale) {
+  appStore.setLocale(value);
+}
+
 const handleCommand = async (command: string) => {
   if (command === 'logout') {
     try {
-      await ElMessageBox.confirm('确定要退出登录吗？', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning',
-      });
+      await ElMessageBox.confirm(
+        t('common.messages.confirmLogout'),
+        t('common.tip'),
+        {
+          confirmButtonText: t('common.confirmButtonText'),
+          cancelButtonText: t('common.cancelButtonText'),
+          type: 'warning',
+        },
+      );
       userStore.logout();
       router.push('/login');
     } catch {
@@ -178,6 +181,14 @@ const handleCommand = async (command: string) => {
       height: 60px;
 
       .header-right {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+
+        .locale-switch {
+          width: 120px;
+        }
+
         .user-info {
           display: flex;
           align-items: center;

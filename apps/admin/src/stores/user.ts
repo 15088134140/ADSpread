@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
 import type { Admin } from '@adspread/types';
+import { usePermissionStore } from '@/stores/permission';
 
 export const useUserStore = defineStore('user', () => {
   const token = ref<string>('');
@@ -16,6 +17,16 @@ export const useUserStore = defineStore('user', () => {
   function setUserInfo(info: Partial<Admin>) {
     userInfo.value = info;
     localStorage.setItem('userInfo', JSON.stringify(info));
+  }
+
+  /**
+   * 登录成功后调用：保存凭据并加载当前用户菜单/权限。
+   */
+  async function login(newToken: string, info: Partial<Admin>) {
+    setToken(newToken);
+    setUserInfo(info);
+    const permissionStore = usePermissionStore();
+    await permissionStore.fetchMenus();
   }
 
   function initFromStorage() {
@@ -39,6 +50,8 @@ export const useUserStore = defineStore('user', () => {
     userInfo.value = {};
     localStorage.removeItem('token');
     localStorage.removeItem('userInfo');
+    const permissionStore = usePermissionStore();
+    permissionStore.reset();
   }
 
   return {
@@ -47,6 +60,7 @@ export const useUserStore = defineStore('user', () => {
     isLoggedIn,
     setToken,
     setUserInfo,
+    login,
     initFromStorage,
     logout,
   };

@@ -87,8 +87,7 @@ const handleLogin = async () => {
         const response = await authApi.login(loginForm);
         const { token, userInfo } = response;
 
-        userStore.setToken(token);
-        userStore.setUserInfo(userInfo);
+        await userStore.login(token, userInfo);
 
         ElMessage.success('登录成功');
         router.push('/');

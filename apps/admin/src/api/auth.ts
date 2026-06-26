@@ -1,4 +1,5 @@
 import { http } from '@/utils/request';
+import type { MenuTreeNode } from '@adspread/types';
 
 export interface LoginParams {
   username: string;
@@ -30,5 +31,9 @@ export const authApi = {
 
   logout: (): Promise<void> => {
     return http.post('/auth/logout');
+  },
+
+  getMenus: (): Promise<MenuTreeNode[]> => {
+    return http.get('/auth/menus');
   },
 };
