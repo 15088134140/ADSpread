@@ -48,11 +48,14 @@ router.beforeEach(async (to, _from, next) => {
 
   // 已登录但动态路由尚未注册：拉取菜单并注册，然后重新解析当前导航
   // 使新注册的动态路由生效（避免刷新后落到 NotFound）。
+  // 必须用 path 而非展开 ...to：刷新时动态路由未注册，to 已被 :pathMatch(.*)*
+  // 解析为 NotFound（to.name === 'NotFound'），展开会带 name 优先按名解析，
+  // 重新导航仍落 NotFound。用 path 强制按路径重新匹配已注册的动态路由。
   const permissionStore = usePermissionStore();
   if (token && !permissionStore.isRoutesAdded) {
     try {
       await permissionStore.fetchMenus();
-      next({ ...to, replace: true });
+      next({ path: to.path, query: to.query, hash: to.hash, replace: true });
       return;
     } catch {
       // 菜单加载失败：放行避免卡死，由 NotFound/权限校验兜底；
