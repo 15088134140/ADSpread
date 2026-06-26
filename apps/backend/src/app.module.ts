@@ -7,6 +7,7 @@ import { DeviceModule } from './modules/device/device.module';
 import { MaterialModule } from './modules/material/material.module';
 import { ProgramModule } from './modules/program/program.module';
 import { PublishModule } from './modules/publish/publish.module';
+import { DashboardModule } from './modules/dashboard/dashboard.module';
 import { DeviceApiModule } from './modules/device-api/device-api.module';
 import { SystemModule } from './modules/system/system.module';
 import { PrismaModule } from './modules/prisma/prisma.module';
@@ -36,6 +37,9 @@ import { OperationLogInterceptor } from './common/interceptors/operation-log.int
     MaterialModule,
     ProgramModule,
     PublishModule,
+
+    // Dashboard 概览聚合
+    DashboardModule,
 
     // Device-side API (public)
     DeviceApiModule,
