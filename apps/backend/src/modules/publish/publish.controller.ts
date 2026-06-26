@@ -1,6 +1,7 @@
-import { Controller, Get, Post, Put, Delete, Param, Query, Body, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Param, Query, Body } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
+import { RequirePermission } from '../../common/decorators/require-permission.decorator';
+import { OperationLog } from '../../common/decorators/operation-log.decorator';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import { PublishService } from './publish.service';
 import { CreatePublishPlanDto } from './dto/create-publish-plan.dto';
@@ -10,12 +11,12 @@ import { UpdatePublishStatusDto } from './dto/update-publish-status.dto';
 
 @ApiTags('发布管理')
 @ApiBearerAuth()
-@UseGuards(JwtAuthGuard)
 @Controller('publish')
 export class PublishController {
   constructor(private readonly publishService: PublishService) {}
 
   @Get()
+  @RequirePermission('publish:list')
   @ApiOperation({
     summary: '分页查询发布计划',
     description: '返回列表含目标门店详情（门店名及启用设备数）',
@@ -26,6 +27,7 @@ export class PublishController {
   }
 
   @Get(':id')
+  @RequirePermission('publish:list')
   @ApiOperation({ summary: '获取发布计划详情' })
   @ApiOkResponse({ description: '返回发布计划详情（含关联节目）' })
   findOne(@Param('id') id: number) {
@@ -33,6 +35,8 @@ export class PublishController {
   }
 
   @Post()
+  @RequirePermission('publish:create')
+  @OperationLog('create', 'publish')
   @ApiOperation({
     summary: '创建发布计划',
     description: '仅可选择已发布节目；目标门店需存在且启用',
@@ -43,6 +47,8 @@ export class PublishController {
   }
 
   @Put(':id')
+  @RequirePermission('publish:update')
+  @OperationLog('update', 'publish')
   @ApiOperation({ summary: '编辑发布计划' })
   @ApiOkResponse({ description: '更新成功，返回更新后的发布计划' })
   update(@Param('id') id: number, @Body() dto: UpdatePublishPlanDto) {
@@ -50,6 +56,8 @@ export class PublishController {
   }
 
   @Put(':id/status')
+  @RequirePermission('publish:update')
+  @OperationLog('update', 'publish')
   @ApiOperation({ summary: '更新发布计划状态', description: '启用/停用发布计划' })
   @ApiOkResponse({ description: '状态更新成功' })
   updateStatus(@Param('id') id: number, @Body() dto: UpdatePublishStatusDto) {
@@ -57,6 +65,8 @@ export class PublishController {
   }
 
   @Post(':id/push')
+  @RequirePermission('publish:push')
+  @OperationLog('push', 'publish')
   @ApiOperation({
     summary: '推送发布计划',
     description: '向目标门店的启用设备推送节目，生成推送日志',
@@ -67,6 +77,8 @@ export class PublishController {
   }
 
   @Post('batch-push')
+  @RequirePermission('publish:push')
+  @OperationLog('push', 'publish')
   @ApiOperation({ summary: '批量推送发布计划' })
   @ApiBody({
     schema: {
@@ -81,6 +93,8 @@ export class PublishController {
   }
 
   @Delete(':id')
+  @RequirePermission('publish:delete')
+  @OperationLog('delete', 'publish')
   @ApiOperation({ summary: '删除发布计划' })
   @ApiOkResponse({ description: '删除成功' })
   remove(@Param('id') id: number) {

@@ -1,4 +1,5 @@
 import { http } from '@/utils/request';
+import type { ImportResult } from '@adspread/types';
 
 export interface Device {
   id: number;
@@ -70,5 +71,17 @@ export const deviceApi = {
 
   getSplitTypes: (): Promise<string[]> => {
     return http.get('/devices/split-types');
+  },
+
+  importDevices: (file: File): Promise<ImportResult> => {
+    const formData = new FormData();
+    formData.append('file', file);
+    return http.post('/devices/import', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+  },
+
+  getImportTemplate: (): Promise<Blob> => {
+    return http.get('/devices/import-template', { responseType: 'blob' });
   },
 };

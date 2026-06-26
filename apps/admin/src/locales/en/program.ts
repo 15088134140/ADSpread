@@ -1,0 +1,58 @@
+export default {
+  title: 'Program Production',
+  createProgram: 'New Program',
+  editProgram: 'Edit Program',
+  saveDraft: 'Save Draft',
+  saveAndPublish: 'Save and Publish',
+  search: {
+    keyword: 'Keyword',
+    keywordPlaceholder: 'Program name',
+    status: 'Status',
+    all: 'All',
+  },
+  table: {
+    name: 'Program Name',
+    screenOrientation: 'Screen Orientation',
+    splitType: 'Split Type',
+    status: 'Status',
+    publishedAt: 'Published At',
+    createdAt: 'Created At',
+    operation: 'Action',
+    edit: 'Edit',
+    publish: 'Publish',
+    delete: 'Delete',
+  },
+  form: {
+    name: 'Program Name',
+    screenOrientation: 'Screen Orientation',
+    splitType: 'Split Type',
+    regionConfig: 'Region Configuration',
+    selectMaterial: 'Select material',
+    durationUnit: 's',
+    removeMaterial: 'Remove',
+    addMaterial: '+ Add material',
+    anySplitTypeAlert:
+      'When "Any" split type is selected, only draft can be saved. Please choose a specific split type before publishing.',
+  },
+  status: {
+    draft: 'Draft',
+    published: 'Published',
+  },
+  screenOrientation: {
+    LANDSCAPE: 'Landscape',
+    PORTRAIT: 'Portrait',
+    ANY: 'Any',
+  },
+  splitType: {
+    SPLIT_1: '1-Split',
+    SPLIT_2: '2-Split',
+    SPLIT_3: '3-Split',
+    SPLIT_3_1: '3-1 Split',
+    SPLIT_4: '4-Split',
+    ANY: 'Any',
+  },
+  messages: {
+    confirmPublish: 'Are you sure you want to publish program "{name}"?',
+    confirmDelete: 'Are you sure you want to delete program "{name}"?',
+  },
+};

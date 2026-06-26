@@ -3,54 +3,55 @@
     <el-card>
       <template #header>
         <div class="card-header">
-          <span>门店管理</span>
-          <el-button type="primary" @click="openCreate">新增门店</el-button>
+          <span>{{ t('store.title') }}</span>
+          <el-button type="primary" @click="openCreate">{{ t('store.createStore') }}</el-button>
         </div>
       </template>
 
       <el-form :inline="true" :model="query">
-        <el-form-item label="关键词">
-          <el-input v-model="query.keyword" placeholder="门店名称/编码" clearable />
+        <el-form-item :label="t('store.search.keyword')">
+          <el-input v-model="query.keyword" :placeholder="t('store.search.keywordPlaceholder')" clearable />
         </el-form-item>
-        <el-form-item label="行业分类">
-          <el-select v-model="query.industryCategory" placeholder="全部" clearable style="width: 160px">
-            <el-option v-for="item in industryOptions" :key="item.value" :label="item.label" :value="item.value" />
+        <el-form-item :label="t('store.search.industryCategory')">
+          <el-select v-model="query.industryCategory" :placeholder="t('store.search.all')" clearable style="width: 160px">
+            <el-option v-for="item in industryOptions" :key="item.value" :label="t(item.label)" :value="item.value" />
           </el-select>
         </el-form-item>
-        <el-form-item label="状态">
-          <el-select v-model="query.status" placeholder="全部" clearable style="width: 120px">
-            <el-option label="启用" :value="1" />
-            <el-option label="禁用" :value="0" />
+        <el-form-item :label="t('store.search.status')">
+          <el-select v-model="query.status" :placeholder="t('store.search.all')" clearable style="width: 120px">
+            <el-option :label="t('common.enabled')" :value="1" />
+            <el-option :label="t('common.disabled')" :value="0" />
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="fetchData">查询</el-button>
-          <el-button @click="resetQuery">重置</el-button>
+          <el-button type="primary" @click="fetchData">{{ t('common.query') }}</el-button>
+          <el-button @click="resetQuery">{{ t('common.reset') }}</el-button>
         </el-form-item>
       </el-form>
 
       <el-table v-loading="loading" :data="list">
-        <el-table-column prop="name" label="门店名称" />
-        <el-table-column prop="code" label="门店编码" />
-        <el-table-column label="行业分类">
+        <el-table-column prop="id" :label="t('store.table.id')" width="80" />
+        <el-table-column prop="name" :label="t('store.table.name')" />
+        <el-table-column prop="code" :label="t('store.table.code')" />
+        <el-table-column :label="t('store.table.industryCategory')">
           <template #default="{ row }">{{ getIndustryLabel(row.industryCategory) }}</template>
         </el-table-column>
-        <el-table-column prop="address" label="地址" />
-        <el-table-column prop="contactPerson" label="联系人" />
-        <el-table-column prop="contactPhone" label="联系电话" />
-        <el-table-column label="状态">
+        <el-table-column prop="address" :label="t('store.table.address')" />
+        <el-table-column prop="contactPerson" :label="t('store.table.contactPerson')" />
+        <el-table-column prop="contactPhone" :label="t('store.table.contactPhone')" />
+        <el-table-column :label="t('store.table.status')">
           <template #default="{ row }">
-            <el-tag :type="row.status === 1 ? 'success' : 'danger'">{{ row.status === 1 ? '启用' : '禁用' }}</el-tag>
+            <el-tag :type="row.status === 1 ? 'success' : 'danger'">{{ row.status === 1 ? t('common.enabled') : t('common.disabled') }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="deviceCount" label="设备数" />
-        <el-table-column label="创建时间">
+        <el-table-column prop="deviceCount" :label="t('store.table.deviceCount')" />
+        <el-table-column :label="t('store.table.createdAt')">
           <template #default="{ row }">{{ formatDateTime(row.createdAt) }}</template>
         </el-table-column>
-        <el-table-column label="操作" width="160">
+        <el-table-column :label="t('store.table.operation')" width="160">
           <template #default="{ row }">
-            <el-button link type="primary" @click="openEdit(row)">编辑</el-button>
-            <el-button link type="danger" @click="handleDelete(row)">删除</el-button>
+            <el-button link type="primary" @click="openEdit(row)">{{ t('common.edit') }}</el-button>
+            <el-button link type="danger" @click="handleDelete(row)">{{ t('common.delete') }}</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -66,35 +67,37 @@
       </div>
     </el-card>
 
-    <el-dialog v-model="dialogVisible" :title="form.id ? '编辑门店' : '新增门店'" width="520px" :close-on-click-modal="false">
+    <el-dialog v-model="dialogVisible" :title="form.id ? t('store.editStore') : t('store.createStore')" width="520px" :close-on-click-modal="false">
       <el-form ref="formRef" :model="form" :rules="rules" label-width="100px">
-        <el-form-item label="门店名称" prop="name"><el-input v-model="form.name" /></el-form-item>
-        <el-form-item label="门店编码" prop="code"><el-input v-model="form.code" /></el-form-item>
-        <el-form-item label="行业分类" prop="industryCategory">
+        <el-form-item :label="t('store.form.name')" prop="name"><el-input v-model="form.name" /></el-form-item>
+        <el-form-item :label="t('store.form.code')" prop="code"><el-input v-model="form.code" /></el-form-item>
+        <el-form-item :label="t('store.form.industryCategory')" prop="industryCategory">
           <el-select v-model="form.industryCategory" style="width: 100%">
-            <el-option v-for="item in industryOptions" :key="item.value" :label="item.label" :value="item.value" />
+            <el-option v-for="item in industryOptions" :key="item.value" :label="t(item.label)" :value="item.value" />
           </el-select>
         </el-form-item>
-        <el-form-item label="地址"><el-input v-model="form.address" /></el-form-item>
-        <el-form-item label="联系人"><el-input v-model="form.contactPerson" /></el-form-item>
-        <el-form-item label="联系电话"><el-input v-model="form.contactPhone" /></el-form-item>
-        <el-form-item label="状态"><el-switch v-model="form.status" :active-value="1" :inactive-value="0" /></el-form-item>
+        <el-form-item :label="t('store.form.address')"><el-input v-model="form.address" /></el-form-item>
+        <el-form-item :label="t('store.form.contactPerson')"><el-input v-model="form.contactPerson" /></el-form-item>
+        <el-form-item :label="t('store.form.contactPhone')"><el-input v-model="form.contactPhone" /></el-form-item>
+        <el-form-item :label="t('store.form.status')"><el-switch v-model="form.status" :active-value="1" :inactive-value="0" /></el-form-item>
       </el-form>
       <template #footer>
-        <el-button @click="dialogVisible = false">取消</el-button>
-        <el-button type="primary" @click="submitForm">保存</el-button>
+        <el-button @click="dialogVisible = false">{{ t('common.cancel') }}</el-button>
+        <el-button type="primary" @click="submitForm">{{ t('common.save') }}</el-button>
       </template>
     </el-dialog>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted } from 'vue';
+import { ref, reactive, computed, onMounted } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { ElMessage, ElMessageBox, type FormInstance, type FormRules } from 'element-plus';
 import { storeApi, type Store } from '@/api/store';
 import { industryCategoryOptions } from '@/utils/options';
 import { dateUtils } from '@/utils/date';
 
+const { t } = useI18n();
 const { formatDateTime } = dateUtils;
 
 const loading = ref(false);
@@ -124,14 +127,15 @@ const form = reactive({
   status: 1,
 });
 
-const rules: FormRules = {
-  name: [{ required: true, message: '请输入门店名称', trigger: 'blur' }],
-  code: [{ required: true, message: '请输入门店编码', trigger: 'blur' }],
-  industryCategory: [{ required: true, message: '请选择行业分类', trigger: 'change' }],
-};
+const rules = computed<FormRules>(() => ({
+  name: [{ required: true, message: t('validation.storeName'), trigger: 'blur' }],
+  code: [{ required: true, message: t('validation.storeCode'), trigger: 'blur' }],
+  industryCategory: [{ required: true, message: t('validation.industryCategory'), trigger: 'change' }],
+}));
 
 function getIndustryLabel(value: string): string {
-  return industryOptions.find((item) => item.value === value)?.label || value;
+  const item = industryOptions.find((o) => o.value === value);
+  return item ? t(item.label) : value;
 }
 
 async function fetchData() {
@@ -201,10 +205,10 @@ async function submitForm() {
       };
       if (form.id) {
         await storeApi.update(form.id, data);
-        ElMessage.success('更新成功');
+        ElMessage.success(t('common.messages.updateSuccess'));
       } else {
         await storeApi.create(data as any);
-        ElMessage.success('创建成功');
+        ElMessage.success(t('common.messages.createSuccess'));
       }
       dialogVisible.value = false;
       fetchData();
@@ -216,13 +220,13 @@ async function submitForm() {
 
 async function handleDelete(row: Store) {
   try {
-    await ElMessageBox.confirm(`确定要删除门店 "${row.name}" 吗？`, '提示', {
-      confirmButtonText: '确定',
-      cancelButtonText: '取消',
+    await ElMessageBox.confirm(t('store.messages.confirmDelete', { name: row.name }), t('common.tip'), {
+      confirmButtonText: t('common.confirm'),
+      cancelButtonText: t('common.cancel'),
       type: 'warning',
     });
     await storeApi.delete(row.id);
-    ElMessage.success('删除成功');
+    ElMessage.success(t('common.messages.deleteSuccess'));
     fetchData();
   } catch {
     // cancelled

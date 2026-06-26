@@ -3,51 +3,52 @@
     <el-card>
       <template #header>
         <div class="card-header">
-          <span>节目制作</span>
-          <el-button type="primary" @click="openCreate">创建节目</el-button>
+          <span>{{ t('program.title') }}</span>
+          <el-button type="primary" @click="openCreate">{{ t('program.createProgram') }}</el-button>
         </div>
       </template>
 
       <el-form :inline="true" :model="query">
-        <el-form-item label="关键词">
-          <el-input v-model="query.keyword" placeholder="节目名称" clearable />
+        <el-form-item :label="t('program.search.keyword')">
+          <el-input v-model="query.keyword" :placeholder="t('program.search.keywordPlaceholder')" clearable />
         </el-form-item>
-        <el-form-item label="状态">
-          <el-select v-model="query.status" placeholder="全部" clearable style="width: 140px">
-            <el-option label="草稿" :value="0" />
-            <el-option label="已发布" :value="1" />
+        <el-form-item :label="t('program.search.status')">
+          <el-select v-model="query.status" :placeholder="t('program.search.all')" clearable style="width: 140px">
+            <el-option :label="t('program.status.draft')" :value="0" />
+            <el-option :label="t('program.status.published')" :value="1" />
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="fetchData">查询</el-button>
-          <el-button @click="resetQuery">重置</el-button>
+          <el-button type="primary" @click="fetchData">{{ t('common.query') }}</el-button>
+          <el-button @click="resetQuery">{{ t('common.reset') }}</el-button>
         </el-form-item>
       </el-form>
 
       <el-table v-loading="loading" :data="list">
-        <el-table-column prop="name" label="节目名称" />
-        <el-table-column label="屏幕方向">
+        <el-table-column prop="id" :label="t('common.id')" width="80" />
+        <el-table-column prop="name" :label="t('program.table.name')" />
+        <el-table-column :label="t('program.table.screenOrientation')">
           <template #default="{ row }">{{ getOrientationLabel(row.screenOrientation) }}</template>
         </el-table-column>
-        <el-table-column label="分屏类型">
+        <el-table-column :label="t('program.table.splitType')">
           <template #default="{ row }">{{ getSplitTypeLabel(row.splitType) }}</template>
         </el-table-column>
-        <el-table-column label="状态">
+        <el-table-column :label="t('program.table.status')">
           <template #default="{ row }">
-            <el-tag :type="row.status === 1 ? 'success' : 'info'">{{ row.status === 1 ? '已发布' : '草稿' }}</el-tag>
+            <el-tag :type="row.status === 1 ? 'success' : 'info'">{{ row.status === 1 ? t('program.status.published') : t('program.status.draft') }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="发布时间">
+        <el-table-column :label="t('program.table.publishedAt')">
           <template #default="{ row }">{{ formatDateTime(row.publishedAt) }}</template>
         </el-table-column>
-        <el-table-column label="创建时间">
+        <el-table-column :label="t('program.table.createdAt')">
           <template #default="{ row }">{{ formatDateTime(row.createdAt) }}</template>
         </el-table-column>
-        <el-table-column label="操作" width="240">
+        <el-table-column :label="t('program.table.operation')" width="240">
           <template #default="{ row }">
-            <el-button link type="primary" @click="openEdit(row)">编辑</el-button>
-            <el-button link type="success" @click="handlePublish(row)" v-if="row.status === 0">发布</el-button>
-            <el-button link type="danger" @click="handleDelete(row)">删除</el-button>
+            <el-button link type="primary" @click="openEdit(row)">{{ t('program.table.edit') }}</el-button>
+            <el-button link type="success" @click="handlePublish(row)" v-if="row.status === 0">{{ t('program.table.publish') }}</el-button>
+            <el-button link type="danger" @click="handleDelete(row)">{{ t('program.table.delete') }}</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -63,41 +64,41 @@
       </div>
     </el-card>
 
-    <el-dialog v-model="dialogVisible" :title="form.id ? '编辑节目' : '创建节目'" width="720px" :close-on-click-modal="false">
+    <el-dialog v-model="dialogVisible" :title="form.id ? t('program.editProgram') : t('program.createProgram')" width="720px" :close-on-click-modal="false">
       <el-form ref="formRef" :model="form" :rules="rules" label-width="100px">
-        <el-form-item label="节目名称" prop="name"><el-input v-model="form.name" /></el-form-item>
-        <el-form-item label="屏幕方向" prop="screenOrientation">
+        <el-form-item :label="t('program.form.name')" prop="name"><el-input v-model="form.name" /></el-form-item>
+        <el-form-item :label="t('program.form.screenOrientation')" prop="screenOrientation">
           <el-select v-model="form.screenOrientation" style="width: 100%">
-            <el-option v-for="item in screenOrientationOptions" :key="item.value" :label="item.label" :value="item.value" />
+            <el-option v-for="item in screenOrientationOptions" :key="item.value" :label="t(item.label)" :value="item.value" />
           </el-select>
         </el-form-item>
-        <el-form-item label="分屏类型" prop="splitType">
+        <el-form-item :label="t('program.form.splitType')" prop="splitType">
           <el-select v-model="form.splitType" style="width: 100%" @change="onSplitTypeChange">
-            <el-option v-for="item in splitTypeOptions" :key="item.value" :label="item.label" :value="item.value" />
+            <el-option v-for="item in splitTypeOptions" :key="item.value" :label="t(item.label)" :value="item.value" />
           </el-select>
         </el-form-item>
-        <el-form-item label="区域配置" v-if="regionIds.length > 0">
+        <el-form-item :label="t('program.form.regionConfig')" v-if="regionIds.length > 0">
           <div class="regions-wrapper">
             <el-card v-for="regionId in regionIds" :key="regionId" class="region-card" shadow="never">
               <template #header>{{ regionId }}</template>
               <div v-for="(item, index) in getRegionMaterials(regionId)" :key="index" class="material-row">
-                <el-select v-model="item.materialId" placeholder="选择素材" style="width: 240px" filterable>
+                <el-select v-model="item.materialId" :placeholder="t('program.form.selectMaterial')" style="width: 240px" filterable>
                   <el-option v-for="m in availableMaterials" :key="m.id" :label="m.name" :value="m.id" />
                 </el-select>
                 <el-input-number v-model="item.duration" :min="1" :max="3600" controls-position="right" />
-                <span class="duration-unit">秒</span>
-                <el-button link type="danger" @click="removeMaterial(regionId, index)">移除</el-button>
+                <span class="duration-unit">{{ t('program.form.durationUnit') }}</span>
+                <el-button link type="danger" @click="removeMaterial(regionId, index)">{{ t('program.form.removeMaterial') }}</el-button>
               </div>
-              <el-button link type="primary" @click="addMaterial(regionId)">+ 添加素材</el-button>
+              <el-button link type="primary" @click="addMaterial(regionId)">{{ t('program.form.addMaterial') }}</el-button>
             </el-card>
           </div>
         </el-form-item>
-        <el-alert v-if="form.splitType === 'ANY'" type="info" :closable="false" title="选择任意分屏时仅可保存草稿，发布前需选择具体分屏类型" />
+        <el-alert v-if="form.splitType === 'ANY'" type="info" :closable="false" :title="t('program.form.anySplitTypeAlert')" />
       </el-form>
       <template #footer>
-        <el-button @click="dialogVisible = false">取消</el-button>
-        <el-button @click="submitForm(false)">保存草稿</el-button>
-        <el-button type="primary" @click="submitForm(true)" v-if="form.splitType !== 'ANY'">保存并发布</el-button>
+        <el-button @click="dialogVisible = false">{{ t('common.cancel') }}</el-button>
+        <el-button @click="submitForm(false)">{{ t('program.saveDraft') }}</el-button>
+        <el-button type="primary" @click="submitForm(true)" v-if="form.splitType !== 'ANY'">{{ t('program.saveAndPublish') }}</el-button>
       </template>
     </el-dialog>
   </div>
@@ -105,12 +106,14 @@
 
 <script setup lang="ts">
 import { ref, reactive, computed, onMounted } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { ElMessage, ElMessageBox, type FormInstance, type FormRules } from 'element-plus';
 import { programApi, type Program, type Region } from '@/api/program';
 import { materialApi, type Material } from '@/api/material';
 import { screenOrientationOptions, splitTypeOptions } from '@/utils/options';
 import { dateUtils } from '@/utils/date';
 
+const { t } = useI18n();
 const { formatDateTime } = dateUtils;
 
 const loading = ref(false);
@@ -140,11 +143,11 @@ const form = reactive({
   status: 0,
 });
 
-const rules: FormRules = {
-  name: [{ required: true, message: '请输入节目名称', trigger: 'blur' }],
-  screenOrientation: [{ required: true, message: '请选择屏幕方向', trigger: 'change' }],
-  splitType: [{ required: true, message: '请选择分屏类型', trigger: 'change' }],
-};
+const rules = computed<FormRules>(() => ({
+  name: [{ required: true, message: t('validation.programName'), trigger: 'blur' }],
+  screenOrientation: [{ required: true, message: t('validation.screenOrientation'), trigger: 'change' }],
+  splitType: [{ required: true, message: t('validation.splitType'), trigger: 'change' }],
+}));
 
 const regionIds = computed(() => getRegionIds(form.splitType));
 
@@ -182,11 +185,13 @@ function removeMaterial(regionId: string, index: number) {
 }
 
 function getOrientationLabel(value: string): string {
-  return screenOrientationOptions.find((item) => item.value === value)?.label || value;
+  const item = screenOrientationOptions.find((o) => o.value === value);
+  return item ? t(item.label) : value;
 }
 
 function getSplitTypeLabel(value: string): string {
-  return splitTypeOptions.find((item) => item.value === value)?.label || value;
+  const item = splitTypeOptions.find((o) => o.value === value);
+  return item ? t(item.label) : value;
 }
 
 async function fetchData() {
@@ -273,13 +278,13 @@ async function submitForm(publish: boolean) {
         if (publish) {
           await programApi.publish(form.id, { regions });
         }
-        ElMessage.success(publish ? '发布成功' : '保存成功');
+        ElMessage.success(publish ? t('common.messages.publishSuccess') : t('common.messages.saveSuccess'));
       } else {
         const created = await programApi.create(data);
         if (publish) {
           await programApi.publish(created.id, { regions });
         }
-        ElMessage.success(publish ? '发布成功' : '保存成功');
+        ElMessage.success(publish ? t('common.messages.publishSuccess') : t('common.messages.saveSuccess'));
       }
       dialogVisible.value = false;
       fetchData();
@@ -291,14 +296,14 @@ async function submitForm(publish: boolean) {
 
 async function handlePublish(row: Program) {
   try {
-    await ElMessageBox.confirm(`确定要发布节目 "${row.name}" 吗？`, '提示', {
-      confirmButtonText: '确定',
-      cancelButtonText: '取消',
+    await ElMessageBox.confirm(t('program.messages.confirmPublish', { name: row.name }), t('common.tip'), {
+      confirmButtonText: t('common.confirm'),
+      cancelButtonText: t('common.cancel'),
       type: 'success',
     });
     const regions = (row.layoutConfig?.regions || []) as Region[];
     await programApi.publish(row.id, { regions });
-    ElMessage.success('发布成功');
+    ElMessage.success(t('common.messages.publishSuccess'));
     fetchData();
   } catch {
     // cancelled
@@ -307,13 +312,13 @@ async function handlePublish(row: Program) {
 
 async function handleDelete(row: Program) {
   try {
-    await ElMessageBox.confirm(`确定要删除节目 "${row.name}" 吗？`, '提示', {
-      confirmButtonText: '确定',
-      cancelButtonText: '取消',
+    await ElMessageBox.confirm(t('program.messages.confirmDelete', { name: row.name }), t('common.tip'), {
+      confirmButtonText: t('common.confirm'),
+      cancelButtonText: t('common.cancel'),
       type: 'warning',
     });
     await programApi.delete(row.id);
-    ElMessage.success('删除成功');
+    ElMessage.success(t('common.messages.deleteSuccess'));
     fetchData();
   } catch {
     // cancelled

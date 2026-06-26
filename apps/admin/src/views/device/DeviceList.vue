@@ -3,57 +3,63 @@
     <el-card>
       <template #header>
         <div class="card-header">
-          <span>设备管理</span>
-          <el-button type="primary" @click="openCreate">新增设备</el-button>
+          <span>{{ t('device.title') }}</span>
+          <div class="card-header-actions">
+            <el-button v-permission="'device:import'" @click="importDialogVisible = true">
+              {{ t('device.batchImport') }}
+            </el-button>
+            <el-button type="primary" @click="openCreate">{{ t('device.createDevice') }}</el-button>
+          </div>
         </div>
       </template>
 
       <el-form :inline="true" :model="query">
-        <el-form-item label="关键词">
-          <el-input v-model="query.keyword" placeholder="设备名称/编码" clearable />
+        <el-form-item :label="t('device.search.keyword')">
+          <el-input v-model="query.keyword" :placeholder="t('device.search.keywordPlaceholder')" clearable />
         </el-form-item>
-        <el-form-item label="所属门店">
-          <el-select v-model="query.storeId" placeholder="全部" clearable style="width: 180px">
+        <el-form-item :label="t('device.search.store')">
+          <el-select v-model="query.storeId" :placeholder="t('device.search.all')" clearable style="width: 180px">
             <el-option v-for="item in storeOptions" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
         </el-form-item>
-        <el-form-item label="状态">
-          <el-select v-model="query.status" placeholder="全部" clearable style="width: 120px">
-            <el-option label="启用" :value="1" />
-            <el-option label="禁用" :value="0" />
+        <el-form-item :label="t('device.search.status')">
+          <el-select v-model="query.status" :placeholder="t('device.search.all')" clearable style="width: 120px">
+            <el-option :label="t('common.enabled')" :value="1" />
+            <el-option :label="t('common.disabled')" :value="0" />
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="fetchData">查询</el-button>
-          <el-button @click="resetQuery">重置</el-button>
+          <el-button type="primary" @click="fetchData">{{ t('common.query') }}</el-button>
+          <el-button @click="resetQuery">{{ t('common.reset') }}</el-button>
         </el-form-item>
       </el-form>
 
       <el-table v-loading="loading" :data="list">
-        <el-table-column prop="name" label="设备名称" />
-        <el-table-column prop="code" label="设备编码" />
-        <el-table-column label="所属门店">
-          <template #default="{ row }">{{ row.store?.name || '未绑定' }}</template>
+        <el-table-column prop="id" :label="t('common.id')" width="80" />
+        <el-table-column prop="name" :label="t('device.table.name')" />
+        <el-table-column prop="code" :label="t('device.table.code')" />
+        <el-table-column :label="t('device.table.store')">
+          <template #default="{ row }">{{ row.store?.name || t('device.search.unbound') }}</template>
         </el-table-column>
-        <el-table-column label="屏幕方向">
+        <el-table-column :label="t('device.table.screenOrientation')">
           <template #default="{ row }">{{ getOrientationLabel(row.screenOrientation) }}</template>
         </el-table-column>
-        <el-table-column prop="screenResolution" label="分辨率" />
-        <el-table-column label="分屏类型">
+        <el-table-column prop="screenResolution" :label="t('device.table.screenResolution')" />
+        <el-table-column :label="t('device.table.splitType')">
           <template #default="{ row }">{{ getSplitTypeLabel(row.splitType) }}</template>
         </el-table-column>
-        <el-table-column label="状态">
+        <el-table-column :label="t('device.table.status')">
           <template #default="{ row }">
-            <el-tag :type="row.status === 1 ? 'success' : 'danger'">{{ row.status === 1 ? '启用' : '禁用' }}</el-tag>
+            <el-tag :type="row.status === 1 ? 'success' : 'danger'">{{ row.status === 1 ? t('common.enabled') : t('common.disabled') }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="创建时间">
+        <el-table-column :label="t('device.table.createdAt')">
           <template #default="{ row }">{{ formatDateTime(row.createdAt) }}</template>
         </el-table-column>
-        <el-table-column label="操作" width="160">
+        <el-table-column :label="t('device.table.operation')" width="160">
           <template #default="{ row }">
-            <el-button link type="primary" @click="openEdit(row)">编辑</el-button>
-            <el-button link type="danger" @click="handleDelete(row)">删除</el-button>
+            <el-button link type="primary" @click="openEdit(row)">{{ t('common.edit') }}</el-button>
+            <el-button link type="danger" @click="handleDelete(row)">{{ t('common.delete') }}</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -69,51 +75,58 @@
       </div>
     </el-card>
 
-    <el-dialog v-model="dialogVisible" :title="form.id ? '编辑设备' : '新增设备'" width="560px" :close-on-click-modal="false">
+    <el-dialog v-model="dialogVisible" :title="form.id ? t('device.editDevice') : t('device.createDevice')" width="560px" :close-on-click-modal="false">
       <el-form ref="formRef" :model="form" :rules="rules" label-width="100px">
-        <el-form-item label="设备名称" prop="name"><el-input v-model="form.name" /></el-form-item>
-        <el-form-item label="设备编码" prop="code"><el-input v-model="form.code" /></el-form-item>
-        <el-form-item label="所属门店">
-          <el-select v-model="form.storeId" placeholder="请选择门店" clearable style="width: 100%">
+        <el-form-item :label="t('device.form.name')" prop="name"><el-input v-model="form.name" /></el-form-item>
+        <el-form-item :label="t('device.form.code')" prop="code"><el-input v-model="form.code" /></el-form-item>
+        <el-form-item :label="t('device.form.store')">
+          <el-select v-model="form.storeId" :placeholder="t('device.form.storePlaceholder')" clearable style="width: 100%">
             <el-option v-for="item in storeOptions" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
         </el-form-item>
-        <el-form-item label="屏幕方向" prop="screenOrientation">
+        <el-form-item :label="t('device.form.screenOrientation')" prop="screenOrientation">
           <el-select v-model="form.screenOrientation" style="width: 100%" @change="onOrientationChange">
-            <el-option v-for="item in screenOrientationOptions" :key="item.value" :label="item.label" :value="item.value" />
+            <el-option v-for="item in screenOrientationOptions" :key="item.value" :label="t(item.label)" :value="item.value" />
           </el-select>
         </el-form-item>
-        <el-form-item label="分辨率" prop="screenResolution">
-          <el-select v-model="form.screenResolution" placeholder="请选择分辨率" style="width: 100%" filterable allow-create>
+        <el-form-item :label="t('device.form.screenResolution')" prop="screenResolution">
+          <el-select v-model="form.screenResolution" :placeholder="t('device.form.screenResolutionPlaceholder')" style="width: 100%" filterable allow-create>
             <el-option v-for="item in resolutions" :key="item" :label="item" :value="item" />
           </el-select>
         </el-form-item>
-        <el-form-item label="分屏类型" prop="splitType">
+        <el-form-item :label="t('device.form.splitType')" prop="splitType">
           <el-select v-model="form.splitType" style="width: 100%">
-            <el-option v-for="item in currentSplitTypeOptions" :key="item.value" :label="item.label" :value="item.value" />
+            <el-option v-for="item in currentSplitTypeOptions" :key="item.value" :label="t(item.label)" :value="item.value" />
           </el-select>
         </el-form-item>
-        <el-form-item label="备注"><el-input v-model="form.remark" type="textarea" /></el-form-item>
-        <el-form-item label="状态"><el-switch v-model="form.status" :active-value="1" :inactive-value="0" /></el-form-item>
+        <el-form-item :label="t('device.form.remark')"><el-input v-model="form.remark" type="textarea" /></el-form-item>
+        <el-form-item :label="t('device.form.status')"><el-switch v-model="form.status" :active-value="1" :inactive-value="0" /></el-form-item>
       </el-form>
       <template #footer>
-        <el-button @click="dialogVisible = false">取消</el-button>
-        <el-button type="primary" @click="submitForm">保存</el-button>
+        <el-button @click="dialogVisible = false">{{ t('common.cancel') }}</el-button>
+        <el-button type="primary" @click="submitForm">{{ t('common.save') }}</el-button>
       </template>
     </el-dialog>
+
+    <ExcelImportDialog v-model="importDialogVisible" @success="fetchData" />
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, reactive, computed, watch, onMounted } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { ElMessage, ElMessageBox, type FormInstance, type FormRules } from 'element-plus';
 import { deviceApi, type Device } from '@/api/device';
 import { storeApi } from '@/api/store';
 import { screenOrientationOptions, splitTypeOptions, getDeviceSplitTypeOptions } from '@/utils/options';
 import { dateUtils } from '@/utils/date';
 import { ScreenOrientation, SplitType } from '@adspread/types';
+import ExcelImportDialog from '@/components/business/ExcelImportDialog.vue';
 
+const { t } = useI18n();
 const { formatDateTime } = dateUtils;
+
+const importDialogVisible = ref(false);
 
 const loading = ref(false);
 const list = ref<Device[]>([]);
@@ -144,13 +157,13 @@ const form = reactive({
   status: 1,
 });
 
-const rules: FormRules = {
-  name: [{ required: true, message: '请输入设备名称', trigger: 'blur' }],
-  code: [{ required: true, message: '请输入设备编码', trigger: 'blur' }],
-  screenOrientation: [{ required: true, message: '请选择屏幕方向', trigger: 'change' }],
-  screenResolution: [{ required: true, message: '请选择分辨率', trigger: 'change' }],
-  splitType: [{ required: true, message: '请选择分屏类型', trigger: 'change' }],
-};
+const rules = computed<FormRules>(() => ({
+  name: [{ required: true, message: t('validation.deviceName'), trigger: 'blur' }],
+  code: [{ required: true, message: t('validation.deviceCode'), trigger: 'blur' }],
+  screenOrientation: [{ required: true, message: t('validation.screenOrientation'), trigger: 'change' }],
+  screenResolution: [{ required: true, message: t('validation.screenResolution'), trigger: 'change' }],
+  splitType: [{ required: true, message: t('validation.splitType'), trigger: 'change' }],
+}));
 
 const currentSplitTypeOptions = computed(() => {
   if (!form.screenOrientation) return splitTypeOptions;
@@ -172,11 +185,13 @@ function onOrientationChange() {
 }
 
 function getOrientationLabel(value: string): string {
-  return screenOrientationOptions.find((item) => item.value === value)?.label || value;
+  const item = screenOrientationOptions.find((o) => o.value === value);
+  return item ? t(item.label) : value;
 }
 
 function getSplitTypeLabel(value: string): string {
-  return splitTypeOptions.find((item) => item.value === value)?.label || value;
+  const item = splitTypeOptions.find((o) => o.value === value);
+  return item ? t(item.label) : value;
 }
 
 async function fetchData() {
@@ -255,10 +270,10 @@ async function submitForm() {
       };
       if (form.id) {
         await deviceApi.update(form.id, data as any);
-        ElMessage.success('更新成功');
+        ElMessage.success(t('common.messages.updateSuccess'));
       } else {
         await deviceApi.create(data as any);
-        ElMessage.success('创建成功');
+        ElMessage.success(t('common.messages.createSuccess'));
       }
       dialogVisible.value = false;
       fetchData();
@@ -270,13 +285,13 @@ async function submitForm() {
 
 async function handleDelete(row: Device) {
   try {
-    await ElMessageBox.confirm(`确定要删除设备 "${row.name}" 吗？`, '提示', {
-      confirmButtonText: '确定',
-      cancelButtonText: '取消',
+    await ElMessageBox.confirm(t('device.messages.confirmDelete', { name: row.name }), t('common.tip'), {
+      confirmButtonText: t('common.confirm'),
+      cancelButtonText: t('common.cancel'),
       type: 'warning',
     });
     await deviceApi.delete(row.id);
-    ElMessage.success('删除成功');
+    ElMessage.success(t('common.messages.deleteSuccess'));
     fetchData();
   } catch {
     // cancelled
@@ -298,6 +313,11 @@ onMounted(() => {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.card-header-actions {
+  display: flex;
+  gap: 8px;
 }
 
 .pagination-container {

@@ -4,10 +4,10 @@ export enum IndustryCategory {
   CATERING = 'CATERING',
   RETAIL = 'RETAIL',
   BEAUTY = 'BEAUTY',
-  HOTEL = 'HOTEL',
+  HOSPITALITY = 'HOSPITALITY',
   EDUCATION = 'EDUCATION',
   AUTOMOTIVE = 'AUTOMOTIVE',
-  LIFE_SERVICE = 'LIFE_SERVICE',
+  LOCAL_LIFE = 'LOCAL_LIFE',
   OTHER = 'OTHER',
 }
 
@@ -39,6 +39,12 @@ export enum ProgramStatus {
 export enum PublishPlanStatus {
   DISABLED = 0,
   ENABLED = 1,
+}
+
+export enum MenuType {
+  DIRECTORY = 1,
+  MENU = 2,
+  BUTTON = 3,
 }
 
 export enum MaterialType {
@@ -95,8 +101,14 @@ export interface Menu extends BaseEntity {
   children?: Menu[];
 }
 
+export interface MenuTreeNode extends Omit<Menu, 'children'> {
+  children?: MenuTreeNode[];
+}
+
 export interface OperationLog extends BaseEntity {
   adminId?: number;
+  roleId?: number;
+  menuId?: number;
   username: string;
   operation: string;
   method?: string;
@@ -207,6 +219,12 @@ export interface PaginationParams {
   pageSize?: number;
 }
 
+export interface ImportResult {
+  successCount: number;
+  failCount: number;
+  failures: Array<{ row: number; field?: string; reason: string }>;
+}
+
 // ==================== 认证相关 ====================
 
 export interface LoginRequest {
@@ -226,10 +244,10 @@ export const IndustryCategoryLabels: Record<IndustryCategory, string> = {
   [IndustryCategory.CATERING]: '餐饮',
   [IndustryCategory.RETAIL]: '零售',
   [IndustryCategory.BEAUTY]: '美妆',
-  [IndustryCategory.HOTEL]: '酒旅',
+  [IndustryCategory.HOSPITALITY]: '酒旅',
   [IndustryCategory.EDUCATION]: '教育',
   [IndustryCategory.AUTOMOTIVE]: '汽车',
-  [IndustryCategory.LIFE_SERVICE]: '本地生活',
+  [IndustryCategory.LOCAL_LIFE]: '本地生活',
   [IndustryCategory.OTHER]: '其他',
 };
 

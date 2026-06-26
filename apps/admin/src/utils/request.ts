@@ -2,6 +2,7 @@ import axios, { type AxiosInstance, type AxiosRequestConfig, type AxiosResponse 
 import { ElMessage } from 'element-plus';
 import router from '@/router';
 import { useUserStore } from '@/stores/user';
+import i18n from '@/locales';
 
 const service: AxiosInstance = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL || '/api',
@@ -18,6 +19,9 @@ service.interceptors.request.use(
     if (userStore.token) {
       config.headers.Authorization = `Bearer ${userStore.token}`;
     }
+    // Accept-Language 取当前语言（直接读 localStorage 避免与 app store 形成循环依赖）
+    const locale = localStorage.getItem('locale') || 'ja';
+    config.headers['Accept-Language'] = locale;
     return config;
   },
   (error) => {
@@ -28,43 +32,56 @@ service.interceptors.request.use(
 // Response interceptor
 service.interceptors.response.use(
   (response: AxiosResponse) => {
+    // 文件下载（blob）直接返回原始数据，跳过业务码解析
+    if (response.config.responseType === 'blob') {
+      return response.data;
+    }
+
     const { code, message, data } = response.data;
 
     if (code === 0) {
       return data;
     }
 
-    ElMessage.error(message || 'Request failed');
+    // 后端业务错误消息保持后端原文显示（本轮后端错误消息未国际化）
+    ElMessage.error(message || i18n.global.t('common.requestFailed'));
     return Promise.reject(new Error(message || 'Request failed'));
   },
   (error) => {
     const userStore = useUserStore();
+    const t = i18n.global.t;
 
     if (error.response) {
       const { status } = error.response;
 
       switch (status) {
         case 401:
-          ElMessage.error('登录已过期，请重新登录');
+          ElMessage.error(t('common.sessionExpired'));
           userStore.logout();
           router.push('/login');
           break;
         case 403:
-          ElMessage.error('没有权限访问该资源');
+          ElMessage.error(t('common.forbidden'));
           break;
         case 404:
-          ElMessage.error('请求的资源不存在');
+          ElMessage.error(t('common.notFoundResource'));
           break;
         case 500:
-          ElMessage.error('服务器内部错误');
+          ElMessage.error(t('common.serverError'));
           break;
         default:
-          ElMessage.error(error.response.data?.message || '请求失败');
+          // 后端业务错误消息保持原文
+          ElMessage.error(error.response.data?.message || t('common.requestFailed'));
       }
     } else if (error.request) {
-      ElMessage.error('网络错误，请检查网络连接');
+      if (error.code === 'ECONNABORTED') {
+        // 请求超时
+        ElMessage.error(t('common.networkError'));
+      } else {
+        ElMessage.error(t('common.networkError'));
+      }
     } else {
-      ElMessage.error(error.message || '请求失败');
+      ElMessage.error(error.message || t('common.requestFailed'));
     }
 
     return Promise.reject(error);

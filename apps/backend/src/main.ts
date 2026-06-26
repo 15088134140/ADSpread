@@ -6,7 +6,6 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { HttpAdapterHost } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { AllExceptionsFilter } from './filters/all-exceptions.filter';
-import { TransformInterceptor } from './interceptors/transform.interceptor';
 
 // 全局支持 BigInt 序列化（Material.fileSize 等字段）
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -46,8 +45,9 @@ async function bootstrap() {
   const httpAdapterHost = app.get(HttpAdapterHost);
   app.useGlobalFilters(new AllExceptionsFilter(httpAdapterHost));
 
-  // Global transform interceptor
-  app.useGlobalInterceptors(new TransformInterceptor());
+  // 全局守卫（JwtAuthGuard + PermissionGuard）与全局拦截器
+  // （TransformInterceptor + OperationLogInterceptor）统一通过 AppModule 的
+  // APP_GUARD / APP_INTERCEPTOR provider 注册，此处不再 useGlobalInterceptors。
 
   // Logging middleware is registered via AppModule (consumer.apply)
 

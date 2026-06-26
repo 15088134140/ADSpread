@@ -3,69 +3,70 @@
     <el-card>
       <template #header>
         <div class="card-header">
-          <span>发布管理</span>
+          <span>{{ t('publish.title') }}</span>
           <div>
-            <el-button type="success" :disabled="selectedIds.length === 0" @click="handleBatchPush">批量推送</el-button>
-            <el-button type="primary" @click="openCreate">创建发布计划</el-button>
+            <el-button type="success" :disabled="selectedIds.length === 0" @click="handleBatchPush">{{ t('publish.batchPush') }}</el-button>
+            <el-button type="primary" @click="openCreate">{{ t('publish.createPlan') }}</el-button>
           </div>
         </div>
       </template>
 
       <el-form :inline="true" :model="query">
-        <el-form-item label="关键词">
-          <el-input v-model="query.keyword" placeholder="计划名称" clearable />
+        <el-form-item :label="t('publish.search.keyword')">
+          <el-input v-model="query.keyword" :placeholder="t('publish.search.keywordPlaceholder')" clearable />
         </el-form-item>
-        <el-form-item label="状态">
-          <el-select v-model="query.status" placeholder="全部" clearable style="width: 140px">
-            <el-option label="启用" :value="1" />
-            <el-option label="停用" :value="0" />
+        <el-form-item :label="t('publish.search.status')">
+          <el-select v-model="query.status" :placeholder="t('publish.search.all')" clearable style="width: 140px">
+            <el-option :label="t('publish.status.enabled')" :value="1" />
+            <el-option :label="t('publish.status.disabled')" :value="0" />
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="fetchData">查询</el-button>
-          <el-button @click="resetQuery">重置</el-button>
+          <el-button type="primary" @click="fetchData">{{ t('common.query') }}</el-button>
+          <el-button @click="resetQuery">{{ t('common.reset') }}</el-button>
         </el-form-item>
       </el-form>
 
       <el-table v-loading="loading" :data="list" @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="50" />
-        <el-table-column prop="name" label="计划名称" />
-        <el-table-column label="节目">
+        <el-table-column prop="id" :label="t('common.id')" width="80" />
+        <el-table-column prop="name" :label="t('publish.table.name')" />
+        <el-table-column :label="t('publish.table.program')">
           <template #default="{ row }">{{ row.program?.name || row.programId }}</template>
         </el-table-column>
-        <el-table-column label="目标门店" min-width="200">
+        <el-table-column :label="t('publish.table.targetStores')" min-width="200">
           <template #default="{ row }">
             <div v-if="row.targetStores && row.targetStores.length" class="store-list">
               <div v-for="store in row.targetStores" :key="store.id" class="store-item">
                 <span class="store-name">{{ store.name }}</span>
-                <span class="store-count">{{ store.deviceCount }}台</span>
+                <span class="store-count">{{ t('publish.table.storeDeviceCount', { count: store.deviceCount }) }}</span>
               </div>
             </div>
             <span v-else class="empty-text">-</span>
           </template>
         </el-table-column>
-        <el-table-column label="开始时间">
+        <el-table-column :label="t('publish.table.startTime')">
           <template #default="{ row }">{{ formatDateTime(row.startTime) }}</template>
         </el-table-column>
-        <el-table-column label="结束时间">
-          <template #default="{ row }">{{ row.endTime ? formatDateTime(row.endTime) : '永久' }}</template>
+        <el-table-column :label="t('publish.table.endTime')">
+          <template #default="{ row }">{{ row.endTime ? formatDateTime(row.endTime) : t('publish.table.permanent') }}</template>
         </el-table-column>
-        <el-table-column label="播放周期">
+        <el-table-column :label="t('publish.table.playDays')">
           <template #default="{ row }">{{ formatPlayDays(row.playDays) }}</template>
         </el-table-column>
-        <el-table-column label="状态">
+        <el-table-column :label="t('publish.table.status')">
           <template #default="{ row }">
-            <el-tag :type="row.status === 1 ? 'success' : 'info'">{{ row.status === 1 ? '启用' : '停用' }}</el-tag>
+            <el-tag :type="row.status === 1 ? 'success' : 'info'">{{ row.status === 1 ? t('publish.status.enabled') : t('publish.status.disabled') }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="最后推送">
+        <el-table-column :label="t('publish.table.lastPushedAt')">
           <template #default="{ row }">{{ formatDateTime(row.lastPushedAt) }}</template>
         </el-table-column>
-        <el-table-column label="操作" width="240">
+        <el-table-column :label="t('publish.table.operation')" width="240">
           <template #default="{ row }">
-            <el-button link type="primary" @click="openEdit(row)">编辑</el-button>
-            <el-button link type="success" @click="handlePush(row)">推送</el-button>
-            <el-button link type="danger" @click="handleDelete(row)">删除</el-button>
+            <el-button link type="primary" @click="openEdit(row)">{{ t('publish.table.edit') }}</el-button>
+            <el-button link type="success" @click="handlePush(row)">{{ t('publish.table.push') }}</el-button>
+            <el-button link type="danger" @click="handleDelete(row)">{{ t('publish.table.delete') }}</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -81,58 +82,60 @@
       </div>
     </el-card>
 
-    <el-dialog v-model="dialogVisible" :title="form.id ? '编辑发布计划' : '创建发布计划'" width="640px" :close-on-click-modal="false">
+    <el-dialog v-model="dialogVisible" :title="form.id ? t('publish.editPlan') : t('publish.createPlan')" width="640px" :close-on-click-modal="false">
       <el-form ref="formRef" :model="form" :rules="rules" label-width="100px">
-        <el-form-item label="计划名称" prop="name"><el-input v-model="form.name" /></el-form-item>
-        <el-form-item label="节目" prop="programId">
-          <el-select v-model="form.programId" placeholder="请选择已发布节目" style="width: 100%" filterable>
+        <el-form-item :label="t('publish.form.name')" prop="name"><el-input v-model="form.name" /></el-form-item>
+        <el-form-item :label="t('publish.form.program')" prop="programId">
+          <el-select v-model="form.programId" :placeholder="t('publish.form.programPlaceholder')" style="width: 100%" filterable>
             <el-option v-for="item in programOptions" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
         </el-form-item>
-        <el-form-item label="目标门店" prop="targetStoreIds">
-          <el-select v-model="form.targetStoreIds" placeholder="请选择门店" style="width: 100%" multiple filterable>
+        <el-form-item :label="t('publish.form.targetStores')" prop="targetStoreIds">
+          <el-select v-model="form.targetStoreIds" :placeholder="t('publish.form.targetStoresPlaceholder')" style="width: 100%" multiple filterable>
             <el-option v-for="item in storeOptions" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
         </el-form-item>
-        <el-form-item label="开始时间" prop="startTime">
-          <el-date-picker v-model="form.startTime" type="datetime" placeholder="选择开始时间" style="width: 100%" value-format="YYYY-MM-DDTHH:mm:ss.000Z" />
+        <el-form-item :label="t('publish.form.startTime')" prop="startTime">
+          <el-date-picker v-model="form.startTime" type="datetime" :placeholder="t('publish.form.startTimePlaceholder')" style="width: 100%" value-format="YYYY-MM-DDTHH:mm:ss.000Z" />
         </el-form-item>
-        <el-form-item label="结束时间">
-          <el-date-picker v-model="form.endTime" type="datetime" placeholder="选择结束时间" style="width: 100%" value-format="YYYY-MM-DDTHH:mm:ss.000Z" />
+        <el-form-item :label="t('publish.form.endTime')">
+          <el-date-picker v-model="form.endTime" type="datetime" :placeholder="t('publish.form.endTimePlaceholder')" style="width: 100%" value-format="YYYY-MM-DDTHH:mm:ss.000Z" />
         </el-form-item>
-        <el-form-item label="播放周期" prop="playDays">
-          <el-select v-model="form.playDays" placeholder="请选择播放周期" style="width: 100%" multiple>
-            <el-option v-for="item in playDayOptions" :key="item.value" :label="item.label" :value="item.value" />
+        <el-form-item :label="t('publish.form.playDays')" prop="playDays">
+          <el-select v-model="form.playDays" :placeholder="t('publish.form.playDaysPlaceholder')" style="width: 100%" multiple>
+            <el-option v-for="item in playDayOptions" :key="item.value" :label="t(item.label)" :value="item.value" />
           </el-select>
         </el-form-item>
-        <el-form-item label="状态"><el-switch v-model="form.status" :active-value="1" :inactive-value="0" /></el-form-item>
+        <el-form-item :label="t('publish.form.status')"><el-switch v-model="form.status" :active-value="1" :inactive-value="0" /></el-form-item>
       </el-form>
       <template #footer>
-        <el-button @click="dialogVisible = false">取消</el-button>
-        <el-button type="primary" @click="submitForm">保存</el-button>
+        <el-button @click="dialogVisible = false">{{ t('common.cancel') }}</el-button>
+        <el-button type="primary" @click="submitForm">{{ t('common.save') }}</el-button>
       </template>
     </el-dialog>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted } from 'vue';
+import { ref, reactive, computed, onMounted } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { ElMessage, ElMessageBox, type FormInstance, type FormRules } from 'element-plus';
 import { publishApi, type PublishPlan } from '@/api/publish';
 import { programApi, type Program } from '@/api/program';
 import { storeApi } from '@/api/store';
 import { dateUtils } from '@/utils/date';
 
+const { t } = useI18n();
 const { formatDateTime } = dateUtils;
 
 const playDayOptions = [
-  { label: '周一', value: 1 },
-  { label: '周二', value: 2 },
-  { label: '周三', value: 3 },
-  { label: '周四', value: 4 },
-  { label: '周五', value: 5 },
-  { label: '周六', value: 6 },
-  { label: '周日', value: 7 },
+  { label: 'publish.playDays.monday', value: 1 },
+  { label: 'publish.playDays.tuesday', value: 2 },
+  { label: 'publish.playDays.wednesday', value: 3 },
+  { label: 'publish.playDays.thursday', value: 4 },
+  { label: 'publish.playDays.friday', value: 5 },
+  { label: 'publish.playDays.saturday', value: 6 },
+  { label: 'publish.playDays.sunday', value: 7 },
 ];
 
 const loading = ref(false);
@@ -163,17 +166,22 @@ const form = reactive({
   status: 1,
 });
 
-const rules: FormRules = {
-  name: [{ required: true, message: '请输入计划名称', trigger: 'blur' }],
-  programId: [{ required: true, message: '请选择节目', trigger: 'change' }],
-  targetStoreIds: [{ required: true, type: 'array', min: 1, message: '请选择目标门店', trigger: 'change' }],
-  startTime: [{ required: true, message: '请选择开始时间', trigger: 'change' }],
-  playDays: [{ required: true, type: 'array', min: 1, message: '请选择播放周期', trigger: 'change' }],
-};
+const rules = computed<FormRules>(() => ({
+  name: [{ required: true, message: t('validation.planName'), trigger: 'blur' }],
+  programId: [{ required: true, message: t('validation.program'), trigger: 'change' }],
+  targetStoreIds: [{ required: true, type: 'array', min: 1, message: t('validation.targetStores'), trigger: 'change' }],
+  startTime: [{ required: true, message: t('validation.startTime'), trigger: 'change' }],
+  playDays: [{ required: true, type: 'array', min: 1, message: t('validation.playDays'), trigger: 'change' }],
+}));
 
 function formatPlayDays(days: number[]): string {
   if (!days || !days.length) return '-';
-  return days.map((d) => playDayOptions.find((o) => o.value === d)?.label || d).join('、');
+  return days
+    .map((d) => {
+      const o = playDayOptions.find((opt) => opt.value === d);
+      return o ? t(o.label) : d;
+    })
+    .join(', ');
 }
 
 async function fetchData() {
@@ -256,10 +264,10 @@ async function submitForm() {
       };
       if (form.id) {
         await publishApi.update(form.id, data);
-        ElMessage.success('更新成功');
+        ElMessage.success(t('common.messages.updateSuccess'));
       } else {
         await publishApi.create(data);
-        ElMessage.success('创建成功');
+        ElMessage.success(t('common.messages.createSuccess'));
       }
       dialogVisible.value = false;
       fetchData();
@@ -271,13 +279,15 @@ async function submitForm() {
 
 async function handlePush(row: PublishPlan) {
   try {
-    await ElMessageBox.confirm(`确定要推送计划 "${row.name}" 吗？`, '提示', {
-      confirmButtonText: '确定',
-      cancelButtonText: '取消',
+    await ElMessageBox.confirm(t('publish.messages.confirmPush', { name: row.name }), t('common.tip'), {
+      confirmButtonText: t('common.confirm'),
+      cancelButtonText: t('common.cancel'),
       type: 'success',
     });
     const result = await publishApi.push(row.id);
-    ElMessage.success(`推送成功，目标设备数：${result.targetDeviceCount}，推送记录ID：${result.pushLogId}`);
+    ElMessage.success(
+      t('publish.messages.pushSuccess', { deviceCount: result.targetDeviceCount, pushLogId: result.pushLogId })
+    );
     fetchData();
   } catch {
     // cancelled
@@ -286,13 +296,17 @@ async function handlePush(row: PublishPlan) {
 
 async function handleBatchPush() {
   try {
-    await ElMessageBox.confirm(`确定要批量推送 ${selectedIds.value.length} 个计划吗？`, '提示', {
-      confirmButtonText: '确定',
-      cancelButtonText: '取消',
-      type: 'success',
-    });
+    await ElMessageBox.confirm(
+      t('publish.messages.confirmBatchPush', { count: selectedIds.value.length }),
+      t('common.tip'),
+      {
+        confirmButtonText: t('common.confirm'),
+        cancelButtonText: t('common.cancel'),
+        type: 'success',
+      }
+    );
     await publishApi.batchPush(selectedIds.value);
-    ElMessage.success('批量推送完成');
+    ElMessage.success(t('common.messages.batchPushCompleted'));
     fetchData();
   } catch {
     // cancelled
@@ -301,13 +315,13 @@ async function handleBatchPush() {
 
 async function handleDelete(row: PublishPlan) {
   try {
-    await ElMessageBox.confirm(`确定要删除计划 "${row.name}" 吗？`, '提示', {
-      confirmButtonText: '确定',
-      cancelButtonText: '取消',
+    await ElMessageBox.confirm(t('publish.messages.confirmDelete', { name: row.name }), t('common.tip'), {
+      confirmButtonText: t('common.confirm'),
+      cancelButtonText: t('common.cancel'),
       type: 'warning',
     });
     await publishApi.delete(row.id);
-    ElMessage.success('删除成功');
+    ElMessage.success(t('common.messages.deleteSuccess'));
     fetchData();
   } catch {
     // cancelled

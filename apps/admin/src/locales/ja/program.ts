@@ -1,0 +1,58 @@
+export default {
+  title: '番組制作',
+  createProgram: '番組新規作成',
+  editProgram: '番組編集',
+  saveDraft: '下書き保存',
+  saveAndPublish: '保存して配信',
+  search: {
+    keyword: 'キーワード',
+    keywordPlaceholder: '番組名',
+    status: 'ステータス',
+    all: 'すべて',
+  },
+  table: {
+    name: '番組名',
+    screenOrientation: '画面方向',
+    splitType: '分割タイプ',
+    status: 'ステータス',
+    publishedAt: '配信日時',
+    createdAt: '作成日時',
+    operation: '操作',
+    edit: '編集',
+    publish: '配信',
+    delete: '削除',
+  },
+  form: {
+    name: '番組名',
+    screenOrientation: '画面方向',
+    splitType: '分割タイプ',
+    regionConfig: '領域設定',
+    selectMaterial: '素材を選択',
+    durationUnit: '秒',
+    removeMaterial: '削除',
+    addMaterial: '+ 素材を追加',
+    anySplitTypeAlert:
+      '任意分割を選択した場合は下書き保存のみ可能です。配信前に具体的な分割タイプを選択してください',
+  },
+  status: {
+    draft: '下書き',
+    published: '配信済み',
+  },
+  screenOrientation: {
+    LANDSCAPE: '横画面',
+    PORTRAIT: '縦画面',
+    ANY: '任意',
+  },
+  splitType: {
+    SPLIT_1: '1分割',
+    SPLIT_2: '2分割',
+    SPLIT_3: '3分割',
+    SPLIT_3_1: '3-1分割',
+    SPLIT_4: '4分割',
+    ANY: '任意',
+  },
+  messages: {
+    confirmPublish: '番組「{name}」を配信してもよろしいですか？',
+    confirmDelete: '番組「{name}」を削除してもよろしいですか？',
+  },
+};

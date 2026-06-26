@@ -2,14 +2,16 @@
   <div class="not-found">
     <div class="content">
       <h1>404</h1>
-      <p>抱歉，您访问的页面不存在</p>
-      <el-button type="primary" @click="$router.push('/')">返回首页</el-button>
+      <p>{{ t('common.pageNotFound') }}</p>
+      <el-button type="primary" @click="$router.push('/')">{{ t('common.backHome') }}</el-button>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-// 404 page
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 </script>
 
 <style scoped lang="scss">
