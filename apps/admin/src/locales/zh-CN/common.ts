@@ -30,6 +30,8 @@ export default {
   backHome: '返回首页',
   login: '登录',
   logout: '登出',
+  systemTitle: '信发系统管理后台',
+  defaultAccountHint: '默认账号: admin / admin123',
   language: '语言',
   profile: '个人中心',
   settings: '系统设置',

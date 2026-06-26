@@ -28,6 +28,7 @@ export default {
   form: {
     rejectReason: 'Reject Reason',
     rejectReasonPlaceholder: 'Please enter the reject reason (at least 10 characters)',
+    confirmReject: 'Confirm Reject',
   },
   preview: {
     unsupported: 'Preview is not supported for this material type',

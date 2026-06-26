@@ -3,7 +3,7 @@
     <div class="login-box">
       <div class="login-header">
         <h1>ADSpread</h1>
-        <p>信发系统管理后台</p>
+        <p>{{ t('common.systemTitle') }}</p>
       </div>
 
       <el-form
@@ -16,7 +16,7 @@
         <el-form-item prop="username">
           <el-input
             v-model="loginForm.username"
-            placeholder="请输入用户名"
+            :placeholder="t('validation.username')"
             size="large"
             prefix-icon="User"
           />
@@ -26,7 +26,7 @@
           <el-input
             v-model="loginForm.password"
             type="password"
-            placeholder="请输入密码"
+            :placeholder="t('validation.password')"
             size="large"
             prefix-icon="Lock"
             show-password
@@ -41,21 +41,22 @@
             :loading="loading"
             @click="handleLogin"
           >
-            登录
+            {{ t('common.login') }}
           </el-button>
         </el-form-item>
       </el-form>
 
       <div class="login-footer">
-        <p>默认账号: admin / admin123</p>
+        <p>{{ t('common.defaultAccountHint') }}</p>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from 'vue';
+import { ref, reactive, computed } from 'vue';
 import { useRouter } from 'vue-router';
+import { useI18n } from 'vue-i18n';
 import { ElMessage, type FormInstance, type FormRules } from 'element-plus';
 import { useUserStore } from '@/stores/user';
 import { authApi } from '@/api/auth';
@@ -63,6 +64,7 @@ import type { LoginRequest } from '@adspread/types';
 
 const router = useRouter();
 const userStore = useUserStore();
+const { t } = useI18n();
 
 const formRef = ref<FormInstance>();
 const loading = ref(false);
@@ -72,10 +74,10 @@ const loginForm = reactive<LoginRequest>({
   password: 'admin123',
 });
 
-const loginRules: FormRules = {
-  username: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
-  password: [{ required: true, message: '请输入密码', trigger: 'blur' }],
-};
+const loginRules = computed<FormRules>(() => ({
+  username: [{ required: true, message: t('validation.username'), trigger: 'blur' }],
+  password: [{ required: true, message: t('validation.password'), trigger: 'blur' }],
+}));
 
 const handleLogin = async () => {
   if (!formRef.value) return;
@@ -89,7 +91,7 @@ const handleLogin = async () => {
 
         await userStore.login(token, userInfo);
 
-        ElMessage.success('登录成功');
+        ElMessage.success(t('common.messages.loginSuccess'));
         router.push('/');
       } catch (error) {
         console.error('Login failed:', error);

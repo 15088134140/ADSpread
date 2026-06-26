@@ -28,6 +28,7 @@ export default {
   form: {
     rejectReason: '驳回原因',
     rejectReasonPlaceholder: '请输入驳回原因（至少10个字符）',
+    confirmReject: '确定驳回',
   },
   preview: {
     unsupported: '不支持预览该类型素材',

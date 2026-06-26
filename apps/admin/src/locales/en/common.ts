@@ -30,6 +30,8 @@ export default {
   backHome: 'Back to Home',
   login: 'Login',
   logout: 'Logout',
+  systemTitle: 'ADSpread Admin System',
+  defaultAccountHint: 'Default account: admin / admin123',
   language: 'Language',
   profile: 'Profile',
   settings: 'Settings',

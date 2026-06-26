@@ -28,6 +28,7 @@ export default {
   form: {
     rejectReason: '却下理由',
     rejectReasonPlaceholder: '却下理由を入力してください（10文字以上）',
+    confirmReject: '却下を確定',
   },
   preview: {
     unsupported: 'このタイプの素材はプレビューできません',

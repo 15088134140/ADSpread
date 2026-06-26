@@ -30,6 +30,8 @@ export default {
   backHome: 'ホームに戻る',
   login: 'ログイン',
   logout: 'ログアウト',
+  systemTitle: '情報発信システム管理画面',
+  defaultAccountHint: 'デフォルトアカウント: admin / admin123',
   language: '言語',
   profile: 'プロフィール',
   settings: '設定',
