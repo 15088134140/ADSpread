@@ -1,12 +1,15 @@
 {
   "permissions": {
     "allow": [
-      "Bash(npm install:*)",
+      "Bash(pnpm install:*)",
+      "Bash(pnpm run:*)",
       "Bash(npx playwright:*)",
       "Bash(node:*)",
       "Bash(ls:*)",
       "WebSearch",
-      "Bash(grep -r \"<div class=\"\"sidebar-header\"\">\" design/*.html)"
+      "Bash(grep -r \"<div class=\"\"sidebar-header\"\">\" design/*.html)",
+      "Skill(run)",
+      "Skill(run:*)"
     ]
   }
 }

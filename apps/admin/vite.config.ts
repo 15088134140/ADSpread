@@ -7,6 +7,12 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
+      '@adspread/types': fileURLToPath(
+        new URL('../../packages/types/src/index.ts', import.meta.url)
+      ),
+      '@adspread/shared': fileURLToPath(
+        new URL('../../packages/shared/src/index.ts', import.meta.url)
+      ),
     },
   },
   server: {

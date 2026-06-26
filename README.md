@@ -91,14 +91,14 @@
 ### 环境要求
 
 - Node.js >= 20.0.0
-- npm >= 10.0.0
+- pnpm >= 8.0.0
 - MySQL >= 8.0
 - Redis >= 7.0
 
 ### 安装依赖
 
 ```bash
-npm install
+pnpm install
 ```
 
 ### 配置环境变量
@@ -112,16 +112,16 @@ cp apps/backend/.env.example apps/backend/.env
 
 ```bash
 # 启动数据库
-npm run docker:up
+pnpm run docker:up
 
 # 数据库迁移
-npm run prisma:migrate
+pnpm run prisma:migrate
 
 # 启动后端
-npm run dev:backend
+pnpm run dev:backend
 
 # 启动前端（新终端）
-npm run dev:admin
+pnpm run dev:admin
 ```
 
 ### 访问地址
@@ -177,13 +177,13 @@ docs: update API documentation
 
 ```bash
 # 代码检查
-npm run lint
+pnpm run lint
 
 # 代码格式化
-npm run format
+pnpm run format
 
 # 运行测试
-npm run test
+pnpm run test
 ```
 
 ## 文档
