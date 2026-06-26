@@ -80,7 +80,8 @@ export class AdminService {
     // 业务规则：不可将自身账号状态置为禁用，避免管理员误锁自己
     if (id === currentUserId && typeof dto.status === 'number' && dto.status === 0) {
       throw new BusinessException(
-        '不可禁用当前登录账号',
+        'ADMIN_CANNOT_DISABLE_SELF',
+        [],
         BusinessErrorCode.BUSINESS_RULE_VIOLATION
       );
     }
@@ -98,7 +99,8 @@ export class AdminService {
     // 业务规则：不可删除自己
     if (id === currentUserId) {
       throw new BusinessException(
-        '不可删除当前登录账号',
+        'ADMIN_CANNOT_DELETE_SELF',
+        [],
         BusinessErrorCode.BUSINESS_RULE_VIOLATION
       );
     }
@@ -124,7 +126,7 @@ export class AdminService {
   private async assertExists(id: number): Promise<Admin> {
     const admin = await this.prisma.admin.findUnique({ where: { id } });
     if (!admin) {
-      throw new BusinessException('管理员不存在', BusinessErrorCode.NOT_FOUND, 404);
+      throw new BusinessException('ADMIN_NOT_FOUND', [], BusinessErrorCode.NOT_FOUND, 404);
     }
     return admin;
   }
@@ -134,14 +136,18 @@ export class AdminService {
       where: { username, ...(excludeId ? { id: { not: excludeId } } : {}) },
     });
     if (existing) {
-      throw new BusinessException('用户名已存在', BusinessErrorCode.DUPLICATE_RESOURCE);
+      throw new BusinessException(
+        'ADMIN_USERNAME_EXISTS',
+        [],
+        BusinessErrorCode.DUPLICATE_RESOURCE
+      );
     }
   }
 
   private async assertRoleExists(roleId: number) {
     const role = await this.prisma.role.findUnique({ where: { id: roleId } });
     if (!role) {
-      throw new BusinessException('所选角色不存在', BusinessErrorCode.NOT_FOUND, 404);
+      throw new BusinessException('ROLE_SELECTED_NOT_FOUND', [], BusinessErrorCode.NOT_FOUND, 404);
     }
   }
 }

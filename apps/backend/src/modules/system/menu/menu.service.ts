@@ -105,7 +105,8 @@ export class MenuService {
       // 业务规则：不可将自身设为父级（形成自环）
       if (dto.parentId === id) {
         throw new BusinessException(
-          '不可将菜单的父级设为自身',
+          'MENU_SELF_PARENT',
+          [],
           BusinessErrorCode.BUSINESS_RULE_VIOLATION
         );
       }
@@ -120,7 +121,8 @@ export class MenuService {
     const childCount = await this.prisma.menu.count({ where: { parentId: id } });
     if (childCount > 0) {
       throw new BusinessException(
-        '存在子菜单，无法删除',
+        'MENU_HAS_CHILDREN',
+        [],
         BusinessErrorCode.BUSINESS_RULE_VIOLATION
       );
     }
@@ -155,7 +157,7 @@ export class MenuService {
   private async assertExists(id: number): Promise<Menu> {
     const menu = await this.prisma.menu.findUnique({ where: { id } });
     if (!menu) {
-      throw new BusinessException('菜单不存在', BusinessErrorCode.NOT_FOUND, 404);
+      throw new BusinessException('MENU_NOT_FOUND', [], BusinessErrorCode.NOT_FOUND, 404);
     }
     return menu;
   }
@@ -163,7 +165,7 @@ export class MenuService {
   private async assertParentExists(parentId: number) {
     const parent = await this.prisma.menu.findUnique({ where: { id: parentId } });
     if (!parent) {
-      throw new BusinessException('父菜单不存在', BusinessErrorCode.NOT_FOUND, 404);
+      throw new BusinessException('MENU_PARENT_NOT_FOUND', [], BusinessErrorCode.NOT_FOUND, 404);
     }
   }
 }

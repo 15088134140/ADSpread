@@ -42,7 +42,7 @@ export class ProgramService {
     });
 
     if (!program) {
-      throw new BusinessException('节目不存在');
+      throw new BusinessException('PROGRAM_NOT_FOUND');
     }
 
     return program;
@@ -70,14 +70,14 @@ export class ProgramService {
     );
 
     if (notFoundIds.length > 0) {
-      throw new BusinessException(`素材不存在: ${notFoundIds.join(',')}`);
+      throw new BusinessException('MATERIAL_NOT_FOUND_IDS', [notFoundIds.join(',')]);
     }
 
     const unapprovedIds = materials
       .filter((material) => material.auditStatus !== 'APPROVED')
       .map((material) => material.id);
     if (unapprovedIds.length > 0) {
-      throw new BusinessException(`素材未审核通过: ${unapprovedIds.join(',')}`);
+      throw new BusinessException('MATERIAL_NOT_APPROVED_IDS', [unapprovedIds.join(',')]);
     }
 
     // 保存节目
@@ -128,14 +128,14 @@ export class ProgramService {
       );
 
       if (notFoundIds.length > 0) {
-        throw new BusinessException(`素材不存在: ${notFoundIds.join(',')}`);
+        throw new BusinessException('MATERIAL_NOT_FOUND_IDS', [notFoundIds.join(',')]);
       }
 
       const unapprovedIds = materials
         .filter((material) => material.auditStatus !== 'APPROVED')
         .map((material) => material.id);
       if (unapprovedIds.length > 0) {
-        throw new BusinessException(`素材未审核通过: ${unapprovedIds.join(',')}`);
+        throw new BusinessException('MATERIAL_NOT_APPROVED_IDS', [unapprovedIds.join(',')]);
       }
 
       updateData.layoutConfig = {
@@ -178,14 +178,14 @@ export class ProgramService {
       );
 
       if (notFoundIds.length > 0) {
-        throw new BusinessException(`素材不存在: ${notFoundIds.join(',')}`);
+        throw new BusinessException('MATERIAL_NOT_FOUND_IDS', [notFoundIds.join(',')]);
       }
 
       const unapprovedIds = materials
         .filter((material) => material.auditStatus !== 'APPROVED')
         .map((material) => material.id);
       if (unapprovedIds.length > 0) {
-        throw new BusinessException(`素材未审核通过: ${unapprovedIds.join(',')}`);
+        throw new BusinessException('MATERIAL_NOT_APPROVED_IDS', [unapprovedIds.join(',')]);
       }
 
       updateData.layoutConfig = {

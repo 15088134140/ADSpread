@@ -61,19 +61,19 @@ export class PermissionGuard implements CanActivate {
     // 2. 未登录
     const user = request.user;
     if (!user) {
-      throw new BusinessException('未登录', BusinessErrorCode.UNAUTHORIZED, 401);
+      throw new BusinessException('UNAUTHORIZED', [], BusinessErrorCode.UNAUTHORIZED, 401);
     }
 
     // 3. 加载角色：roleId 缺失 → 403
     const roleId = user.roleId;
     if (roleId === undefined || roleId === null) {
-      throw new BusinessException('无权限访问', BusinessErrorCode.FORBIDDEN, 403);
+      throw new BusinessException('FORBIDDEN', [], BusinessErrorCode.FORBIDDEN, 403);
     }
 
     const role = await this.loadRole(request, roleId);
     if (!role) {
       // 角色已被删除或不存在
-      throw new BusinessException('无权限访问', BusinessErrorCode.FORBIDDEN, 403);
+      throw new BusinessException('FORBIDDEN', [], BusinessErrorCode.FORBIDDEN, 403);
     }
     if (role.name === SUPER_ADMIN_ROLE_NAME) {
       return true;
@@ -91,11 +91,11 @@ export class PermissionGuard implements CanActivate {
       if (permissionSet.has(code)) {
         return true;
       }
-      throw new BusinessException('无权限访问', BusinessErrorCode.FORBIDDEN, 403);
+      throw new BusinessException('FORBIDDEN', [], BusinessErrorCode.FORBIDDEN, 403);
     }
 
     // 6. 严格兜底：未声明任何权限标记
-    throw new BusinessException('无权限访问', BusinessErrorCode.FORBIDDEN, 403);
+    throw new BusinessException('FORBIDDEN', [], BusinessErrorCode.FORBIDDEN, 403);
   }
 
   /**

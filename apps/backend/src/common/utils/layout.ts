@@ -17,7 +17,7 @@ export function validateSplitType(screenOrientation: ScreenOrientation, splitTyp
     screenOrientation === ScreenOrientation.PORTRAIT ? PORTRAIT_SPLIT_TYPES : LANDSCAPE_SPLIT_TYPES;
 
   if (!allowed.includes(splitType)) {
-    throw new BusinessException('屏幕方向与分屏类型不匹配');
+    throw new BusinessException('SCREEN_SPLIT_MISMATCH');
   }
 }
 

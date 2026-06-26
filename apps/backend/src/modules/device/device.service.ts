@@ -4,6 +4,11 @@ import * as xlsx from 'xlsx';
 import type { ImportResult } from '@adspread/types';
 import { PrismaService } from '../prisma/prisma.service';
 import { BusinessException } from '../../common/errors/business.exception';
+import {
+  resolveErrorMessage,
+  type AppLocale,
+  type ErrorMessageKey,
+} from '../../common/i18n/error-messages';
 import { getPagination, paginated } from '../../common/utils/pagination';
 import { validateSplitType } from '../../common/utils/layout';
 import { CreateDeviceDto } from './dto/create-device.dto';
@@ -115,23 +120,23 @@ export class DeviceService {
    * assertStoreExists、assertCodeUnique）→ 合法行事务批量 createMany；
    * 非法行收集到 failures，不中断整体。事务失败时回退为逐条创建，尽量保留可插入行。
    */
-  async batchImport(file: Express.Multer.File): Promise<ImportResult> {
+  async batchImport(file: Express.Multer.File, locale: AppLocale = 'zh-CN'): Promise<ImportResult> {
     let workbook: xlsx.WorkBook;
     try {
       workbook = xlsx.read(file.buffer, { type: 'buffer' });
     } catch {
-      throw new BusinessException('无法解析 Excel 文件，请确认上传的是 xlsx 文件');
+      throw new BusinessException('EXCEL_PARSE_FAILED');
     }
 
     const sheetName = workbook.SheetNames[0];
     if (!sheetName) {
-      throw new BusinessException('Excel 文件无数据');
+      throw new BusinessException('EXCEL_EMPTY');
     }
     const rows = xlsx.utils.sheet_to_json<Record<string, unknown>>(workbook.Sheets[sheetName], {
       defval: '',
     });
     if (rows.length === 0) {
-      throw new BusinessException('Excel 文件无数据行');
+      throw new BusinessException('EXCEL_EMPTY_ROWS');
     }
 
     const headerMap = this.buildHeaderMap(rows);
@@ -141,7 +146,7 @@ export class DeviceService {
 
     for (let i = 0; i < rows.length; i++) {
       const rowNo = i + 1;
-      const outcome = await this.validateRow(rows[i], rowNo, headerMap, seenCodes);
+      const outcome = await this.validateRow(rows[i], rowNo, headerMap, seenCodes, locale);
       if (outcome.ok) {
         validRows.push({ row: rowNo, data: outcome.data });
       } else {
@@ -165,7 +170,8 @@ export class DeviceService {
           } catch (e) {
             failures.push({
               row: v.row,
-              reason: e instanceof Error ? e.message : '创建失败',
+              reason:
+                e instanceof Error ? e.message : resolveErrorMessage('CREATE_FAILED', [], locale),
             });
           }
         }
@@ -213,7 +219,7 @@ export class DeviceService {
 
   private async assertExists(id: number): Promise<Device> {
     const device = await this.prisma.device.findUnique({ where: { id } });
-    if (!device) throw new BusinessException('设备不存在');
+    if (!device) throw new BusinessException('DEVICE_NOT_FOUND');
     return device;
   }
 
@@ -221,13 +227,13 @@ export class DeviceService {
     const existing = await this.prisma.device.findFirst({
       where: { code, ...(excludeId ? { id: { not: excludeId } } : {}) },
     });
-    if (existing) throw new BusinessException('设备编码已存在');
+    if (existing) throw new BusinessException('DEVICE_CODE_EXISTS');
   }
 
   private async assertStoreExists(storeId?: number) {
     if (storeId) {
       const store = await this.prisma.store.findUnique({ where: { id: storeId } });
-      if (!store) throw new BusinessException('所属门店不存在');
+      if (!store) throw new BusinessException('STORE_NOT_EXISTS');
     }
   }
 
@@ -239,7 +245,8 @@ export class DeviceService {
     row: Record<string, unknown>,
     rowNo: number,
     headerMap: Partial<Record<DeviceRowField, string>>,
-    seenCodes: Set<string>
+    seenCodes: Set<string>,
+    locale: AppLocale
   ): Promise<
     | { ok: true; data: Prisma.DeviceCreateManyInput }
     | { ok: false; failure: { row: number; field?: string; reason: string } }
@@ -252,26 +259,27 @@ export class DeviceService {
     const storeId = this.getNumber(row, headerMap.storeId);
     const remark = this.getString(row, headerMap.remark);
 
-    const fail = (field: string, reason: string) => ({
+    const fail = (field: string, key: ErrorMessageKey, params: unknown[] = []) => ({
       ok: false as const,
-      failure: { row: rowNo, field, reason },
+      failure: { row: rowNo, field, reason: resolveErrorMessage(key, params, locale) },
     });
 
-    if (!name) return fail('name', '缺少必填项：设备名称');
-    if (!code) return fail('code', '缺少必填项：设备编码');
-    if (!screenOrientation) return fail('screenOrientation', '缺少必填项：屏幕方向');
-    if (!screenResolution) return fail('screenResolution', '缺少必填项：分辨率');
-    if (!splitType) return fail('splitType', '缺少必填项：分屏类型');
+    if (!name) return fail('name', 'DEVICE_ROW_NAME_REQUIRED');
+    if (!code) return fail('code', 'DEVICE_ROW_CODE_REQUIRED');
+    if (!screenOrientation)
+      return fail('screenOrientation', 'DEVICE_ROW_SCREEN_ORIENTATION_REQUIRED');
+    if (!screenResolution) return fail('screenResolution', 'DEVICE_ROW_SCREEN_RESOLUTION_REQUIRED');
+    if (!splitType) return fail('splitType', 'DEVICE_ROW_SPLIT_TYPE_REQUIRED');
 
     if (!VALID_ORIENTATIONS.has(screenOrientation)) {
-      return fail('screenOrientation', `屏幕方向取值非法：${screenOrientation}`);
+      return fail('screenOrientation', 'SCREEN_ORIENTATION_INVALID', [screenOrientation]);
     }
     if (!VALID_SPLIT_TYPES.has(splitType)) {
-      return fail('splitType', `分屏类型取值非法：${splitType}`);
+      return fail('splitType', 'SPLIT_TYPE_INVALID', [splitType]);
     }
 
     if (seenCodes.has(code)) {
-      return fail('code', '设备编码当批重复');
+      return fail('code', 'DEVICE_CODE_BATCH_DUPLICATE');
     }
 
     const orientation = screenOrientation as ScreenOrientation;
@@ -280,19 +288,31 @@ export class DeviceService {
     try {
       validateSplitType(orientation, split);
     } catch (e) {
-      return fail('splitType', e instanceof Error ? e.message : '屏幕方向与分屏类型不匹配');
+      return fail(
+        'splitType',
+        e instanceof BusinessException ? e.messageKey : 'SCREEN_SPLIT_MISMATCH',
+        e instanceof BusinessException ? e.messageParams : []
+      );
     }
 
     try {
       await this.assertStoreExists(storeId);
     } catch (e) {
-      return fail('storeId', e instanceof Error ? e.message : '所属门店不存在');
+      return fail(
+        'storeId',
+        e instanceof BusinessException ? e.messageKey : 'STORE_NOT_EXISTS',
+        e instanceof BusinessException ? e.messageParams : []
+      );
     }
 
     try {
       await this.assertCodeUnique(code);
     } catch (e) {
-      return fail('code', e instanceof Error ? e.message : '设备编码已存在');
+      return fail(
+        'code',
+        e instanceof BusinessException ? e.messageKey : 'DEVICE_CODE_EXISTS',
+        e instanceof BusinessException ? e.messageParams : []
+      );
     }
 
     seenCodes.add(code);

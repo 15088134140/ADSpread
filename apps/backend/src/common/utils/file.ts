@@ -16,11 +16,11 @@ export function getMaterialType(filename: string, mimetype: string): 'IMAGE' | '
   const ext = getLowerExtension(filename);
   if (IMAGE_EXTENSIONS.includes(ext) && IMAGE_MIME_TYPES.includes(mimetype)) return 'IMAGE';
   if (VIDEO_EXTENSIONS.includes(ext) && VIDEO_MIME_TYPES.includes(mimetype)) return 'VIDEO';
-  throw new BusinessException('不支持的素材文件类型');
+  throw new BusinessException('FILE_TYPE_UNSUPPORTED');
 }
 
 export function assertMaterialFile(file: Express.Multer.File) {
-  if (!file) throw new BusinessException('请选择上传文件');
-  if (file.size > MATERIAL_MAX_FILE_SIZE) throw new BusinessException('素材文件不能超过100MB');
+  if (!file) throw new BusinessException('FILE_REQUIRED');
+  if (file.size > MATERIAL_MAX_FILE_SIZE) throw new BusinessException('FILE_TOO_LARGE');
   return getMaterialType(file.originalname, file.mimetype);
 }

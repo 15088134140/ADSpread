@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  Headers,
   Param,
   ParseIntPipe,
   Post,
@@ -26,6 +27,7 @@ import type { ImportResult } from '@adspread/types';
 import { RequirePermission } from '../../common/decorators/require-permission.decorator';
 import { OperationLog } from '../../common/decorators/operation-log.decorator';
 import { BusinessException } from '../../common/errors/business.exception';
+import { resolveLocale } from '../../common/i18n/error-messages';
 import { CreateDeviceDto } from './dto/create-device.dto';
 import { DeviceQueryDto } from './dto/device-query.dto';
 import { UpdateDeviceDto } from './dto/update-device.dto';
@@ -106,11 +108,14 @@ export class DeviceController {
     description: '上传 xlsx 文件，逐行校验并批量创建设备，返回成功/失败明细',
   })
   @ApiOkResponse({ description: '返回导入结果' })
-  async import(@UploadedFile() file: Express.Multer.File): Promise<ImportResult> {
+  async import(
+    @UploadedFile() file: Express.Multer.File,
+    @Headers('accept-language') acceptLanguage?: string
+  ): Promise<ImportResult> {
     if (!file) {
-      throw new BusinessException('未上传文件');
+      throw new BusinessException('FILE_NOT_UPLOADED');
     }
-    return this.deviceService.batchImport(file);
+    return this.deviceService.batchImport(file, resolveLocale(acceptLanguage));
   }
 
   @Post()

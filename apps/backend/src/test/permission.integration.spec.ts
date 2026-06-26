@@ -224,6 +224,21 @@ describe('Permission integration (e2e)', () => {
         .expect(403);
       expect(res.body.code).not.toBe(0);
     });
+
+    it('403 message 本地化随 Accept-Language 变化（BusinessException）', async () => {
+      const en = await request(app.getHttpServer())
+        .get('/api/admin/admins')
+        .set('Authorization', `Bearer ${operatorToken}`)
+        .set('Accept-Language', 'en')
+        .expect(403);
+      expect(en.body.message).toBe('No permission to access');
+      const ja = await request(app.getHttpServer())
+        .get('/api/admin/admins')
+        .set('Authorization', `Bearer ${operatorToken}`)
+        .set('Accept-Language', 'ja')
+        .expect(403);
+      expect(ja.body.message).toBe('アクセス権限がありません');
+    });
   });
 
   describe('operator token — allowed list access', () => {
@@ -239,6 +254,24 @@ describe('Permission integration (e2e)', () => {
   describe('unauthenticated access', () => {
     it('GET /api/stores without token → 401', async () => {
       await request(app.getHttpServer()).get('/api/stores').expect(401);
+    });
+
+    it('401 message 本地化随 Accept-Language 变化（通用兜底）', async () => {
+      const en = await request(app.getHttpServer())
+        .get('/api/stores')
+        .set('Accept-Language', 'en')
+        .expect(401);
+      expect(en.body.message).toBe('Not logged in');
+      const ja = await request(app.getHttpServer())
+        .get('/api/stores')
+        .set('Accept-Language', 'ja')
+        .expect(401);
+      expect(ja.body.message).toBe('未ログインです');
+      const zh = await request(app.getHttpServer())
+        .get('/api/stores')
+        .set('Accept-Language', 'zh-CN')
+        .expect(401);
+      expect(zh.body.message).toBe('未登录');
     });
 
     it('GET /api/device/program without token → 200 (@Public)', async () => {

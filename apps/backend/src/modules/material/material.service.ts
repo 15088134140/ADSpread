@@ -111,7 +111,7 @@ export class MaterialService {
     if (material.auditStatus === AuditStatus.REJECTED) return this.serializeMaterial(material);
 
     if (dto.reason.length < 10) {
-      throw new BusinessException('驳回原因至少10个字符');
+      throw new BusinessException('MATERIAL_REJECT_REASON_TOO_SHORT');
     }
 
     const updated = await this.prisma.material.update({
@@ -145,7 +145,7 @@ export class MaterialService {
     }).length;
 
     if (programCount > 0) {
-      throw new BusinessException('该素材已被使用在节目中，无法删除');
+      throw new BusinessException('MATERIAL_IN_USE');
     }
 
     const deleted = await this.prisma.material.delete({ where: { id } });
@@ -185,7 +185,7 @@ export class MaterialService {
 
   private async assertExists(id: number): Promise<Material> {
     const material = await this.prisma.material.findUnique({ where: { id } });
-    if (!material) throw new BusinessException('素材不存在');
+    if (!material) throw new BusinessException('MATERIAL_NOT_FOUND');
     return material;
   }
 }

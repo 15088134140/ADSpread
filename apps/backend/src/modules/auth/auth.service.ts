@@ -9,10 +9,7 @@ import { BusinessException } from '../../common/errors/business.exception';
 import { BusinessErrorCode } from '../../common/errors/business-error-codes';
 import { STATUS_ENABLED } from '../../common/constants/business.constants';
 import { SUPER_ADMIN_ROLE_NAME } from '../../common/constants/rbac.constants';
-import {
-  PASSWORD_STRENGTH_REGEX,
-  PASSWORD_STRENGTH_MESSAGE,
-} from '../system/admin/dto/create-admin.dto';
+import { PASSWORD_STRENGTH_REGEX } from '../system/admin/dto/create-admin.dto';
 import type { JwtUser } from '../../common/decorators/current-user.decorator';
 
 const BCRYPT_ROUNDS = 12;
@@ -54,20 +51,27 @@ export class AuthService {
 
     if (!admin) {
       throw new BusinessException(
-        '用户名或密码错误',
+        'LOGIN_FAILED',
+        [],
         BusinessErrorCode.UNAUTHORIZED,
         HttpStatus.UNAUTHORIZED
       );
     }
 
     if (admin.status !== STATUS_ENABLED) {
-      throw new BusinessException('账号已禁用', BusinessErrorCode.FORBIDDEN, HttpStatus.FORBIDDEN);
+      throw new BusinessException(
+        'ACCOUNT_DISABLED',
+        [],
+        BusinessErrorCode.FORBIDDEN,
+        HttpStatus.FORBIDDEN
+      );
     }
 
     const passwordOk = await bcrypt.compare(password, admin.passwordHash);
     if (!passwordOk) {
       throw new BusinessException(
-        '用户名或密码错误',
+        'LOGIN_FAILED',
+        [],
         BusinessErrorCode.UNAUTHORIZED,
         HttpStatus.UNAUTHORIZED
       );
@@ -133,7 +137,7 @@ export class AuthService {
       select: ADMIN_PUBLIC_SELECT,
     });
     if (!admin) {
-      throw new BusinessException('用户不存在', BusinessErrorCode.NOT_FOUND, 404);
+      throw new BusinessException('USER_NOT_FOUND', [], BusinessErrorCode.NOT_FOUND, 404);
     }
     return admin;
   }
@@ -145,7 +149,7 @@ export class AuthService {
   async menus(user: JwtUser) {
     const roleId = user.roleId;
     if (roleId === undefined || roleId === null) {
-      throw new BusinessException('无权限访问', BusinessErrorCode.FORBIDDEN, 403);
+      throw new BusinessException('FORBIDDEN', [], BusinessErrorCode.FORBIDDEN, 403);
     }
 
     const role = await this.prisma.role.findUnique({
@@ -153,7 +157,7 @@ export class AuthService {
       select: { name: true, menuIds: true },
     });
     if (!role) {
-      throw new BusinessException('无权限访问', BusinessErrorCode.FORBIDDEN, 403);
+      throw new BusinessException('FORBIDDEN', [], BusinessErrorCode.FORBIDDEN, 403);
     }
 
     const isSuperAdmin = role.name === SUPER_ADMIN_ROLE_NAME;
@@ -167,16 +171,16 @@ export class AuthService {
   async changePassword(userId: number, oldPassword: string, newPassword: string) {
     const admin = await this.prisma.admin.findUnique({ where: { id: userId } });
     if (!admin) {
-      throw new BusinessException('用户不存在', BusinessErrorCode.NOT_FOUND, 404);
+      throw new BusinessException('USER_NOT_FOUND', [], BusinessErrorCode.NOT_FOUND, 404);
     }
 
     const oldOk = await bcrypt.compare(oldPassword, admin.passwordHash);
     if (!oldOk) {
-      throw new BusinessException('旧密码错误', BusinessErrorCode.PARAM_ERROR);
+      throw new BusinessException('PASSWORD_OLD_WRONG', [], BusinessErrorCode.PARAM_ERROR);
     }
 
     if (!PASSWORD_STRENGTH_REGEX.test(newPassword)) {
-      throw new BusinessException(PASSWORD_STRENGTH_MESSAGE, BusinessErrorCode.PARAM_ERROR);
+      throw new BusinessException('PASSWORD_WEAK', [], BusinessErrorCode.PARAM_ERROR);
     }
 
     const passwordHash = await bcrypt.hash(newPassword, BCRYPT_ROUNDS);

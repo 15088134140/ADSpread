@@ -54,7 +54,7 @@ export class StoreService {
   async remove(id: number) {
     await this.assertExists(id);
     const deviceCount = await this.prisma.device.count({ where: { storeId: id } });
-    if (deviceCount > 0) throw new BusinessException('门店下存在设备，无法删除');
+    if (deviceCount > 0) throw new BusinessException('STORE_HAS_DEVICES');
     return this.prisma.store.delete({ where: { id } });
   }
 
@@ -81,7 +81,7 @@ export class StoreService {
 
   private async assertExists(id: number): Promise<Store> {
     const store = await this.prisma.store.findUnique({ where: { id } });
-    if (!store) throw new BusinessException('门店不存在');
+    if (!store) throw new BusinessException('STORE_NOT_FOUND');
     return store;
   }
 
@@ -89,6 +89,6 @@ export class StoreService {
     const existing = await this.prisma.store.findFirst({
       where: { code, ...(excludeId ? { id: { not: excludeId } } : {}) },
     });
-    if (existing) throw new BusinessException('门店编码已存在');
+    if (existing) throw new BusinessException('STORE_CODE_EXISTS');
   }
 }

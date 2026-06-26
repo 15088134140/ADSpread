@@ -14,7 +14,7 @@ export class DeviceApiService {
     });
 
     if (!device) {
-      throw new BusinessException('设备不存在');
+      throw new BusinessException('DEVICE_NOT_FOUND');
     }
 
     if (device.status !== 1) {

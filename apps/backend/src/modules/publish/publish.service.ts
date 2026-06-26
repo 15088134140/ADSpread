@@ -77,7 +77,7 @@ export class PublishService {
     });
 
     if (!plan) {
-      throw new BusinessException('发布计划不存在');
+      throw new BusinessException('PUBLISH_PLAN_NOT_FOUND');
     }
 
     return plan;
@@ -90,11 +90,11 @@ export class PublishService {
     });
 
     if (!program) {
-      throw new BusinessException('节目不存在');
+      throw new BusinessException('PROGRAM_NOT_FOUND');
     }
 
     if (program.status !== 1) {
-      throw new BusinessException('节目未发布');
+      throw new BusinessException('PROGRAM_NOT_PUBLISHED');
     }
 
     // 验证目标门店是否存在
@@ -103,7 +103,7 @@ export class PublishService {
     });
 
     if (targetStoreCount < dto.targetStoreIds.length) {
-      throw new BusinessException('部分目标门店不存在或已禁用');
+      throw new BusinessException('PUBLISH_TARGET_STORES_INVALID');
     }
 
     // 创建发布计划
@@ -137,11 +137,11 @@ export class PublishService {
       });
 
       if (!program) {
-        throw new BusinessException('节目不存在');
+        throw new BusinessException('PROGRAM_NOT_FOUND');
       }
 
       if (program.status !== 1) {
-        throw new BusinessException('节目未发布');
+        throw new BusinessException('PROGRAM_NOT_PUBLISHED');
       }
     }
 
@@ -152,7 +152,7 @@ export class PublishService {
       });
 
       if (targetStoreCount < dto.targetStoreIds.length) {
-        throw new BusinessException('部分目标门店不存在或已禁用');
+        throw new BusinessException('PUBLISH_TARGET_STORES_INVALID');
       }
     }
 
@@ -179,7 +179,7 @@ export class PublishService {
     const plan = await this.findOne(id);
 
     if (plan.status !== 1) {
-      throw new BusinessException('发布计划未启用');
+      throw new BusinessException('PUBLISH_PLAN_DISABLED');
     }
 
     // 获取目标设备数量

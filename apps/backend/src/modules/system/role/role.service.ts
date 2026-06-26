@@ -67,7 +67,8 @@ export class RoleService {
     // 超管角色名称不可改（防止误改后失去超管识别）
     if (role.name === SUPER_ADMIN_ROLE_NAME && dto.name && dto.name !== role.name) {
       throw new BusinessException(
-        '超级管理员角色名称不可修改',
+        'ROLE_SUPER_NAME_FIXED',
+        [],
         BusinessErrorCode.BUSINESS_RULE_VIOLATION
       );
     }
@@ -83,7 +84,8 @@ export class RoleService {
     // 业务规则：超级管理员角色不可删除
     if (role.name === SUPER_ADMIN_ROLE_NAME) {
       throw new BusinessException(
-        '超级管理员角色不可删除',
+        'ROLE_SUPER_DELETE_FIXED',
+        [],
         BusinessErrorCode.BUSINESS_RULE_VIOLATION
       );
     }
@@ -91,10 +93,7 @@ export class RoleService {
     // 业务规则：有关联管理员时不可删除
     const adminCount = await this.prisma.admin.count({ where: { roleId: id } });
     if (adminCount > 0) {
-      throw new BusinessException(
-        '角色下存在关联管理员，无法删除',
-        BusinessErrorCode.BUSINESS_RULE_VIOLATION
-      );
+      throw new BusinessException('ROLE_HAS_ADMINS', [], BusinessErrorCode.BUSINESS_RULE_VIOLATION);
     }
 
     return this.prisma.role.delete({ where: { id } });
@@ -106,7 +105,8 @@ export class RoleService {
     // 业务规则：超管角色 menuIds 不可改（运行时识别为全部启用菜单）
     if (role.name === SUPER_ADMIN_ROLE_NAME) {
       throw new BusinessException(
-        '超级管理员角色权限不可修改',
+        'ROLE_SUPER_MENU_FIXED',
+        [],
         BusinessErrorCode.BUSINESS_RULE_VIOLATION
       );
     }
@@ -120,7 +120,7 @@ export class RoleService {
   private async assertExists(id: number): Promise<Role> {
     const role = await this.prisma.role.findUnique({ where: { id } });
     if (!role) {
-      throw new BusinessException('角色不存在', BusinessErrorCode.NOT_FOUND, 404);
+      throw new BusinessException('ROLE_NOT_FOUND', [], BusinessErrorCode.NOT_FOUND, 404);
     }
     return role;
   }
@@ -130,7 +130,7 @@ export class RoleService {
       where: { name, ...(excludeId ? { id: { not: excludeId } } : {}) },
     });
     if (existing) {
-      throw new BusinessException('角色名称已存在', BusinessErrorCode.DUPLICATE_RESOURCE);
+      throw new BusinessException('ROLE_NAME_EXISTS', [], BusinessErrorCode.DUPLICATE_RESOURCE);
     }
   }
 }

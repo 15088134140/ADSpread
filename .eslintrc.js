@@ -7,7 +7,10 @@ module.exports = {
   },
   parser: '@typescript-eslint/parser',
   parserOptions: {
-    project: 'tsconfig.json',
+    // 根 tsconfig 仅覆盖 packages/，各 app 由自身 tsconfig 覆盖。
+    // typescript-eslint 按文件归属匹配对应 project，否则 apps/** 文件会因
+    // 不在根 project 内而报 "TSConfig does not include this file"。
+    project: ['tsconfig.json', 'apps/backend/tsconfig.json', 'apps/admin/tsconfig.json'],
     tsconfigRootDir: __dirname,
     sourceType: 'module',
   },
