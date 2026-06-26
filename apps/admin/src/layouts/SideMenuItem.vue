@@ -30,6 +30,7 @@
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { MenuType, type MenuTreeNode } from '@adspread/types';
+import { menuNameToSlug } from './menu-i18n';
 
 defineOptions({ name: 'SideMenuItem' });
 
@@ -41,8 +42,9 @@ const props = defineProps<{
 const { t } = useI18n();
 
 /**
- * 当前节点的 i18n key 前缀，由父级前缀与节点 name 拼接而成。
- * 节点文案取 `${i18nKey}.label`，与 locales/menu.ts 的对象结构一一对应。
+ * 当前节点的 i18n key 前缀，由父级前缀与节点 name 对应的 slug 拼接而成。
+ * 后端菜单 name 为中文，通过 menuNameToSlug 映射到 locales/menu.ts 的英文 key 段；
+ * 节点文案取 `${i18nKey}.label`。未命中映射时回退使用 name 本身。
  */
-const i18nKey = computed(() => `${props.i18nPrefix}.${props.node.name}`);
+const i18nKey = computed(() => `${props.i18nPrefix}.${menuNameToSlug(props.node.name)}`);
 </script>
