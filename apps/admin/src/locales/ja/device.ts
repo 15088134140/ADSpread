@@ -31,6 +31,7 @@ export default {
     splitType: '分割タイプ',
     status: 'ステータス',
     createdAt: '作成日時',
+    lastActiveAt: '最終オンライン',
     operation: '操作',
   },
   form: {

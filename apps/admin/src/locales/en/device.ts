@@ -31,6 +31,7 @@ export default {
     splitType: 'Split Type',
     status: 'Status',
     createdAt: 'Created At',
+    lastActiveAt: 'Last Online',
     operation: 'Action',
   },
   form: {

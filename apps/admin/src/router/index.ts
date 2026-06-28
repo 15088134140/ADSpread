@@ -13,9 +13,8 @@ const routes: RouteRecordRaw[] = [
     path: '/',
     name: 'Layout',
     component: () => import('@/layouts/MainLayout.vue'),
-    redirect: '/dashboard',
     meta: { requiresAuth: true },
-    // 业务子路由由 permissionStore.fetchMenus 动态注册（router.addRoute('Layout', ...)）
+    // 子路由由 permissionStore.fetchMenus 动态注册（router.addRoute('Layout', ...)）
     children: [],
   },
   {
@@ -43,6 +42,12 @@ router.beforeEach(async (to, _from, next) => {
   // 已登录访问登录页 → 跳首页
   if (to.path === '/login' && token) {
     next('/');
+    return;
+  }
+
+  // 已登录访问首页 / → 跳 /dashboard（redirect 移出 route config 以避免未登录时也被 redirect）
+  if (to.path === '/' && token) {
+    next('/dashboard');
     return;
   }
 

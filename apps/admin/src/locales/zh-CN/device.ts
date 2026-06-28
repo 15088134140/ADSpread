@@ -31,6 +31,7 @@ export default {
     splitType: '分屏类型',
     status: '状态',
     createdAt: '创建时间',
+    lastActiveAt: '最后在线',
     operation: '操作',
   },
   form: {

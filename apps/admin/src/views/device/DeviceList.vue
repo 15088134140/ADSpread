@@ -53,6 +53,12 @@
             <el-tag :type="row.status === 1 ? 'success' : 'danger'">{{ row.status === 1 ? t('common.enabled') : t('common.disabled') }}</el-tag>
           </template>
         </el-table-column>
+        <el-table-column :label="t('device.table.lastActiveAt')">
+          <template #default="{ row }">
+            <span v-if="row.lastActiveAt" :style="{ color: isOnline(row) ? '#67c23a' : '#909399' }">{{ formatDateTime(row.lastActiveAt) }}</span>
+            <span v-else style="color: #909399">{{ t('common.neverOnline') }}</span>
+          </template>
+        </el-table-column>
         <el-table-column :label="t('device.table.createdAt')">
           <template #default="{ row }">{{ formatDateTime(row.createdAt) }}</template>
         </el-table-column>
@@ -125,6 +131,10 @@ import ExcelImportDialog from '@/components/business/ExcelImportDialog.vue';
 
 const { t } = useI18n();
 const { formatDateTime } = dateUtils;
+const isOnline = (row: Device) => {
+  if (!row.lastActiveAt) return false;
+  return Date.now() - new Date(row.lastActiveAt).getTime() < 5 * 60 * 1000;
+};
 
 const importDialogVisible = ref(false);
 

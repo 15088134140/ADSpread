@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- ===== 网络 ===== -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+
+    <!-- ===== 前台 Service（spec §12.1） ===== -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
+
+    <!-- ===== 开机自启（BootReceiver，Task A9） ===== -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
+    <!-- ===== 屏幕常亮 / 唤醒锁 ===== -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <!-- ===== Android 13+ 前台 Service 通知 ===== -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <!-- ===== 精确闹钟（软重启自愈，Task A9） ===== -->
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
+
+    <!--
+        注：不声明任何存储权限——素材落 app 专属目录，API 26+ 免权限（spec ADR-F / §12.1）。
+    -->
+
+    <application
+        android:name=".app.AdSpreadApp"
+        android:allowBackup="false"
+        android:label="ADSpread"
+        android:supportsRtl="true"
+        android:icon="@android:drawable/sym_def_app_icon"
+        android:theme="@android:style/Theme.Material.NoActionBar"
+        android:usesCleartextTraffic="true">
+
+        <!--
+            V1 局域网 HTTP 后端需 cleartext（spec §12.1 / plan K1）；
+            生产收紧为 networkSecurityConfig 列后续。
+        -->
+
+        <activity
+            android:name=".app.MainActivity"
+            android:launchMode="singleTask"
+            android:exported="true"
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!--
+            PlayerService：前台 mediaPlayback Service（spec §7.1 / ADR-B，Task A6）。
+            持有最小 MediaSession（满足 mediaPlayback 类型）+ ExoPlayer 池 + 编排协程。
+            不导出（仅 App 内部 / BootReceiver 启动）。
+        -->
+        <service
+            android:name=".service.PlayerService"
+            android:foregroundServiceType="mediaPlayback"
+            android:exported="false" />
+
+        <!--
+            BootReceiver（Task A9）：监听开机完成广播，启动 MainActivity + PlayerService。
+            exported=true（系统 BOOT_COMPLETED 广播需 receiver 可被系统启动）。
+        -->
+        <receiver
+            android:name=".service.BootReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+        <!--
+            SyncWorker / DownloadWorker 等组件在对应 Task 实现时再声明，避免引用
+            不存在的类导致 A0 编译失败（plan Task A0 决策）。
+        -->
+
+        <!-- 禁用 WorkManager 默认初始化器（使用 AdSpreadApp Configuration.Provider） -->
+        <provider
+            android:name="androidx.startup.InitializationProvider"
+            android:authorities="${applicationId}.androidx-startup"
+            android:exported="false"
+            tools:node="merge">
+            <meta-data
+                android:name="androidx.work.WorkManagerInitializer"
+                android:value="androidx.startup"
+                tools:node="remove" />
+        </provider>
+    </application>
+</manifest>

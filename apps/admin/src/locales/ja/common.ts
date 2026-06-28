@@ -18,6 +18,7 @@ export default {
   disabled: '無効',
   loading: '読み込み中...',
   noData: 'データなし',
+  neverOnline: 'オンライン履歴なし',
   success: '成功',
   failure: '失敗',
   tip: 'ヒント',

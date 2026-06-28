@@ -7,10 +7,14 @@ import { CreatePublishPlanDto } from './dto/create-publish-plan.dto';
 import { UpdatePublishPlanDto } from './dto/update-publish-plan.dto';
 import { PublishQueryDto } from './dto/publish-query.dto';
 import { UpdatePublishStatusDto } from './dto/update-publish-status.dto';
+import { CommandDispatchService } from '../device-api/service/command-dispatch.service';
 
 @Injectable()
 export class PublishService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly commandDispatch: CommandDispatchService
+  ) {}
 
   async findAll(query: PublishQueryDto) {
     const { page, pageSize, skip, take } = getPagination(query);
@@ -208,6 +212,18 @@ export class PublishService {
       },
     });
 
+    // 通知目标设备：通过 Socket.io 发送 ad:update（spec §6.2）
+    const targetDevices = await this.prisma.device.findMany({
+      where: {
+        storeId: { in: plan.targetStoreIds as any },
+        status: 1,
+      },
+      select: { code: true },
+    });
+    for (const device of targetDevices) {
+      this.commandDispatch.broadcastProgramUpdate(device.code, String(plan.updatedAt.getTime()));
+    }
+
     // 更新最后推送时间
     const updated = await this.prisma.publishPlan.update({
       where: { id },
@@ -218,6 +234,7 @@ export class PublishService {
       ...updated,
       pushLogId: pushLog.id,
       targetDeviceCount,
+      notifiedDevices: targetDevices.length,
     };
   }
 

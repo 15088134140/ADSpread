@@ -1,5 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
+import { IoAdapter } from '@nestjs/platform-socket.io';
 import { join } from 'path';
 import { ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
@@ -7,10 +8,10 @@ import { HttpAdapterHost } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { AllExceptionsFilter } from './filters/all-exceptions.filter';
 
-// 全局支持 BigInt 序列化（Material.fileSize 等字段）
+// 全局支持 BigInt 序列化（Material.fileSize 等以字符串下发，避免大数丢精度）
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 (BigInt.prototype as any).toJSON = function () {
-  return Number(this);
+  return String(this);
 };
 
 async function bootstrap() {
@@ -29,6 +30,10 @@ async function bootstrap() {
 
   // Global prefix
   app.setGlobalPrefix('api');
+
+  // WebSocket adapter：注册 socket.io IoAdapter 使 @WebSocketGateway 生效（Task 5）。
+  // IoAdapter 复用当前 HTTP server，socket.io path '/socket.io/' 独立于全局 /api 前缀。
+  app.useWebSocketAdapter(new IoAdapter(app));
 
   // Global validation pipe
   app.useGlobalPipes(

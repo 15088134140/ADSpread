@@ -12,6 +12,7 @@
     "rootDir": "./src",
     "incremental": false,
     "skipLibCheck": true,
+    "types": ["multer"],
     "strictNullChecks": true,
     "noImplicitAny": false,
     "strictBindCallApply": true,

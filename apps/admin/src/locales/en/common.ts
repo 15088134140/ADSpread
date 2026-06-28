@@ -18,6 +18,7 @@ export default {
   disabled: 'Disabled',
   loading: 'Loading...',
   noData: 'No data',
+  neverOnline: 'Never online',
   success: 'Success',
   failure: 'Failure',
   tip: 'Tip',

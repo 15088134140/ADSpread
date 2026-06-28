@@ -168,6 +168,8 @@ model Device {
   updatedAt         DateTime          @updatedAt
 
   store             Store?            @relation(fields: [storeId], references: [id], onDelete: SetNull)
+  logs              DeviceLog[]
+  commands          DeviceCommand[]
 
   @@index([storeId])
   @@index([status])
@@ -279,4 +281,42 @@ model PushMessageLog {
   @@index([publishPlanId])
   @@index([createdAt])
   @@map("push_message_logs")
+}
+
+// ==================== 设备日志与远程指令模块 ====================
+
+/// 设备上行日志/事件（spec §1.2 logs / §13）。
+/// 设备批量上报播放日志、事件、异常；type 标识来源类别（play/event/error），
+/// payload 承载原始 JSON，severity 供管理后台分级检索与告警。
+/// 设备删除时级联清理（onDelete: Cascade）。
+model DeviceLog {
+  id        BigInt   @id @default(autoincrement())
+  deviceId  Int
+  type      String   // play/event/error
+  payload   Json
+  severity  String   @default("INFO") // ERROR/WARN/INFO
+  createdAt DateTime @default(now())
+  device    Device   @relation(fields: [deviceId], references: [id], onDelete: Cascade)
+
+  @@index([deviceId, createdAt])
+  @@map("device_logs")
+}
+
+/// 设备远程指令（spec §1.2 commands ack / §6.2 / §6.3 离线指令队列）。
+/// id 为 UUID，作指令唯一标识供设备 ack 闭环。status 流转：
+///   0=待下发 → 1=已下发 → 2=已ack（成功）/ 3=失败 / 4=过期
+/// 离线设备的指令留队（status=0），上线后由网关补发（Task 5）。
+/// expireAt 为过期时间，超时由后端作废为 status=4。
+model DeviceCommand {
+  id        String   @id @default(uuid())
+  deviceId  Int
+  type      String   // command:screenshot 等
+  payload   Json
+  status    Int      @default(0) // 0:待下发 1:已下发 2:已ack 3:失败 4:过期
+  createdAt DateTime @default(now())
+  expireAt  DateTime?
+  device    Device   @relation(fields: [deviceId], references: [id], onDelete: Cascade)
+
+  @@index([deviceId, status])
+  @@map("device_commands")
 }

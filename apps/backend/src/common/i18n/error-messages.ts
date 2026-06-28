@@ -130,6 +130,31 @@ export const ERROR_MESSAGES = {
     ja: 'デバイスコードがバッチ内で重複しています',
     en: 'Device code duplicated within the batch',
   },
+  DEVICE_TOKEN_INVALID: {
+    'zh-CN': '设备令牌无效或已过期',
+    ja: 'デバイストークンが無効または期限切れです',
+    en: 'Device token is invalid or expired',
+  },
+  DEVICE_DISABLED_OR_NOT_FOUND: {
+    'zh-CN': '设备已禁用或不存在',
+    ja: 'デバイスが無効化されているか存在しません',
+    en: 'Device is disabled or does not exist',
+  },
+  DEVICE_NOT_BOUND: {
+    'zh-CN': '设备未绑定门店',
+    ja: 'デバイスが店舗に紐付けられていません',
+    en: 'Device is not bound to a store',
+  },
+  COMMAND_NOT_FOUND: {
+    'zh-CN': '指令不存在',
+    ja: 'コマンドが存在しません',
+    en: 'Command does not exist',
+  },
+  COMMAND_UNSUPPORTED: {
+    'zh-CN': '不支持的指令类型：{0}',
+    ja: 'サポートされていないコマンドタイプです：{0}',
+    en: 'Unsupported command type: {0}',
+  },
 
   // 素材
   MATERIAL_NOT_FOUND: {

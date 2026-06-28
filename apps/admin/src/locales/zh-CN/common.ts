@@ -18,6 +18,7 @@ export default {
   disabled: '禁用',
   loading: '加载中...',
   noData: '暂无数据',
+  neverOnline: '从未在线',
   success: '成功',
   failure: '失败',
   tip: '提示',
