@@ -7,12 +7,11 @@ FROM node:20-alpine AS builder
 WORKDIR /app
 
 # Install dependencies
-COPY package*.json ./
-COPY package-lock.json* ./
-COPY apps/admin/package*.json ./apps/admin/
+COPY package.json ./
+COPY apps/admin/package.json ./apps/admin/
 COPY packages/types/package*.json ./packages/types/
 
-RUN npm ci --include=dev
+RUN npm install --ignore-scripts
 
 # Copy source code
 COPY . .

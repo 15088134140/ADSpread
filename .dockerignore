@@ -1,0 +1,61 @@
+# Dependencies
+node_modules/
+**/node_modules/
+pnpm-lock.yaml
+
+# Build outputs
+apps/backend/dist/
+apps/admin/dist/
+dist/
+
+# IDE & OS
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Logs
+*.log
+logs/
+npm-debug.log*
+
+# Test files
+**/test/
+**/*.spec.ts
+**/*.test.ts
+coverage/
+
+# Documentation
+docs/
+*.md
+!README.md
+
+# CI/CD
+.github/
+.gitlab-ci.yml
+
+# Temporary
+tmp/
+temp/
+.tmp/
+
+# Android (not needed for Docker builds)
+apps/android/
+
+# Misc
+.claude/
+.ai/
+tools/
