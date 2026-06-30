@@ -13,7 +13,7 @@ android {
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.adspread.android"
+        applicationId = "com.greenutility.adspread"
         minSdk = 26
         targetSdk = 34
         versionCode = 1
@@ -22,11 +22,27 @@ android {
         vectorDrawables { useSupportLibrary = true }
     }
 
+    // 签名配置（密码通过 keystore.properties 注入，该文件不提交 Git）
+    val keystoreProperties = java.util.Properties()
+    rootProject.file("keystore.properties").takeIf { it.exists() }?.let {
+        keystoreProperties.load(it.inputStream())
+    }
+
+    signingConfigs {
+        create("release") {
+            storeFile = file("keystore/greenUtility.jks")
+            storePassword = keystoreProperties["KEYSTORE_PASS"] as? String
+            keyAlias = keystoreProperties["KEY_ALIAS"] as? String
+            keyPassword = keystoreProperties["KEY_PASS"] as? String
+        }
+    }
+
     buildTypes {
         debug {
             isMinifyEnabled = false
         }
         release {
+            signingConfig = signingConfigs.getByName("release")
             // A0 占位：暂不启用 minify；各依赖 keep 规则在对应 Task 接入后补充
             isMinifyEnabled = false
             proguardFiles(

@@ -17,3 +17,8 @@ captures/
 
 # Kotlin
 .kotlin/
+
+# Signing
+*.jks
+*.keystore
+keystore.properties
