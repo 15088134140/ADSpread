@@ -136,7 +136,8 @@ pnpm run dev:admin
 ADSpread/
 ├── apps/                          # 应用目录
 │   ├── backend/                   # NestJS 后端服务
-│   └── admin/                     # Vue3 管理后台
+│   ├── admin/                     # Vue3 管理后台
+│   └── android/                   # Kotlin 安卓客户端
 ├── packages/                      # 共享包
 │   ├── shared/                    # 工具函数
 │   └── types/                     # TypeScript 类型定义
